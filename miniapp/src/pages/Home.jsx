@@ -2,9 +2,8 @@ import { useEffect, useState } from 'react';
 import Stories from '../components/Stories.jsx';
 import ProductCard from '../components/ProductCard.jsx';
 import { api } from '../api.js';
-import { haptic } from '../telegram.js';
 
-export default function Home({ user, onNavigate, onOpenProduct }) {
+export default function Home({ user, onOpenProduct }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -32,21 +31,6 @@ export default function Home({ user, onNavigate, onOpenProduct }) {
       </div>
 
       <Stories />
-
-      <div className="hero">
-        <div className="hero-emoji">🛍</div>
-        <h2>Yangi buyurtma berish</h2>
-        <p>Ka'ba kisvasidan asl bo'laklar — sertifikat bilan</p>
-        <button
-          className="hero-btn"
-          onClick={() => {
-            haptic('medium');
-            onNavigate('catalog');
-          }}
-        >
-          Katalogni ochish
-        </button>
-      </div>
 
       <div className="info-row">
         <div className="info-card">
