@@ -9,3 +9,5 @@ desktop.ini
 tools/
 .claude/
 .vite/
+_zip.mjs
+*.zip

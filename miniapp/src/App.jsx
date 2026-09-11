@@ -7,7 +7,6 @@ import Profile from './pages/Profile.jsx';
 import Admin from './pages/Admin.jsx';
 import BottomNav from './components/BottomNav.jsx';
 import ProductSheet from './components/ProductSheet.jsx';
-import ThemeToggle from './components/ThemeToggle.jsx';
 import { initTelegram } from './telegram.js';
 import { api } from './api.js';
 
@@ -48,9 +47,6 @@ export default function App() {
   if (adminOpen) {
     return (
       <div className="app" style={{ paddingBottom: 24 }}>
-        <div className="top-bar">
-          <ThemeToggle />
-        </div>
         <Admin onExit={() => setAdminOpen(false)} />
       </div>
     );
@@ -58,10 +54,6 @@ export default function App() {
 
   return (
     <div className="app">
-      <div className="top-bar">
-        <ThemeToggle />
-      </div>
-
       {tab === 'home' && <Home user={user} onNavigate={setTab} onOpenProduct={setSheetProduct} />}
       {tab === 'catalog' && <Catalog onOpenProduct={setSheetProduct} />}
       {tab === 'cart' && <Cart user={user} onNavigate={setTab} />}
