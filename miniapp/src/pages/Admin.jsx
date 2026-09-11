@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { adminApi, formatPrice } from '../api.js';
+import { adminApi, formatPrice, resolveImage } from '../api.js';
 import { haptic, showAlert } from '../telegram.js';
 
 const STORAGE_KEY = 'kisva_admin_pass';
@@ -269,7 +269,7 @@ export default function Admin({ onExit }) {
             <label>Rasm</label>
             {form.imageUrl && (
               <img
-                src={form.imageUrl}
+                src={resolveImage(form.imageUrl)}
                 alt=""
                 style={{
                   width: '100%',
@@ -309,7 +309,7 @@ export default function Admin({ onExit }) {
                       className={form.imageUrl === item.url ? 'active' : ''}
                       onClick={() => setForm((prev) => ({ ...prev, imageUrl: item.url }))}
                     >
-                      <img src={item.url} alt={item.name} />
+                      <img src={resolveImage(item.url)} alt={item.name} />
                     </button>
                   ))}
                 </div>
@@ -506,7 +506,7 @@ export default function Admin({ onExit }) {
           {products.map((product) => (
             <div className="admin-card" key={product.id}>
               <div className="admin-row">
-                <img className="admin-thumb" src={product.imageUrl} alt="" />
+                <img className="admin-thumb" src={resolveImage(product.imageUrl)} alt="" />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 13.5, fontWeight: 600 }}>{product.name}</div>
                   <div className="muted" style={{ fontSize: 12 }}>

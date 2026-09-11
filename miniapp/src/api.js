@@ -1,6 +1,19 @@
 import { tg } from './telegram.js';
 
-const BASE = '/api';
+// Netlify'da statik sayt sifatida joylashtirilganda, backend boshqa manzilda
+// turadi — shu manzil deploy paytida VITE_API_URL orqali beriladi.
+// Lokal kompyuterda (Vite dev server) bo'sh qoldiriladi — proxy o'zi ishlaydi.
+const API_ROOT = import.meta.env.VITE_API_URL || '';
+const BASE = `${API_ROOT}/api`;
+
+/**
+ * "/uploads/rasm.jpg" kabi nisbiy rasm manzilini to'liq (backend) manzilga aylantiradi.
+ */
+export function resolveImage(url) {
+  if (!url) return url;
+  if (/^https?:\/\//i.test(url)) return url;
+  return `${API_ROOT}${url}`;
+}
 
 async function request(path, options = {}) {
   const response = await fetch(BASE + path, {
@@ -32,7 +45,7 @@ export const api = {
 
 /* ---------- Ichki admin panel uchun ---------- */
 
-const ADMIN_BASE = '/api/admin';
+const ADMIN_BASE = `${API_ROOT}/api/admin`;
 
 async function adminRequest(password, path, options = {}) {
   const response = await fetch(ADMIN_BASE + path, {

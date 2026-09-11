@@ -6,6 +6,7 @@ export default defineConfig({
   server: {
     host: true,
     port: 5173,
+    strictPort: true,
     // ngrok domenidan kirishga ruxsat
     allowedHosts: true,
     proxy: {

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { formatPrice } from '../api.js';
+import { formatPrice, resolveImage } from '../api.js';
 import { haptic } from '../telegram.js';
 import { useCart } from '../context/CartContext.jsx';
 
@@ -21,7 +21,7 @@ export default function ProductSheet({ product, onClose }) {
         <div className="sheet-handle" />
 
         <div className="sheet-scroll">
-          <img className="sheet-img" src={product.imageUrl} alt={product.name} />
+          <img className="sheet-img" src={resolveImage(product.imageUrl)} alt={product.name} />
 
           <h2>{product.name}</h2>
           <div className="price-row">

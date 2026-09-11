@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { api, formatPrice } from '../api.js';
+import { api, formatPrice, resolveImage } from '../api.js';
 import { useCart } from '../context/CartContext.jsx';
 import { haptic, showAlert, closeApp, requestLocation } from '../telegram.js';
 
@@ -98,7 +98,7 @@ export default function Cart({ user, onNavigate }) {
       <div style={{ marginTop: 12 }}>
         {items.map((item) => (
           <div className="cart-item" key={item.key}>
-            <img className="cart-img" src={item.imageUrl} alt={item.name} />
+            <img className="cart-img" src={resolveImage(item.imageUrl)} alt={item.name} />
             <div className="cart-info">
               <div className="cart-name">{item.name}</div>
               {item.size && <div className="muted" style={{ fontSize: 12 }}>O‘lcham: {item.size}</div>}
@@ -123,7 +123,7 @@ export default function Cart({ user, onNavigate }) {
 
       {upsell && (
         <div className="upsell">
-          <img src={upsell.imageUrl} alt={upsell.name} />
+          <img src={resolveImage(upsell.imageUrl)} alt={upsell.name} />
           <div className="upsell-text">
             Bunga qo‘shimcha ravishda <b>{upsell.name}</b> ni atigi{' '}
             <b>{formatPrice(upsell.price)} so‘m</b> ga qo‘shasizmi?

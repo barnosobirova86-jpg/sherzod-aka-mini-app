@@ -1,4 +1,4 @@
-import { formatPrice } from '../api.js';
+import { formatPrice, resolveImage } from '../api.js';
 import { haptic } from '../telegram.js';
 import { useCart } from '../context/CartContext.jsx';
 
@@ -19,7 +19,7 @@ export default function ProductCard({ product, onOpen }) {
   return (
     <div className="card" onClick={() => onOpen(product)}>
       <div className="card-img">
-        <img src={product.imageUrl} alt={product.name} loading="lazy" />
+        <img src={resolveImage(product.imageUrl)} alt={product.name} loading="lazy" />
         {discount > 0 && <span className="card-badge">-{discount}%</span>}
         <button className="card-add" onClick={quickAdd} aria-label="Savatchaga qo‘shish">
           +

@@ -14,6 +14,10 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 
 app.use(cors());
+
+// Telegram webhookni JSON parserdan oldin ro'yxatdan o'tkazish kerak (Telegraf o'zi o'qiydi)
+const WEBHOOK_PATH = '/telegram/webhook';
+
 app.use(express.json({ limit: '2mb' }));
 
 // Yuklangan rasmlar: public/uploads/rasm.jpg -> /uploads/rasm.jpg
@@ -31,24 +35,42 @@ app.use((req, res) => res.status(404).json({ message: 'Topilmadi' }));
 async function start() {
   await connectDatabase();
 
+  const bot = registerBotHandlers();
+
+  // Render.com kabi xostinglar avtomatik ravishda o'z ochiq manzilini beradi.
+  // U mavjud bo'lsa — webhook rejimi (uxlab qolsa ham keyingi xabarda uyg'onadi).
+  // Bo'lmasa (o'z kompyuteringizda) — oddiy polling rejimi ishlaydi.
+  const publicUrl = process.env.RENDER_EXTERNAL_URL || process.env.PUBLIC_URL || '';
+
+  if (publicUrl) {
+    app.use(bot.webhookCallback(WEBHOOK_PATH));
+  }
+
   app.listen(config.port, () => {
     console.log(`🚀 API ishga tushdi: http://localhost:${config.port}`);
   });
 
-  const bot = registerBotHandlers();
-
   try {
     const me = await bot.telegram.getMe();
-    bot.launch().catch((e) => console.error('❌ Bot to\'xtadi:', e.message));
-    console.log(`🤖 Telegram bot ishga tushdi: @${me.username}`);
+
+    if (publicUrl) {
+      const webhookUrl = `${publicUrl.replace(/\/$/, '')}${WEBHOOK_PATH}`;
+      await bot.telegram.setWebhook(webhookUrl);
+      console.log(`🤖 Telegram bot ishga tushdi (webhook): @${me.username}`);
+      console.log(`   Webhook: ${webhookUrl}`);
+    } else {
+      await bot.telegram.deleteWebhook().catch(() => {});
+      bot.launch().catch((e) => console.error('❌ Bot to\'xtadi:', e.message));
+      console.log(`🤖 Telegram bot ishga tushdi (polling): @${me.username}`);
+    }
   } catch (e) {
     console.error('❌ Bot ishga tushmadi:', e.message);
-    console.error('   .env faylidagi BOT_TOKEN ni tekshiring.');
+    console.error('   BOT_TOKEN ni tekshiring.');
   }
 
   const shutdown = async (signal) => {
     console.log(`\n${signal} — to'xtatilmoqda...`);
-    bot.stop(signal);
+    if (!publicUrl) bot.stop(signal);
     await disconnectDatabase();
     process.exit(0);
   };

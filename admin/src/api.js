@@ -1,5 +1,17 @@
-const BASE = '/api/admin';
+// Netlify'ga joylashtirilganda backend boshqa manzilda turadi.
+// Deploy paytida VITE_API_URL environment o'zgaruvchisi orqali beriladi.
+const API_ROOT = import.meta.env.VITE_API_URL || '';
+const BASE = `${API_ROOT}/api/admin`;
 const TOKEN_KEY = 'kisva_admin_token';
+
+/**
+ * "/uploads/rasm.jpg" kabi nisbiy rasm manzilini to'liq (backend) manzilga aylantiradi.
+ */
+export function resolveImage(url) {
+  if (!url) return url;
+  if (/^https?:\/\//i.test(url)) return url;
+  return `${API_ROOT}${url}`;
+}
 
 export function getToken() {
   try {

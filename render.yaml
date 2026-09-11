@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: kisva-shop-backend
+    runtime: node
+    plan: free
+    region: frankfurt
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: DATABASE_URL
+        sync: false
+      - key: DIRECT_URL
+        sync: false
+      - key: BOT_TOKEN
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: WEBAPP_URL
+        sync: false
+      - key: ALLOW_DEV_AUTH
+        value: "false"

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { api, formatPrice } from '../api.js';
+import { api, formatPrice, resolveImage } from '../api.js';
 
 const emptyForm = {
   name: '',
@@ -164,7 +164,7 @@ export default function Products({ onExpire }) {
                 {products.map((product) => (
                   <tr key={product.id}>
                     <td>
-                      <img className="thumb" src={product.imageUrl} alt={product.name} />
+                      <img className="thumb" src={resolveImage(product.imageUrl)} alt={product.name} />
                     </td>
                     <td style={{ maxWidth: 260 }}>
                       <b>{product.name}</b>
@@ -233,7 +233,7 @@ export default function Products({ onExpire }) {
                 <div className="image-picker">
                   <div className="image-preview">
                     {form.imageUrl ? (
-                      <img src={form.imageUrl} alt="" />
+                      <img src={resolveImage(form.imageUrl)} alt="" />
                     ) : (
                       <span>Rasm yo'q</span>
                     )}
@@ -286,7 +286,7 @@ export default function Products({ onExpire }) {
                           title={item.name}
                           onClick={() => setForm((prev) => ({ ...prev, imageUrl: item.url }))}
                         >
-                          <img src={item.url} alt={item.name} />
+                          <img src={resolveImage(item.url)} alt={item.name} />
                         </button>
                       ))}
                     </div>
