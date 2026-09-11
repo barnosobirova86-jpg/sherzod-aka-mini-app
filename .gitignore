@@ -8,3 +8,4 @@ desktop.ini
 *.log
 tools/
 .claude/
+.vite/
