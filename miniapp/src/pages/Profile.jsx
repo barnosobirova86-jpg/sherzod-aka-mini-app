@@ -9,7 +9,7 @@ const statusLabels = {
   canceled: 'Bekor qilindi',
 };
 
-export default function Profile({ user, onNavigate, onOpenAdmin }) {
+export default function Profile({ user, onNavigate }) {
   const { addItem } = useCart();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -79,12 +79,6 @@ export default function Profile({ user, onNavigate, onOpenAdmin }) {
           <span style={{ flex: 1 }}>Yetkazib berish</span>
           <span className="muted">Bepul</span>
         </div>
-
-        <button className="list-item" onClick={onOpenAdmin}>
-          <span style={{ fontSize: 18 }}>🔐</span>
-          <span style={{ flex: 1 }}>Admin panel</span>
-          <span className="muted">›</span>
-        </button>
       </div>
 
       {showOrders && (

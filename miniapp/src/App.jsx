@@ -4,7 +4,6 @@ import Home from './pages/Home.jsx';
 import Catalog from './pages/Catalog.jsx';
 import Cart from './pages/Cart.jsx';
 import Profile from './pages/Profile.jsx';
-import Admin from './pages/Admin.jsx';
 import BottomNav from './components/BottomNav.jsx';
 import ProductSheet from './components/ProductSheet.jsx';
 import { initTelegram } from './telegram.js';
@@ -24,7 +23,6 @@ export default function App() {
   const [tab, setTab] = useState('home');
   const [user, setUser] = useState(null);
   const [sheetProduct, setSheetProduct] = useState(null);
-  const [adminOpen, setAdminOpen] = useState(false);
 
   useEffect(() => {
     initTelegram();
@@ -44,22 +42,12 @@ export default function App() {
     return <Onboarding onFinish={finishOnboarding} />;
   }
 
-  if (adminOpen) {
-    return (
-      <div className="app" style={{ paddingBottom: 24 }}>
-        <Admin onExit={() => setAdminOpen(false)} />
-      </div>
-    );
-  }
-
   return (
     <div className="app">
       {tab === 'home' && <Home user={user} onNavigate={setTab} onOpenProduct={setSheetProduct} />}
       {tab === 'catalog' && <Catalog onOpenProduct={setSheetProduct} />}
       {tab === 'cart' && <Cart user={user} onNavigate={setTab} />}
-      {tab === 'profile' && (
-        <Profile user={user} onNavigate={setTab} onOpenAdmin={() => setAdminOpen(true)} />
-      )}
+      {tab === 'profile' && <Profile user={user} onNavigate={setTab} />}
 
       <BottomNav active={tab} onChange={setTab} />
 
