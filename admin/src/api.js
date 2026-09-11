@@ -1,0 +1,100 @@
+const BASE = '/api/admin';
+const TOKEN_KEY = 'kisva_admin_token';
+
+export function getToken() {
+  try {
+    return localStorage.getItem(TOKEN_KEY) || '';
+  } catch {
+    return '';
+  }
+}
+
+export function setToken(token) {
+  try {
+    localStorage.setItem(TOKEN_KEY, token);
+  } catch {
+    /* ignore */
+  }
+}
+
+export function clearToken() {
+  try {
+    localStorage.removeItem(TOKEN_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
+async function request(path, options = {}) {
+  const response = await fetch(BASE + path, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      'x-admin-password': getToken(),
+      ...(options.headers || {}),
+    },
+  });
+
+  if (response.status === 401) {
+    clearToken();
+    throw new Error("Sessiya tugadi. Qaytadan kiring.");
+  }
+
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data.message || 'Xatolik yuz berdi');
+  }
+
+  return response.json();
+}
+
+export const api = {
+  login: (password) =>
+    fetch(BASE + '/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password }),
+    }).then(async (r) => {
+      if (!r.ok) throw new Error("Parol noto'g'ri");
+      return r.json();
+    }),
+
+  stats: () => request('/stats'),
+
+  orders: (status) => request(`/orders${status && status !== 'all' ? `?status=${status}` : ''}`),
+  updateOrderStatus: (id, status) =>
+    request(`/orders/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }),
+
+  uploads: () => request('/uploads'),
+
+  uploadImage: (file) => {
+    const body = new FormData();
+    body.append('image', file);
+    return fetch(BASE + '/upload', {
+      method: 'POST',
+      headers: { 'x-admin-password': getToken() },
+      body,
+    }).then(async (r) => {
+      const data = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(data.message || 'Rasm yuklanmadi');
+      return data;
+    });
+  },
+
+  products: () => request('/products'),
+  createProduct: (data) => request('/products', { method: 'POST', body: JSON.stringify(data) }),
+  updateProduct: (id, data) =>
+    request(`/products/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteProduct: (id) => request(`/products/${id}`, { method: 'DELETE' }),
+};
+
+export const formatPrice = (value) => Number(value || 0).toLocaleString('uz-UZ');
+
+export const formatDate = (value) =>
+  new Date(value).toLocaleString('uz-UZ', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });

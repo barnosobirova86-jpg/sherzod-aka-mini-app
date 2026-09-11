@@ -1,0 +1,40 @@
+import { formatPrice } from '../api.js';
+import { haptic } from '../telegram.js';
+import { useCart } from '../context/CartContext.jsx';
+
+export default function ProductCard({ product, onOpen }) {
+  const { addItem } = useCart();
+
+  const discount =
+    product.oldPrice && product.oldPrice > product.price
+      ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
+      : 0;
+
+  function quickAdd(event) {
+    event.stopPropagation();
+    haptic('medium');
+    addItem(product, product.sizes?.[0] || null, 1);
+  }
+
+  return (
+    <div className="card" onClick={() => onOpen(product)}>
+      <div className="card-img">
+        <img src={product.imageUrl} alt={product.name} loading="lazy" />
+        {discount > 0 && <span className="card-badge">-{discount}%</span>}
+        <button className="card-add" onClick={quickAdd} aria-label="Savatchaga qo‘shish">
+          +
+        </button>
+      </div>
+
+      <div className="card-body">
+        <div className="card-name">{product.name}</div>
+        <div className="price-row">
+          <span className="price-new">{formatPrice(product.price)} so‘m</span>
+          {product.oldPrice > 0 && (
+            <span className="price-old">{formatPrice(product.oldPrice)}</span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

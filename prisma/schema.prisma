@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  telegramId String   @unique
+  firstName  String
+  lastName   String?
+  username   String?
+  phone      String?
+  createdAt  DateTime @default(now())
+
+  orders Order[]
+
+  @@map("users")
+}
+
+model Product {
+  id            Int      @id @default(autoincrement())
+  name          String
+  description   String
+  imageUrl      String
+  oldPrice      Int?
+  price         Int
+  category      String
+  sizes         String[] @default([])
+  features      String[] @default([])
+  isRecommended Boolean  @default(false)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("products")
+}
+
+model Order {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  items      Json
+  totalPrice Int
+  phone      String?
+  latitude   Float?
+  longitude  Float?
+  note       String?
+  status     String   @default("pending")
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("orders")
+}

@@ -1,0 +1,30 @@
+{
+  "name": "kisva-shop-backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Kisva Shop - Telegram Mini App backend (Bot + API)",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "db:push": "prisma db push",
+    "db:seed": "node prisma/seed.js",
+    "db:studio": "prisma studio",
+    "postinstall": "prisma generate"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "multer": "^2.3.0",
+    "telegraf": "^4.16.3"
+  },
+  "devDependencies": {
+    "prisma": "^5.22.0"
+  }
+}
