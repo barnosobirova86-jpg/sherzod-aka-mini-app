@@ -130,7 +130,11 @@ export default function Orders({ onExpire }) {
                       <b>#{order.id}</b>
                     </td>
                     <td>
-                      {order.user?.firstName} {order.user?.lastName || ''}
+                      <b>
+                        {order.customerName ||
+                          `${order.user?.firstName || ''} ${order.user?.lastName || ''}`.trim() ||
+                          '—'}
+                      </b>
                       {order.user?.username && (
                         <div style={{ color: 'var(--muted)', fontSize: 12 }}>
                           @{order.user.username}

@@ -1148,3 +1148,49 @@ img {
   font-size: 17px;
   line-height: 1;
 }
+
+/* ---------- Buyurtma tasdiqlangandan keyingi karta ---------- */
+
+.thankyou-card {
+  position: relative;
+  margin-top: 60px;
+  padding: 40px 24px 36px;
+  border-radius: 22px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.thankyou-exit {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--soft);
+  color: var(--text);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thankyou-icon {
+  font-size: 48px;
+  margin-bottom: 14px;
+}
+
+.thankyou-card h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+}
+
+.thankyou-card p {
+  color: var(--muted);
+  margin: 0;
+  font-size: 14.5px;
+}

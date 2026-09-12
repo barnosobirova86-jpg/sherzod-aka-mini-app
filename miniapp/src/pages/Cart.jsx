@@ -1,39 +1,24 @@
 import { useEffect, useState } from 'react';
 import { api, formatPrice, resolveImage } from '../api.js';
 import { useCart } from '../context/CartContext.jsx';
-import { haptic, showAlert, closeApp, requestLocation } from '../telegram.js';
+import { haptic, showAlert, requestLocation } from '../telegram.js';
 
 export default function Cart({ user, onNavigate }) {
-  const { items, total, changeQty, removeItem, addItem, clearCart } = useCart();
+  const { items, total, changeQty, removeItem, clearCart } = useCart();
 
-  const [recommended, setRecommended] = useState([]);
+  const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [note, setNote] = useState('');
   const [location, setLocation] = useState(null);
   const [locating, setLocating] = useState(false);
   const [sending, setSending] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
-    api.recommended().then(setRecommended).catch(() => setRecommended([]));
-  }, []);
-
-  useEffect(() => {
+    const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(' ');
+    if (fullName) setName(fullName);
     if (user?.phone) setPhone(user.phone);
   }, [user]);
-
-  // Admin panelda "Tavsiya etilgan" deb belgilangan birinchi mahsulot
-  const candidate = recommended[0] || null;
-  const onlyUpsellInCart =
-    candidate && items.length === 1 && items[0].productId === candidate.id;
-  const upsell = onlyUpsellInCart ? null : candidate;
-  const upsellOn = upsell ? items.some((i) => i.productId === upsell.id) : false;
-
-  function toggleUpsell(product) {
-    haptic('medium');
-    const inCart = items.find((i) => i.productId === product.id);
-    if (inCart) removeItem(inCart.key);
-    else addItem(product, product.sizes?.[0] || null, 1);
-  }
 
   async function getLocation() {
     setLocating(true);
@@ -49,28 +34,49 @@ export default function Cart({ user, onNavigate }) {
   }
 
   async function submitOrder() {
+    if (!name.trim()) return showAlert('Ismingizni kiriting');
     if (!phone.trim()) return showAlert('Telefon raqamingizni kiriting');
-    if (!location) return showAlert('Yetkazib berish lokatsiyasini yuboring');
 
     setSending(true);
     try {
       await api.createOrder({
         items: items.map((i) => ({ productId: i.productId, size: i.size, qty: i.qty })),
+        name: name.trim(),
         phone: phone.trim(),
-        latitude: location.latitude,
-        longitude: location.longitude,
+        latitude: location?.latitude,
+        longitude: location?.longitude,
         note: note.trim() || null,
       });
 
       clearCart();
       haptic('heavy');
-      showAlert('Buyurtmangiz qabul qilindi! Kuryerimiz tez orada bog‘lanadi 🕋');
-      setTimeout(closeApp, 700);
+      setSubmitted(true);
     } catch (error) {
       showAlert(error.message || 'Buyurtma yuborilmadi');
     } finally {
       setSending(false);
     }
+  }
+
+  function closeThankYou() {
+    haptic('light');
+    setSubmitted(false);
+    onNavigate('home');
+  }
+
+  if (submitted) {
+    return (
+      <div className="page">
+        <div className="thankyou-card">
+          <button className="thankyou-exit" onClick={closeThankYou} aria-label="Yopish">
+            ➜
+          </button>
+          <div className="thankyou-icon">🎉</div>
+          <h2>Xarid uchun rahmat!</h2>
+          <p>Admin siz bilan bog‘lanadi.</p>
+        </div>
+      </div>
+    );
   }
 
   if (items.length === 0) {
@@ -121,22 +127,17 @@ export default function Cart({ user, onNavigate }) {
         ))}
       </div>
 
-      {upsell && (
-        <div className="upsell">
-          <img src={resolveImage(upsell.imageUrl)} alt={upsell.name} />
-          <div className="upsell-text">
-            Bunga qo‘shimcha ravishda <b>{upsell.name}</b> ni atigi{' '}
-            <b>{formatPrice(upsell.price)} so‘m</b> ga qo‘shasizmi?
-          </div>
-          <button
-            className={`switch ${upsellOn ? 'on' : ''}`}
-            onClick={() => toggleUpsell(upsell)}
-            aria-label="Qo‘shimcha mahsulot"
-          />
-        </div>
-      )}
-
       <div className="section-title">Yetkazib berish</div>
+
+      <div className="field">
+        <label>Ismingiz</label>
+        <input
+          type="text"
+          placeholder="Ismingizni kiriting"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+      </div>
 
       <div className="field">
         <label>Telefon raqamingiz</label>
@@ -150,7 +151,7 @@ export default function Cart({ user, onNavigate }) {
       </div>
 
       <div className="field">
-        <label>Manzil (lokatsiya)</label>
+        <label>Manzil (lokatsiya) — ixtiyoriy</label>
         <button className="btn btn-outline" onClick={getLocation} disabled={locating}>
           {locating
             ? 'Aniqlanmoqda...'

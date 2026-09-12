@@ -41,16 +41,17 @@ model Product {
 }
 
 model Order {
-  id         Int      @id @default(autoincrement())
-  userId     Int
-  items      Json
-  totalPrice Int
-  phone      String?
-  latitude   Float?
-  longitude  Float?
-  note       String?
-  status     String   @default("pending")
-  createdAt  DateTime @default(now())
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  items        Json
+  totalPrice   Int
+  customerName String?
+  phone        String?
+  latitude     Float?
+  longitude    Float?
+  note         String?
+  status       String   @default("pending")
+  createdAt    DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 

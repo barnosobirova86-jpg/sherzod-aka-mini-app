@@ -58,7 +58,7 @@ export async function getMyOrders(req, res) {
  */
 export async function createOrder(req, res) {
   try {
-    const { items = [], phone, latitude, longitude, note } = req.body;
+    const { items = [], name, phone, latitude, longitude, note } = req.body;
 
     if (!Array.isArray(items) || items.length === 0) {
       return res.status(400).json({ message: "Savatcha bo'sh" });
@@ -98,6 +98,7 @@ export async function createOrder(req, res) {
       userId: req.user.id,
       items: preparedItems,
       totalPrice,
+      customerName: name?.trim() || null,
       phone: phone || req.user.phone || null,
       latitude: latitude ? Number(latitude) : null,
       longitude: longitude ? Number(longitude) : null,
