@@ -12,7 +12,7 @@ const SLIDES = [
 // Silliq, cheksiz aylanish uchun oxiriga birinchi rasmning nusxasi qo'shiladi
 const LOOP_SLIDES = [...SLIDES, SLIDES[0]];
 
-const DISPLAY_MS = 2600; // har bir rasm shuncha vaqt to'liq ko'rinib turadi
+const DISPLAY_MS = 3000; // har bir rasm shuncha vaqt to'liq ko'rinib turadi
 
 export default function Banner() {
   const [index, setIndex] = useState(0);
