@@ -45,6 +45,13 @@ export async function telegramAuth(req, res, next) {
 
     if (initData) {
       tgUser = verifyInitData(initData, config.botToken);
+      if (!tgUser) {
+        console.log('[DEBUG auth] initData bor lekin tekshiruvdan o\'tmadi. Uzunlik:', initData.length);
+        console.log('[DEBUG auth] initData namunasi:', initData.slice(0, 120));
+        console.log('[DEBUG auth] BOT_TOKEN mavjudmi:', Boolean(config.botToken), 'uzunligi:', config.botToken?.length);
+      }
+    } else {
+      console.log('[DEBUG auth] x-telegram-init-data header umuman kelmadi. Yo\'l:', req.path);
     }
 
     // Brauzerda (Telegramsiz) test qilish uchun

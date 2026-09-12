@@ -1,11 +1,12 @@
 import { useCart } from '../context/CartContext.jsx';
 import { haptic } from '../telegram.js';
+import { HomeIcon, SearchIcon, CartIcon, ProfileIcon } from './NavIcons.jsx';
 
 const tabs = [
-  { id: 'home', icon: '🏠', label: 'Bosh sahifa' },
-  { id: 'catalog', icon: '🔍', label: 'Katalog' },
-  { id: 'cart', icon: '🛒', label: 'Savatcha' },
-  { id: 'profile', icon: '👤', label: 'Profil' },
+  { id: 'home', Icon: HomeIcon, label: 'Bosh sahifa' },
+  { id: 'catalog', Icon: SearchIcon, label: 'Katalog' },
+  { id: 'cart', Icon: CartIcon, label: 'Savatcha' },
+  { id: 'profile', Icon: ProfileIcon, label: 'Profil' },
 ];
 
 export default function BottomNav({ active, onChange }) {
@@ -13,18 +14,20 @@ export default function BottomNav({ active, onChange }) {
 
   return (
     <nav className="bottom-nav">
-      {tabs.map((tab) => (
+      {tabs.map(({ id, Icon, label }) => (
         <button
-          key={tab.id}
-          className={`nav-item ${active === tab.id ? 'active' : ''}`}
+          key={id}
+          className={`nav-item ${active === id ? 'active' : ''}`}
           onClick={() => {
             haptic('light');
-            onChange(tab.id);
+            onChange(id);
           }}
         >
-          <span className="nav-icon">{tab.icon}</span>
-          {tab.id === 'cart' && count > 0 && <span className="nav-badge">{count}</span>}
-          {tab.label}
+          <span className="nav-icon-wrap">
+            <Icon />
+            {id === 'cart' && count > 0 && <span className="nav-badge">{count}</span>}
+          </span>
+          <span className="nav-label">{label}</span>
         </button>
       ))}
     </nav>
