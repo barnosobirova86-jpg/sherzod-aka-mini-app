@@ -34,6 +34,15 @@ export function closeApp() {
 }
 
 /**
+ * Berilgan Telegram username bilan shaxsiy chatni ochadi
+ */
+export function openTelegramProfile(username) {
+  const url = `https://t.me/${username}`;
+  if (tg?.openTelegramLink) tg.openTelegramLink(url);
+  else window.open(url, '_blank');
+}
+
+/**
  * Lokatsiyani olish: avval Telegram LocationManager, keyin brauzer GPS
  */
 export function requestLocation() {

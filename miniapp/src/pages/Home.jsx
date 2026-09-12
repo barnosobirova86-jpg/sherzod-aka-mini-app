@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import ProductCard from '../components/ProductCard.jsx';
 import Banner from '../components/Banner.jsx';
+import ContactButton from '../components/ContactButton.jsx';
 import { api } from '../api.js';
 
 export default function Home({ user, onOpenProduct }) {
@@ -32,20 +33,7 @@ export default function Home({ user, onOpenProduct }) {
 
       <Banner />
 
-      <div className="info-row">
-        <div className="info-card">
-          <b>🚚 1 kun</b>
-          <span>Toshkent bo‘ylab</span>
-        </div>
-        <div className="info-card">
-          <b>✅ Kafolat</b>
-          <span>Almashtirish</span>
-        </div>
-        <div className="info-card">
-          <b>🕋 Asl</b>
-          <span>Sertifikatli</span>
-        </div>
-      </div>
+      <ContactButton />
 
       <div className="section-title">Ommabop mahsulotlar</div>
 
