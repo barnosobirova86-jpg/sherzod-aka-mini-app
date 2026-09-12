@@ -28,20 +28,26 @@ function verifyInitData(initData, botToken) {
       .digest('hex');
 
     if (calculatedHash !== hash) {
-      // Muqobil variant: '\/' ni '/' ga almashtirib ko'ramiz (ehtimoliy sabab)
+      // Muqobil 1: '\/' ni '/' ga almashtirib ko'ramiz
       const altString = dataCheckString.replace(/\\\//g, '/');
-      const altHash = crypto
-        .createHmac('sha256', secretKey)
-        .update(altString)
-        .digest('hex');
+      const altHash = crypto.createHmac('sha256', secretKey).update(altString).digest('hex');
 
-      console.log('[DEBUG auth] dataCheckString HEX:', Buffer.from(dataCheckString, 'utf8').toString('hex'));
-      console.log('[DEBUG auth] hisoblangan hash:    ', calculatedHash);
-      console.log('[DEBUG auth] muqobil (/ escapesiz):', altHash);
-      console.log('[DEBUG auth] kelgan hash:          ', hash);
-      console.log('[DEBUG auth] botToken HEX:', Buffer.from(botToken, 'utf8').toString('hex'));
+      // Muqobil 2: Login Widget uslubi (secret = SHA256(token), HMAC emas)
+      const loginSecret = crypto.createHash('sha256').update(botToken).digest();
+      const loginHash = crypto.createHmac('sha256', loginSecret).update(dataCheckString).digest('hex');
 
-      if (altHash === hash) {
+      // Muqobil 3: token trim qilingan holda (bo'sh joy bo'lsa)
+      const trimmedKey = crypto.createHmac('sha256', 'WebAppData').update(botToken.trim()).digest();
+      const trimmedHash = crypto.createHmac('sha256', trimmedKey).update(dataCheckString).digest('hex');
+
+      console.log('[DEBUG auth] hisoblangan (standart):  ', calculatedHash);
+      console.log('[DEBUG auth] muqobil (/ escapesiz):    ', altHash);
+      console.log('[DEBUG auth] muqobil (login-widget):   ', loginHash);
+      console.log('[DEBUG auth] muqobil (token.trim()):   ', trimmedHash);
+      console.log('[DEBUG auth] kelgan hash:              ', hash);
+
+      if (altHash === hash || loginHash === hash || trimmedHash === hash) {
+        console.log('[DEBUG auth] MOS TOPILDI!');
         const userRaw = params.get('user');
         return userRaw ? JSON.parse(userRaw) : null;
       }
