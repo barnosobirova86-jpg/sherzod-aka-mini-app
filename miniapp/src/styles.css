@@ -938,3 +938,55 @@ img {
   z-index: 39;
 }
 
+
+/* ---------- Banner (avtomatik almashinuvchi rasm) ---------- */
+
+.banner {
+  margin-top: 14px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.banner-track {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: var(--soft);
+}
+
+.banner-slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.banner-slide.active {
+  opacity: 1;
+}
+
+.banner-dots {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  padding: 10px 0;
+  background: var(--surface);
+}
+
+.banner-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--line);
+  transition: all 0.25s ease;
+}
+
+.banner-dot.active {
+  width: 18px;
+  border-radius: 4px;
+  background: var(--accent);
+}

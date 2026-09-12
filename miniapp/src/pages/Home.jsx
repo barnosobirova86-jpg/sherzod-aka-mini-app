@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import ProductCard from '../components/ProductCard.jsx';
+import Banner from '../components/Banner.jsx';
 import { api } from '../api.js';
 
 export default function Home({ user, onOpenProduct }) {
@@ -28,6 +29,8 @@ export default function Home({ user, onOpenProduct }) {
           {name.charAt(0).toUpperCase()}
         </div>
       </div>
+
+      <Banner />
 
       <div className="info-row">
         <div className="info-card">
