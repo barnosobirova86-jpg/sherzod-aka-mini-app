@@ -939,13 +939,33 @@ img {
 }
 
 
-/* ---------- Banner (avtomatik almashinuvchi rasm) ---------- */
+/* ---------- Banner (nurlanuvchi karusel) ---------- */
 
 .banner {
-  margin-top: 14px;
+  margin: 14px auto 0;
+  width: 78%;
+  border-radius: 18px;
+  padding: 3px;
+  position: relative;
+}
+
+.banner::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
   border-radius: 20px;
-  overflow: hidden;
-  box-shadow: var(--shadow);
+  background: linear-gradient(
+    120deg,
+    #d4af37,
+    #fff3c4,
+    #147a4f,
+    #d4af37,
+    #fff3c4
+  );
+  background-size: 300% 300%;
+  animation: banner-glow-spin 5s linear infinite;
+  filter: blur(6px);
+  opacity: 0.85;
 }
 
 .banner-track {
@@ -953,6 +973,24 @@ img {
   width: 100%;
   aspect-ratio: 16 / 10;
   background: var(--soft);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(43, 36, 23, 0.18);
+}
+
+@keyframes banner-glow-spin {
+  0% {
+    background-position: 0% 50%;
+    opacity: 0.6;
+  }
+  50% {
+    background-position: 100% 50%;
+    opacity: 1;
+  }
+  100% {
+    background-position: 0% 50%;
+    opacity: 0.6;
+  }
 }
 
 .banner-slide {
@@ -973,20 +1011,20 @@ img {
   display: flex;
   gap: 6px;
   justify-content: center;
-  padding: 10px 0;
-  background: var(--surface);
+  padding: 8px 0 2px;
+  position: relative;
 }
 
 .banner-dot {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
   background: var(--line);
   transition: all 0.25s ease;
 }
 
 .banner-dot.active {
-  width: 18px;
+  width: 15px;
   border-radius: 4px;
   background: var(--accent);
 }
