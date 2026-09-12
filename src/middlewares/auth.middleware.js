@@ -7,18 +7,19 @@ import User from '../models/User.js';
  */
 function verifyInitData(initData, botToken) {
   try {
-    console.log('[DEBUG auth] XOM initData HEX:', Buffer.from(initData, 'utf8').toString('hex'));
     const params = new URLSearchParams(initData);
-    console.log('[DEBUG auth] Barcha maydonlar:', [...params.keys()].join(', '));
     const hash = params.get('hash');
     if (!hash) return null;
 
+    // Faqat 'hash' o'zi tekshiruv qatoridan chiqariladi — 'signature'
+    // (Ed25519, uchinchi tomon tekshiruvi uchun) qolgan maydonlar qatorida
+    // qoladi, chunki Telegram HMAC hash'ni aynan shu maydon bilan birga
+    // hisoblaydi.
     params.delete('hash');
-    params.delete('signature');
 
     const dataCheckString = [...params.entries()]
-      .sort(([a], [b]) => a.localeCompare(b))
       .map(([key, value]) => `${key}=${value}`)
+      .sort()
       .join('\n');
 
     const secretKey = crypto.createHmac('sha256', 'WebAppData').update(botToken).digest();
@@ -27,38 +28,11 @@ function verifyInitData(initData, botToken) {
       .update(dataCheckString)
       .digest('hex');
 
-    if (calculatedHash !== hash) {
-      // Muqobil 1: '\/' ni '/' ga almashtirib ko'ramiz
-      const altString = dataCheckString.replace(/\\\//g, '/');
-      const altHash = crypto.createHmac('sha256', secretKey).update(altString).digest('hex');
-
-      // Muqobil 2: Login Widget uslubi (secret = SHA256(token), HMAC emas)
-      const loginSecret = crypto.createHash('sha256').update(botToken).digest();
-      const loginHash = crypto.createHmac('sha256', loginSecret).update(dataCheckString).digest('hex');
-
-      // Muqobil 3: token trim qilingan holda (bo'sh joy bo'lsa)
-      const trimmedKey = crypto.createHmac('sha256', 'WebAppData').update(botToken.trim()).digest();
-      const trimmedHash = crypto.createHmac('sha256', trimmedKey).update(dataCheckString).digest('hex');
-
-      console.log('[DEBUG auth] hisoblangan (standart):  ', calculatedHash);
-      console.log('[DEBUG auth] muqobil (/ escapesiz):    ', altHash);
-      console.log('[DEBUG auth] muqobil (login-widget):   ', loginHash);
-      console.log('[DEBUG auth] muqobil (token.trim()):   ', trimmedHash);
-      console.log('[DEBUG auth] kelgan hash:              ', hash);
-
-      if (altHash === hash || loginHash === hash || trimmedHash === hash) {
-        console.log('[DEBUG auth] MOS TOPILDI!');
-        const userRaw = params.get('user');
-        return userRaw ? JSON.parse(userRaw) : null;
-      }
-
-      return null;
-    }
+    if (calculatedHash !== hash) return null;
 
     const userRaw = params.get('user');
     return userRaw ? JSON.parse(userRaw) : null;
-  } catch (e) {
-    console.log('[DEBUG auth] verifyInitData exception:', e.message);
+  } catch {
     return null;
   }
 }
@@ -74,13 +48,6 @@ export async function telegramAuth(req, res, next) {
 
     if (initData) {
       tgUser = verifyInitData(initData, config.botToken);
-      if (!tgUser) {
-        console.log('[DEBUG auth] initData bor lekin tekshiruvdan o\'tmadi. Uzunlik:', initData.length);
-        console.log('[DEBUG auth] initData namunasi:', initData.slice(0, 120));
-        console.log('[DEBUG auth] BOT_TOKEN mavjudmi:', Boolean(config.botToken), 'uzunligi:', config.botToken?.length);
-      }
-    } else {
-      console.log('[DEBUG auth] x-telegram-init-data header umuman kelmadi. Yo\'l:', req.path);
     }
 
     // Brauzerda (Telegramsiz) test qilish uchun
