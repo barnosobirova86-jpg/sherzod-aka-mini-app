@@ -39,8 +39,6 @@ export default function Home({ user, onOpenProduct }) {
 
       <ContactButton />
 
-      <div className="section-title">Kategoriyalar</div>
-
       <CategoryRibbon active={activeCategory} onSelect={setActiveCategory} />
 
       {loading ? (
