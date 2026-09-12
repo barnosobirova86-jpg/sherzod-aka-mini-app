@@ -939,33 +939,11 @@ img {
 }
 
 
-/* ---------- Banner (nurlanuvchi karusel) ---------- */
+/* ---------- Banner (tez slayd karusel) ---------- */
 
 .banner {
   margin: 14px auto 0;
   width: 78%;
-  border-radius: 18px;
-  padding: 3px;
-  position: relative;
-}
-
-.banner::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: 20px;
-  background: linear-gradient(
-    120deg,
-    #d4af37,
-    #fff3c4,
-    #147a4f,
-    #d4af37,
-    #fff3c4
-  );
-  background-size: 300% 300%;
-  animation: banner-glow-spin 5s linear infinite;
-  filter: blur(6px);
-  opacity: 0.85;
 }
 
 .banner-track {
@@ -973,38 +951,23 @@ img {
   width: 100%;
   aspect-ratio: 16 / 10;
   background: var(--soft);
-  border-radius: 16px;
+  border-radius: 18px;
   overflow: hidden;
-  box-shadow: 0 4px 18px rgba(43, 36, 23, 0.18);
+  box-shadow: var(--shadow);
 }
 
-@keyframes banner-glow-spin {
-  0% {
-    background-position: 0% 50%;
-    opacity: 0.6;
-  }
-  50% {
-    background-position: 100% 50%;
-    opacity: 1;
-  }
-  100% {
-    background-position: 0% 50%;
-    opacity: 0.6;
-  }
+.banner-strip {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .banner-slide {
-  position: absolute;
-  inset: 0;
+  flex: 0 0 100%;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0;
-  transition: opacity 0.8s ease;
-}
-
-.banner-slide.active {
-  opacity: 1;
 }
 
 .banner-dots {
