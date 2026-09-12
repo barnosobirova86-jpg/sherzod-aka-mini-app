@@ -25,11 +25,17 @@ function verifyInitData(initData, botToken) {
       .update(dataCheckString)
       .digest('hex');
 
-    if (calculatedHash !== hash) return null;
+    if (calculatedHash !== hash) {
+      console.log('[DEBUG auth] TO\'LIQ dataCheckString:', JSON.stringify(dataCheckString));
+      console.log('[DEBUG auth] hisoblangan hash:', calculatedHash);
+      console.log('[DEBUG auth] kelgan hash:      ', hash);
+      return null;
+    }
 
     const userRaw = params.get('user');
     return userRaw ? JSON.parse(userRaw) : null;
-  } catch {
+  } catch (e) {
+    console.log('[DEBUG auth] verifyInitData exception:', e.message);
     return null;
   }
 }
