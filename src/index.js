@@ -15,8 +15,20 @@ const app = express();
 
 app.use(cors());
 
-// Telegram webhookni JSON parserdan oldin ro'yxatdan o'tkazish kerak (Telegraf o'zi o'qiydi)
 const WEBHOOK_PATH = '/telegram/webhook';
+
+// Render.com kabi xostinglar avtomatik ravishda o'z ochiq manzilini beradi.
+// U mavjud bo'lsa — webhook rejimi (uxlab qolsa ham keyingi xabarda uyg'onadi).
+// Bo'lmasa (o'z kompyuteringizda) — oddiy polling rejimi ishlaydi.
+const publicUrl = process.env.RENDER_EXTERNAL_URL || process.env.PUBLIC_URL || '';
+
+const bot = registerBotHandlers();
+
+// Webhook yo'li BOSHQA hamma routedan (va 404 tutuvchidan) oldin ro'yxatdan
+// o'tishi shart — aks holda Telegram xabarlari hech qachon botga yetib bormaydi.
+if (publicUrl) {
+  app.use(bot.webhookCallback(WEBHOOK_PATH));
+}
 
 app.use(express.json({ limit: '2mb' }));
 
@@ -34,17 +46,6 @@ app.use((req, res) => res.status(404).json({ message: 'Topilmadi' }));
 
 async function start() {
   await connectDatabase();
-
-  const bot = registerBotHandlers();
-
-  // Render.com kabi xostinglar avtomatik ravishda o'z ochiq manzilini beradi.
-  // U mavjud bo'lsa — webhook rejimi (uxlab qolsa ham keyingi xabarda uyg'onadi).
-  // Bo'lmasa (o'z kompyuteringizda) — oddiy polling rejimi ishlaydi.
-  const publicUrl = process.env.RENDER_EXTERNAL_URL || process.env.PUBLIC_URL || '';
-
-  if (publicUrl) {
-    app.use(bot.webhookCallback(WEBHOOK_PATH));
-  }
 
   app.listen(config.port, () => {
     console.log(`🚀 API ishga tushdi: http://localhost:${config.port}`);
