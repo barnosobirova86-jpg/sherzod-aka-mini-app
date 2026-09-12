@@ -12,7 +12,7 @@ const products = [
     imageUrl: '/uploads/kisva-ramka-oltin.jpg',
     oldPrice: 15500000,
     price: 12900000,
-    category: "Makkani po'shti",
+    category: 'Kisva',
     sizes: ['Katta (90x150 sm)'],
     features: [
       "Ka'ba kisvasidan asl bo'lak",
@@ -29,7 +29,7 @@ const products = [
     imageUrl: '/uploads/kisva-kaba-eshigi.png',
     oldPrice: 11800000,
     price: 9500000,
-    category: "Ka'ba eshigi",
+    category: 'Kisva',
     sizes: ['Katta (100x170 sm)'],
     features: [
       "Ka'ba eshigi pardasi nusxasi",
@@ -46,7 +46,7 @@ const products = [
     imageUrl: '/uploads/kisva-uch-medalyon.png',
     oldPrice: 9200000,
     price: 7800000,
-    category: "Makkani po'shti",
+    category: 'Kisva',
     sizes: ["O'rta (70x140 sm)"],
     features: [
       '3 ta oltin medalyon',
@@ -63,7 +63,7 @@ const products = [
     imageUrl: '/uploads/kisva-eshik-oltin.png',
     oldPrice: 8400000,
     price: 6900000,
-    category: "Ka'ba eshigi",
+    category: 'Kisva',
     sizes: ["O'rta (60x110 sm)"],
     features: [
       'Oltin rangli nozik naqsh',
@@ -80,7 +80,7 @@ const products = [
     imageUrl: '/uploads/kisva-yashil-qora.png',
     oldPrice: 7600000,
     price: 6200000,
-    category: 'Kolleksiya',
+    category: 'Kisva',
     sizes: ["O'rta (55x75 sm)"],
     features: [
       "2 ta asl bo'lak: yashil va qora",
@@ -97,7 +97,7 @@ const products = [
     imageUrl: '/uploads/kisva-qizil.png',
     oldPrice: 6800000,
     price: 5700000,
-    category: 'Kolleksiya',
+    category: 'Kisva',
     sizes: ["Kichik (45x60 sm)"],
     features: [
       'Nodir bordo rangdagi mato',
@@ -114,7 +114,7 @@ const products = [
     imageUrl: '/uploads/kisva-doira.png',
     oldPrice: 5900000,
     price: 4900000,
-    category: "Makkani po'shti",
+    category: 'Kisva',
     sizes: ["Kichik (40x40 sm)"],
     features: [
       'Doira shaklidagi kompozitsiya',
@@ -131,7 +131,7 @@ const products = [
     imageUrl: '/uploads/kisva-oltin-naqsh.png',
     oldPrice: 5400000,
     price: 4500000,
-    category: "Makkani po'shti",
+    category: 'Kisva',
     sizes: ["Kichik (35x50 sm)"],
     features: [
       "2 bo'lakli to'plam",
@@ -148,7 +148,7 @@ const products = [
     imageUrl: '/uploads/kisva-sertifikat.png',
     oldPrice: 4900000,
     price: 4200000,
-    category: 'Kolleksiya',
+    category: 'Kisva',
     sizes: ["Kichik (30x30 sm)"],
     features: [
       'Rasmiy sertifikat ilovasi',

@@ -1,21 +1,8 @@
-import { useEffect, useState } from 'react';
-import ProductCard from '../components/ProductCard.jsx';
 import Banner from '../components/Banner.jsx';
 import ContactButton from '../components/ContactButton.jsx';
-import { api } from '../api.js';
+import CategoryRibbon from '../components/CategoryRibbon.jsx';
 
-export default function Home({ user, onOpenProduct }) {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    api
-      .products()
-      .then((data) => setProducts(data.slice(0, 4)))
-      .catch(() => setProducts([]))
-      .finally(() => setLoading(false));
-  }, []);
-
+export default function Home({ user, onSelectCategory }) {
   const name = user?.firstName || 'Mehmon';
   const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(' ') || 'Mehmon';
 
@@ -35,19 +22,9 @@ export default function Home({ user, onOpenProduct }) {
 
       <ContactButton />
 
-      <div className="section-title">Ommabop mahsulotlar</div>
+      <div className="section-title">Kategoriyalar</div>
 
-      {loading ? (
-        <div className="loader">
-          <div className="spinner" />
-        </div>
-      ) : (
-        <div className="grid">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} onOpen={onOpenProduct} />
-          ))}
-        </div>
-      )}
+      <CategoryRibbon onSelect={onSelectCategory} />
     </div>
   );
 }

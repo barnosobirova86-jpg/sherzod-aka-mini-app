@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { api, formatPrice, resolveImage } from '../api.js';
+import { CATEGORIES } from '../categories.js';
 
 const emptyForm = {
   name: '',
   description: '',
   imageUrl: '',
-  category: "Makka po'shti",
+  category: CATEGORIES[0],
   price: '',
   oldPrice: '',
   sizes: 'S, M, L, XL',
@@ -296,7 +297,13 @@ export default function Products({ onExpire }) {
 
               <div className="field">
                 <label>Kategoriya *</label>
-                <input {...field('category')} required placeholder="Makka po‘shti" />
+                <select {...field('category')} required>
+                  {CATEGORIES.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="field">

@@ -1,17 +1,13 @@
 import { useEffect, useState } from 'react';
 import ProductCard from '../components/ProductCard.jsx';
+import { CATEGORIES } from '../categories.js';
 import { api } from '../api.js';
 import { haptic } from '../telegram.js';
 
-export default function Catalog({ onOpenProduct }) {
-  const [categories, setCategories] = useState([]);
-  const [active, setActive] = useState('all');
+export default function Catalog({ initialCategory, onOpenProduct }) {
+  const [active, setActive] = useState(initialCategory || 'all');
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    api.categories().then(setCategories).catch(() => setCategories([]));
-  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -37,16 +33,16 @@ export default function Catalog({ onOpenProduct }) {
         >
           Hammasi
         </button>
-        {categories.map((category) => (
+        {CATEGORIES.map((category) => (
           <button
-            key={category}
-            className={`chip ${active === category ? 'active' : ''}`}
+            key={category.name}
+            className={`chip ${active === category.name ? 'active' : ''}`}
             onClick={() => {
               haptic('light');
-              setActive(category);
+              setActive(category.name);
             }}
           >
-            {category}
+            {category.icon} {category.name}
           </button>
         ))}
       </div>

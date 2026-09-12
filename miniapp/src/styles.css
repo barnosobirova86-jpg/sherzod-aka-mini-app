@@ -1085,3 +1085,46 @@ img {
     left: 130%;
   }
 }
+
+/* ---------- Kategoriyalar lentasi (glass) ---------- */
+
+.category-ribbon {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 6px 16px 10px;
+  margin: 0 -16px;
+  scrollbar-width: none;
+}
+
+.category-ribbon::-webkit-scrollbar {
+  display: none;
+}
+
+.category-chip {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 20px;
+  border-radius: 18px;
+  white-space: nowrap;
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.32);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 6px 16px rgba(43, 36, 23, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  transition: transform 0.15s ease;
+}
+
+.category-chip:active {
+  transform: scale(0.96);
+}
+
+.category-chip-icon {
+  font-size: 17px;
+  line-height: 1;
+}
