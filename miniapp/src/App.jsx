@@ -23,12 +23,6 @@ export default function App() {
   const [tab, setTab] = useState('home');
   const [user, setUser] = useState(null);
   const [sheetProduct, setSheetProduct] = useState(null);
-  const [catalogCategory, setCatalogCategory] = useState('all');
-
-  function openCategory(category) {
-    setCatalogCategory(category);
-    setTab('catalog');
-  }
 
   useEffect(() => {
     initTelegram();
@@ -50,10 +44,8 @@ export default function App() {
 
   return (
     <div className="app">
-      {tab === 'home' && <Home user={user} onSelectCategory={openCategory} />}
-      {tab === 'catalog' && (
-        <Catalog initialCategory={catalogCategory} onOpenProduct={setSheetProduct} />
-      )}
+      {tab === 'home' && <Home user={user} onOpenProduct={setSheetProduct} />}
+      {tab === 'catalog' && <Catalog onOpenProduct={setSheetProduct} />}
       {tab === 'cart' && <Cart user={user} onNavigate={setTab} />}
       {tab === 'profile' && <Profile user={user} onNavigate={setTab} />}
 
