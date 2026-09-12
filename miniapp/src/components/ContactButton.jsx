@@ -11,7 +11,9 @@ export default function ContactButton() {
 
   return (
     <button className="contact-btn" onClick={handleClick}>
-      ART XIZMATIMIZ UCHUN MUROJAT QILING
+      <span className="contact-arrow contact-arrow-left">➜</span>
+      <span className="contact-btn-text">ART XIZMATLARIMIZ UCHUN BOSING</span>
+      <span className="contact-arrow contact-arrow-right">➜</span>
     </button>
   );
 }
