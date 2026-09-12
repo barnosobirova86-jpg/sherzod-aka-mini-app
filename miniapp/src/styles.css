@@ -464,6 +464,24 @@ img {
   font-weight: 700;
 }
 
+.card-out {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 999px;
+}
+
+.card-stock {
+  margin-top: 4px;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
 .card-body {
   padding: 10px 12px 14px;
   display: flex;

@@ -37,6 +37,14 @@ export function clearToken() {
   }
 }
 
+/**
+ * Yangi buyurtmalarni jonli kuzatish uchun manzil (EventSource maxsus
+ * header yubora olmagani uchun parol query orqali beriladi).
+ */
+export function eventsUrl() {
+  return `${BASE}/events?password=${encodeURIComponent(getToken())}`;
+}
+
 async function request(path, options = {}) {
   const response = await fetch(BASE + path, {
     ...options,

@@ -9,6 +9,7 @@ const emptyForm = {
   category: CATEGORIES[0],
   price: '',
   oldPrice: '',
+  stock: '0',
   sizes: 'S, M, L, XL',
   features: '',
   isRecommended: false,
@@ -47,6 +48,16 @@ export default function Products({ onExpire }) {
     if (editing) api.uploads().then(setGallery).catch(() => setGallery([]));
   }, [editing]);
 
+  // Modal ochiq paytda orqa fon qotib tursin (faqat modal ichi scroll bo'ladi)
+  useEffect(() => {
+    if (editing) {
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = '';
+      };
+    }
+  }, [editing]);
+
   async function handleUpload(event) {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -77,6 +88,7 @@ export default function Products({ onExpire }) {
       category: product.category,
       price: String(product.price),
       oldPrice: product.oldPrice ? String(product.oldPrice) : '',
+      stock: String(product.stock ?? 0),
       sizes: (product.sizes || []).join(', '),
       features: (product.features || []).join('\n'),
       isRecommended: product.isRecommended,
@@ -93,6 +105,7 @@ export default function Products({ onExpire }) {
         ...form,
         price: Number(form.price),
         oldPrice: form.oldPrice ? Number(form.oldPrice) : null,
+        stock: Number(form.stock) || 0,
       };
 
       if (editing === 'new') await api.createProduct(payload);
@@ -162,6 +175,7 @@ export default function Products({ onExpire }) {
                     <th>Ўлчамлар</th>
                     <th>Эски нарх</th>
                     <th>Нарх</th>
+                    <th>Омборда</th>
                     <th>Ҳолат</th>
                     <th>Амаллар</th>
                   </tr>
@@ -186,6 +200,13 @@ export default function Products({ onExpire }) {
                       </td>
                       <td style={{ whiteSpace: 'nowrap' }}>
                         <b>{formatPrice(product.price)}</b> сўм
+                      </td>
+                      <td>
+                        {product.stock > 0 ? (
+                          <span className="badge delivered">{product.stock} дона</span>
+                        ) : (
+                          <span className="badge canceled">Тугаган</span>
+                        )}
                       </td>
                       <td>
                         {product.isActive ? (
@@ -238,6 +259,11 @@ export default function Products({ onExpire }) {
                         <span className="badge muted">Яширилган</span>
                       )}
                       {product.isRecommended && <span className="badge pending">Тавсия</span>}
+                      {product.stock > 0 ? (
+                        <span className="badge delivered">{product.stock} дона</span>
+                      ) : (
+                        <span className="badge canceled">Тугаган</span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -305,7 +331,7 @@ export default function Products({ onExpire }) {
                       onClick={() => fileRef.current?.click()}
                       disabled={uploading}
                     >
-                      {uploading ? 'Юкланмоқда...' : '📁 Компьютердан расм танлаш'}
+                      {uploading ? 'Юкланмоқда...' : '📁 Расм жойлаш'}
                     </button>
                     {form.imageUrl && (
                       <button
@@ -370,6 +396,11 @@ export default function Products({ onExpire }) {
               <div className="field">
                 <label>Янги нарх (сўм) *</label>
                 <input {...field('price')} type="number" required placeholder="390000" />
+              </div>
+
+              <div className="field">
+                <label>Омборда қанча бор (дона)</label>
+                <input {...field('stock')} type="number" min="0" placeholder="10" />
               </div>
 
               <div className="field full">

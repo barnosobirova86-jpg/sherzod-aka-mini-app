@@ -1,13 +1,14 @@
 :root {
-  --bg: #f7f7f8;
+  --bg: #f7f1e3;
   --surface: #ffffff;
-  --line: #e9e9ec;
-  --text: #101014;
-  --muted: #85858f;
+  --line: #ece1c8;
+  --text: #2b2417;
+  --muted: #948a72;
   --accent: #147a4f;
   --accent-soft: #e8f4ee;
   --danger: #e23e3e;
-  --radius: 14px;
+  --radius: 18px;
+  --shadow: 0 6px 20px rgba(43, 36, 23, 0.08);
 }
 
 * {
@@ -56,7 +57,8 @@ img {
 .login-card {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 20px;
+  box-shadow: var(--shadow);
+  border-radius: 22px;
   padding: 32px;
   width: 100%;
   max-width: 360px;
@@ -83,6 +85,7 @@ img {
   width: 232px;
   background: var(--surface);
   border-right: 1px solid var(--line);
+  box-shadow: var(--shadow);
   padding: 22px 16px;
   display: flex;
   flex-direction: column;
@@ -163,6 +166,7 @@ img {
 .stat {
   background: var(--surface);
   border: 1px solid var(--line);
+  box-shadow: var(--shadow);
   border-radius: var(--radius);
   padding: 16px 18px;
 }
@@ -184,6 +188,7 @@ img {
 .card {
   background: var(--surface);
   border: 1px solid var(--line);
+  box-shadow: var(--shadow);
   border-radius: var(--radius);
   overflow: hidden;
 }
@@ -322,6 +327,7 @@ tr:last-child td {
   border-radius: 999px;
   background: var(--surface);
   border: 1px solid var(--line);
+  box-shadow: var(--shadow);
   color: var(--muted);
   font-weight: 600;
   font-size: 13px;
@@ -495,8 +501,9 @@ tr:last-child td {
 .product-card-admin {
   background: var(--surface);
   border: 1px solid var(--line);
+  box-shadow: var(--shadow);
   border-radius: var(--radius);
-  padding: 14px 16px;
+  padding: 16px 18px;
 }
 
 .oca-top {

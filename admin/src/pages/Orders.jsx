@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { api, formatPrice, formatDate } from '../api.js';
+import { api, eventsUrl, formatPrice, formatDate } from '../api.js';
 
 const filters = [
   { id: 'all', label: 'Ҳаммаси' },
@@ -40,9 +40,19 @@ export default function Orders({ onExpire }) {
     load();
   }, [load]);
 
-  // Har 15 soniyada yangi buyurtmalarni avtomatik tekshirish
+  // Yangi buyurtma tushishi bilan jonli (real-time) xabar olish
   useEffect(() => {
-    const timer = setInterval(load, 15000);
+    const source = new EventSource(eventsUrl());
+    source.addEventListener('new-order', load);
+    source.onerror = () => {
+      /* uzilib qolsa, pastdagi zaxira interval baribir yangilab turadi */
+    };
+    return () => source.close();
+  }, [load]);
+
+  // Zaxira: EventSource uzilib qolgan taqdirda ham har 30 soniyada tekshirish
+  useEffect(() => {
+    const timer = setInterval(load, 30000);
     return () => clearInterval(timer);
   }, [load]);
 
@@ -91,7 +101,7 @@ export default function Orders({ onExpire }) {
       <div className="page-head">
         <div>
           <h1>Буюртмалар</h1>
-          <p>Янги буюртмалар ҳар 15 сонияда автоматик янгиланади</p>
+          <p>Янги буюртмалар шу заҳоти автоматик пайдо бўлади</p>
         </div>
         <button className="btn btn-light" onClick={load}>
           🔄 Янгилаш

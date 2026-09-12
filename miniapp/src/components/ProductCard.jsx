@@ -14,15 +14,19 @@ export default function ProductCard({ product, onOpen }) {
   const key = `${product.id}__${size || ''}`;
   const cartItem = items.find((i) => i.key === key);
   const qty = cartItem?.qty || 0;
+  const stock = product.stock ?? 0;
+  const outOfStock = stock <= 0;
 
   function quickAdd(event) {
     event.stopPropagation();
+    if (outOfStock) return;
     haptic('medium');
     addItem(product, size, 1);
   }
 
   function increase(event) {
     event.stopPropagation();
+    if (qty >= stock) return;
     haptic('light');
     changeQty(key, 1);
   }
@@ -38,7 +42,9 @@ export default function ProductCard({ product, onOpen }) {
       <div className="card-img">
         <img src={resolveImage(product.imageUrl)} alt={product.name} loading="lazy" />
         {discount > 0 && <span className="card-badge">-{discount}%</span>}
-        {qty > 0 ? (
+        {outOfStock ? (
+          <span className="card-out">Тугаган</span>
+        ) : qty > 0 ? (
           <div className="card-qty-stepper" onClick={(e) => e.stopPropagation()}>
             <button className="card-qty-btn" onClick={decrease} aria-label="Kamaytirish">
               −
@@ -63,6 +69,7 @@ export default function ProductCard({ product, onOpen }) {
             <span className="price-old">{formatPrice(product.oldPrice)}</span>
           )}
         </div>
+        {!outOfStock && <div className="card-stock">Омборда: {stock} дона</div>}
       </div>
     </div>
   );

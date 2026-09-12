@@ -31,6 +31,7 @@ model Product {
   oldPrice      Int?
   price         Int
   category      String
+  stock         Int      @default(0)
   sizes         String[] @default([])
   features      String[] @default([])
   isRecommended Boolean  @default(false)

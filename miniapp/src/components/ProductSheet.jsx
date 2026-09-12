@@ -7,8 +7,11 @@ export default function ProductSheet({ product, onClose }) {
   const { addItem } = useCart();
   const [size, setSize] = useState(product.sizes?.[0] || null);
   const [qty, setQty] = useState(1);
+  const stock = product.stock ?? 0;
+  const outOfStock = stock <= 0;
 
   function submit() {
+    if (outOfStock) return;
     haptic('medium');
     addItem(product, size, qty);
     onClose();
@@ -80,13 +83,20 @@ export default function ProductSheet({ product, onClose }) {
           <div className="qty" style={{ marginTop: 10 }}>
             <button onClick={() => setQty((q) => Math.max(1, q - 1))}>−</button>
             <span>{qty}</span>
-            <button onClick={() => setQty((q) => q + 1)}>+</button>
+            <button onClick={() => setQty((q) => Math.min(stock, q + 1))} disabled={outOfStock}>
+              +
+            </button>
+          </div>
+          <div className="muted" style={{ fontSize: 12.5, marginTop: 6 }}>
+            {outOfStock ? 'Тугаган' : `Омборда: ${stock} дона`}
           </div>
         </div>
 
         <div className="sheet-footer">
-          <button className="btn btn-accent" onClick={submit}>
-            Саватчага қўшиш — {formatPrice(product.price * qty)} сўм
+          <button className="btn btn-accent" onClick={submit} disabled={outOfStock}>
+            {outOfStock
+              ? 'Тугаган'
+              : `Саватчага қўшиш — ${formatPrice(product.price * qty)} сўм`}
           </button>
         </div>
       </div>

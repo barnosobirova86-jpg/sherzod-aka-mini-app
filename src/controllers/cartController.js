@@ -2,6 +2,7 @@ import Product from '../models/Product.js';
 import Order from '../models/Order.js';
 import User from '../models/User.js';
 import { sendMessage } from '../core/bot.js';
+import { broadcast } from '../core/sse.js';
 import { buildOrderMessage } from './botController.js';
 
 export async function getProducts(req, res) {
@@ -127,6 +128,9 @@ export async function createOrder(req, res) {
 
     // Mijozga botdan xabar
     await sendMessage(req.user.telegramId, buildOrderMessage(order));
+
+    // Admin panelga jonli xabar (yangilashga hojat qolmasin)
+    broadcast('new-order', { orderId: order.id });
 
     res.status(201).json(order);
   } catch (error) {
