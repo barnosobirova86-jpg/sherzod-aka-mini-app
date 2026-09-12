@@ -488,6 +488,40 @@ img {
   box-shadow: var(--shadow);
 }
 
+.card-qty-stepper {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  border-radius: 999px;
+  box-shadow: var(--shadow);
+  padding: 4px;
+}
+
+.card-qty-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  color: var(--btn-fg);
+  font-size: 16px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-qty-value {
+  min-width: 16px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+}
+
 .card-body {
   padding: 10px 12px 14px;
   display: flex;
