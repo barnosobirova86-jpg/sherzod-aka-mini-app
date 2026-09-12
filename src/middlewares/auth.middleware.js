@@ -7,7 +7,9 @@ import User from '../models/User.js';
  */
 function verifyInitData(initData, botToken) {
   try {
+    console.log('[DEBUG auth] XOM initData HEX:', Buffer.from(initData, 'utf8').toString('hex'));
     const params = new URLSearchParams(initData);
+    console.log('[DEBUG auth] Barcha maydonlar:', [...params.keys()].join(', '));
     const hash = params.get('hash');
     if (!hash) return null;
 
