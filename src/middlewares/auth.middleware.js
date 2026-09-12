@@ -26,9 +26,24 @@ function verifyInitData(initData, botToken) {
       .digest('hex');
 
     if (calculatedHash !== hash) {
-      console.log('[DEBUG auth] TO\'LIQ dataCheckString:', JSON.stringify(dataCheckString));
-      console.log('[DEBUG auth] hisoblangan hash:', calculatedHash);
-      console.log('[DEBUG auth] kelgan hash:      ', hash);
+      // Muqobil variant: '\/' ni '/' ga almashtirib ko'ramiz (ehtimoliy sabab)
+      const altString = dataCheckString.replace(/\\\//g, '/');
+      const altHash = crypto
+        .createHmac('sha256', secretKey)
+        .update(altString)
+        .digest('hex');
+
+      console.log('[DEBUG auth] dataCheckString HEX:', Buffer.from(dataCheckString, 'utf8').toString('hex'));
+      console.log('[DEBUG auth] hisoblangan hash:    ', calculatedHash);
+      console.log('[DEBUG auth] muqobil (/ escapesiz):', altHash);
+      console.log('[DEBUG auth] kelgan hash:          ', hash);
+      console.log('[DEBUG auth] botToken HEX:', Buffer.from(botToken, 'utf8').toString('hex'));
+
+      if (altHash === hash) {
+        const userRaw = params.get('user');
+        return userRaw ? JSON.parse(userRaw) : null;
+      }
+
       return null;
     }
 
