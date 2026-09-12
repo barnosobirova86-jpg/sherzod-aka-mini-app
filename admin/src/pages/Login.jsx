@@ -25,15 +25,15 @@ export default function Login({ onSuccess }) {
     <div className="login-wrap">
       <form className="login-card" onSubmit={submit}>
         <div className="login-logo">🕋</div>
-        <h1>Kisva Shop — Admin</h1>
-        <p style={{ color: 'var(--muted)', marginTop: 0 }}>Panelga kirish uchun parolni kiriting</p>
+        <h1>Кисва Шоп — Админ</h1>
+        <p style={{ color: 'var(--muted)', marginTop: 0 }}>Панелга кириш учун паролни киритинг</p>
 
         {error && <div className="error">{error}</div>}
 
         <div className="field" style={{ marginTop: 16 }}>
           <input
             type="password"
-            placeholder="Parol"
+            placeholder="Парол"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             autoFocus
@@ -41,7 +41,7 @@ export default function Login({ onSuccess }) {
         </div>
 
         <button className="btn btn-accent" style={{ width: '100%', marginTop: 14 }} disabled={loading}>
-          {loading ? 'Tekshirilmoqda...' : 'Kirish'}
+          {loading ? 'Текширилмоқда...' : 'Кириш'}
         </button>
       </form>
     </div>

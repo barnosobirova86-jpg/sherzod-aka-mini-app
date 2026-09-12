@@ -66,11 +66,11 @@ export function requestLocation() {
 
 function browserLocation(resolve, reject) {
   if (!navigator.geolocation) {
-    return reject(new Error('Qurilmangiz lokatsiyani qo\'llab-quvvatlamaydi'));
+    return reject(new Error('Қурилмангиз локацияни қўллаб-қувватламайди'));
   }
   navigator.geolocation.getCurrentPosition(
     (pos) => resolve({ latitude: pos.coords.latitude, longitude: pos.coords.longitude }),
-    () => reject(new Error('Lokatsiyaga ruxsat berilmadi')),
+    () => reject(new Error('Локацияга рухсат берилмади')),
     { enableHighAccuracy: true, timeout: 10000 }
   );
 }

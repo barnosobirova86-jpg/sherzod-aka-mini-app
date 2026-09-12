@@ -32,7 +32,7 @@ export default function Products({ onExpire }) {
       setError('');
     } catch (err) {
       setError(err.message);
-      if (err.message.includes('Sessiya')) onExpire();
+      if (err.message.includes('Сессия')) onExpire();
     } finally {
       setLoading(false);
     }
@@ -108,7 +108,7 @@ export default function Products({ onExpire }) {
   }
 
   async function remove(product) {
-    if (!confirm(`"${product.name}" o'chirilsinmi?`)) return;
+    if (!confirm(`"${product.name}" ўчирилсинми?`)) return;
     try {
       await api.deleteProduct(product.id);
       load();
@@ -131,112 +131,163 @@ export default function Products({ onExpire }) {
     <>
       <div className="page-head">
         <div>
-          <h1>Mahsulotlar</h1>
-          <p>Yangi mahsulot qo‘shing, narx va rasmlarni tahrirlang</p>
+          <h1>Маҳсулотлар</h1>
+          <p>Янги маҳсулот қўшинг, нарх ва расмларни таҳрирланг</p>
         </div>
         <button className="btn btn-accent" onClick={openNew}>
-          + Yangi mahsulot
+          + Янги маҳсулот
         </button>
       </div>
 
       {error && <div className="error">{error}</div>}
 
-      <div className="card">
-        {loading ? (
-          <div className="loading">Yuklanmoqda...</div>
-        ) : products.length === 0 ? (
-          <div className="empty">Mahsulotlar yo‘q</div>
-        ) : (
-          <div className="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th>Rasm</th>
-                  <th>Nomi</th>
-                  <th>Kategoriya</th>
-                  <th>O‘lchamlar</th>
-                  <th>Eski narx</th>
-                  <th>Narx</th>
-                  <th>Holat</th>
-                  <th>Amallar</th>
-                </tr>
-              </thead>
-              <tbody>
-                {products.map((product) => (
-                  <tr key={product.id}>
-                    <td>
-                      <img className="thumb" src={resolveImage(product.imageUrl)} alt={product.name} />
-                    </td>
-                    <td style={{ maxWidth: 260 }}>
-                      <b>{product.name}</b>
-                      <div style={{ color: 'var(--muted)', fontSize: 12, marginTop: 2 }}>
-                        {product.description?.slice(0, 70)}
-                        {product.description?.length > 70 ? '...' : ''}
-                      </div>
-                    </td>
-                    <td>{product.category}</td>
-                    <td>{(product.sizes || []).join(', ') || '—'}</td>
-                    <td style={{ color: 'var(--muted)', textDecoration: 'line-through' }}>
-                      {product.oldPrice ? formatPrice(product.oldPrice) : '—'}
-                    </td>
-                    <td style={{ whiteSpace: 'nowrap' }}>
-                      <b>{formatPrice(product.price)}</b> so‘m
-                    </td>
-                    <td>
-                      {product.isActive ? (
-                        <span className="badge delivered">Faol</span>
-                      ) : (
-                        <span className="badge muted">Yashirilgan</span>
-                      )}
-                      {product.isRecommended && (
-                        <div style={{ marginTop: 4 }}>
-                          <span className="badge pending">Tavsiya</span>
-                        </div>
-                      )}
-                    </td>
-                    <td>
-                      <div className="row-actions">
-                        <button className="btn btn-light btn-sm" onClick={() => openEdit(product)}>
-                          ✎ Tahrirlash
-                        </button>
-                        <button className="btn btn-danger btn-sm" onClick={() => remove(product)}>
-                          🗑 O‘chirish
-                        </button>
-                      </div>
-                    </td>
+      {loading ? (
+        <div className="card">
+          <div className="loading">Юкланмоқда...</div>
+        </div>
+      ) : products.length === 0 ? (
+        <div className="card">
+          <div className="empty">Маҳсулотлар йўқ</div>
+        </div>
+      ) : (
+        <>
+          <div className="card table-only">
+            <div className="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Расм</th>
+                    <th>Номи</th>
+                    <th>Категория</th>
+                    <th>Ўлчамлар</th>
+                    <th>Эски нарх</th>
+                    <th>Нарх</th>
+                    <th>Ҳолат</th>
+                    <th>Амаллар</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {products.map((product) => (
+                    <tr key={product.id}>
+                      <td>
+                        <img className="thumb" src={resolveImage(product.imageUrl)} alt={product.name} />
+                      </td>
+                      <td style={{ maxWidth: 260 }}>
+                        <b>{product.name}</b>
+                        <div style={{ color: 'var(--muted)', fontSize: 12, marginTop: 2 }}>
+                          {product.description?.slice(0, 70)}
+                          {product.description?.length > 70 ? '...' : ''}
+                        </div>
+                      </td>
+                      <td>{product.category}</td>
+                      <td>{(product.sizes || []).join(', ') || '—'}</td>
+                      <td style={{ color: 'var(--muted)', textDecoration: 'line-through' }}>
+                        {product.oldPrice ? formatPrice(product.oldPrice) : '—'}
+                      </td>
+                      <td style={{ whiteSpace: 'nowrap' }}>
+                        <b>{formatPrice(product.price)}</b> сўм
+                      </td>
+                      <td>
+                        {product.isActive ? (
+                          <span className="badge delivered">Фаол</span>
+                        ) : (
+                          <span className="badge muted">Яширилган</span>
+                        )}
+                        {product.isRecommended && (
+                          <div style={{ marginTop: 4 }}>
+                            <span className="badge pending">Тавсия</span>
+                          </div>
+                        )}
+                      </td>
+                      <td>
+                        <div className="row-actions">
+                          <button className="btn btn-light btn-sm" onClick={() => openEdit(product)}>
+                            ✎ Таҳрирлаш
+                          </button>
+                          <button className="btn btn-danger btn-sm" onClick={() => remove(product)}>
+                            🗑 Ўчириш
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        )}
-      </div>
+
+          <div className="product-cards cards-only">
+            {products.map((product) => (
+              <div className="product-card-admin" key={product.id}>
+                <div className="pca-top">
+                  <img className="thumb" src={resolveImage(product.imageUrl)} alt={product.name} />
+                  <div className="pca-body">
+                    <b>{product.name}</b>
+                    <div className="pca-desc">
+                      {product.description?.slice(0, 70)}
+                      {product.description?.length > 70 ? '...' : ''}
+                    </div>
+                    <div className="pca-meta">
+                      <span className="badge muted">{product.category}</span>
+                      {(product.sizes || []).length > 0 && (
+                        <span className="badge muted">{product.sizes.join(', ')}</span>
+                      )}
+                      {product.isActive ? (
+                        <span className="badge delivered">Фаол</span>
+                      ) : (
+                        <span className="badge muted">Яширилган</span>
+                      )}
+                      {product.isRecommended && <span className="badge pending">Тавсия</span>}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pca-price">
+                  <b>{formatPrice(product.price)} сўм</b>
+                  {product.oldPrice > 0 && (
+                    <span className="pca-old">{formatPrice(product.oldPrice)}</span>
+                  )}
+                </div>
+
+                <div className="row-actions pca-actions">
+                  <button className="btn btn-light btn-sm" onClick={() => openEdit(product)}>
+                    ✎ Таҳрирлаш
+                  </button>
+                  <button className="btn btn-danger btn-sm" onClick={() => remove(product)}>
+                    🗑 Ўчириш
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
 
       {editing && (
         <div className="modal-backdrop" onClick={() => setEditing(null)}>
           <form className="modal" onClick={(e) => e.stopPropagation()} onSubmit={save}>
-            <h2>{editing === 'new' ? 'Yangi mahsulot' : 'Mahsulotni tahrirlash'}</h2>
+            <h2>{editing === 'new' ? 'Янги маҳсулот' : 'Маҳсулотни таҳрирлаш'}</h2>
 
             <div className="form-grid">
               <div className="field full">
-                <label>Nomi *</label>
-                <input {...field('name')} required placeholder="Makka po‘shti — Oq" />
+                <label>Номи *</label>
+                <input {...field('name')} required placeholder="Макка пўшти — Оқ" />
               </div>
 
               <div className="field full">
-                <label>Ta’rifi</label>
-                <textarea {...field('description')} rows={3} placeholder="Qisqacha ta’rif" />
+                <label>Таърифи</label>
+                <textarea {...field('description')} rows={3} placeholder="Қисқача таъриф" />
               </div>
 
               <div className="field full">
-                <label>Mahsulot rasmi</label>
+                <label>Маҳсулот расми</label>
 
                 <div className="image-picker">
                   <div className="image-preview">
                     {form.imageUrl ? (
                       <img src={resolveImage(form.imageUrl)} alt="" />
                     ) : (
-                      <span>Rasm yo'q</span>
+                      <span>Расм йўқ</span>
                     )}
                   </div>
 
@@ -254,7 +305,7 @@ export default function Products({ onExpire }) {
                       onClick={() => fileRef.current?.click()}
                       disabled={uploading}
                     >
-                      {uploading ? 'Yuklanmoqda...' : '📁 Kompyuterdan rasm tanlash'}
+                      {uploading ? 'Юкланмоқда...' : '📁 Компьютердан расм танлаш'}
                     </button>
                     {form.imageUrl && (
                       <button
@@ -262,12 +313,12 @@ export default function Products({ onExpire }) {
                         className="btn btn-light btn-sm"
                         onClick={() => setForm((prev) => ({ ...prev, imageUrl: '' }))}
                       >
-                        Rasmni olib tashlash
+                        Расмни олиб ташлаш
                       </button>
                     )}
                     <input
                       {...field('imageUrl')}
-                      placeholder="yoki rasm havolasini shu yerga qo'ying"
+                      placeholder="ёки расм ҳаволасини шу ерга қўйинг"
                       style={{ marginTop: 4 }}
                     />
                   </div>
@@ -276,7 +327,7 @@ export default function Products({ onExpire }) {
                 {gallery.length > 0 && (
                   <>
                     <div className="gallery-title">
-                      Yuklangan rasmlar ({gallery.length}) — tanlash uchun bosing
+                      Юкланган расмлар ({gallery.length}) — танлаш учун босинг
                     </div>
                     <div className="gallery">
                       {gallery.map((item) => (
@@ -296,7 +347,7 @@ export default function Products({ onExpire }) {
               </div>
 
               <div className="field">
-                <label>Kategoriya *</label>
+                <label>Категория *</label>
                 <select {...field('category')} required>
                   {CATEGORIES.map((cat) => (
                     <option key={cat} value={cat}>
@@ -307,46 +358,46 @@ export default function Products({ onExpire }) {
               </div>
 
               <div className="field">
-                <label>O‘lchamlar (vergul bilan)</label>
+                <label>Ўлчамлар (вергул билан)</label>
                 <input {...field('sizes')} placeholder="S, M, L, XL" />
               </div>
 
               <div className="field">
-                <label>Eski narx (so‘m)</label>
+                <label>Эски нарх (сўм)</label>
                 <input {...field('oldPrice')} type="number" placeholder="450000" />
               </div>
 
               <div className="field">
-                <label>Yangi narx (so‘m) *</label>
+                <label>Янги нарх (сўм) *</label>
                 <input {...field('price')} type="number" required placeholder="390000" />
               </div>
 
               <div className="field full">
-                <label>Tarkibi / xususiyatlari (har biri yangi qatordan)</label>
+                <label>Таркиби / хусусиятлари (ҳар бири янги қатордан)</label>
                 <textarea
                   {...field('features')}
                   rows={4}
-                  placeholder={'100% paxta mato\nMakkadan original\nSovg‘a qutisi bilan'}
+                  placeholder={'100% пахта мато\nМаккадан оригинал\nСовға қутиси билан'}
                 />
               </div>
 
               <label className="checkbox">
                 <input type="checkbox" {...check('isActive')} />
-                Do‘konda ko‘rinsin
+                Дўконда кўринсин
               </label>
 
               <label className="checkbox">
                 <input type="checkbox" {...check('isRecommended')} />
-                Savatchada tavsiya qilinsin
+                Саватчада тавсия қилинсин
               </label>
             </div>
 
             <div className="modal-actions">
               <button type="button" className="btn btn-light" onClick={() => setEditing(null)}>
-                Bekor qilish
+                Бекор қилиш
               </button>
               <button className="btn btn-accent" disabled={saving}>
-                {saving ? 'Saqlanmoqda...' : 'Saqlash'}
+                {saving ? 'Сақланмоқда...' : 'Сақлаш'}
               </button>
             </div>
           </form>

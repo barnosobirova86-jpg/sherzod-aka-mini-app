@@ -42,7 +42,7 @@ app.get('/', (req, res) => {
 app.use('/api', clientRoutes);
 app.use('/api/admin', adminRoutes);
 
-app.use((req, res) => res.status(404).json({ message: 'Topilmadi' }));
+app.use((req, res) => res.status(404).json({ message: 'Топилмади' }));
 
 async function start() {
   await connectDatabase();

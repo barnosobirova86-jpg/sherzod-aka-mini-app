@@ -27,7 +27,7 @@ async function request(path, options = {}) {
 
   if (!response.ok) {
     const data = await response.json().catch(() => ({}));
-    throw new Error(data.message || 'Xatolik yuz berdi');
+    throw new Error(data.message || 'Хатолик юз берди');
   }
   return response.json();
 }
@@ -38,6 +38,8 @@ export const api = {
   categories: () => request('/categories'),
   recommended: () => request('/recommended'),
   me: () => request('/me'),
+  updateProfile: (payload) =>
+    request('/profile', { method: 'POST', body: JSON.stringify(payload) }),
   myOrders: () => request('/orders'),
   createOrder: (payload) =>
     request('/orders', { method: 'POST', body: JSON.stringify(payload) }),

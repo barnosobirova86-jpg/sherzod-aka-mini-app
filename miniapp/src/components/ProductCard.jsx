@@ -58,7 +58,7 @@ export default function ProductCard({ product, onOpen }) {
       <div className="card-body">
         <div className="card-name">{product.name}</div>
         <div className="price-row">
-          <span className="price-new">{formatPrice(product.price)} so‘m</span>
+          <span className="price-new">{formatPrice(product.price)} сўм</span>
           {product.oldPrice > 0 && (
             <span className="price-old">{formatPrice(product.oldPrice)}</span>
           )}

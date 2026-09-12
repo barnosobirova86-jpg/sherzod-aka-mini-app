@@ -9,13 +9,14 @@ datasource db {
 }
 
 model User {
-  id         Int      @id @default(autoincrement())
-  telegramId String   @unique
-  firstName  String
-  lastName   String?
-  username   String?
-  phone      String?
-  createdAt  DateTime @default(now())
+  id          Int      @id @default(autoincrement())
+  telegramId  String   @unique
+  firstName   String
+  lastName    String?
+  username    String?
+  phone       String?
+  contactName String?
+  createdAt   DateTime @default(now())
 
   orders Order[]
 

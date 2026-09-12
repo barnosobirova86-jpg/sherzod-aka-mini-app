@@ -11,19 +11,19 @@ const config = {
   webAppUrl: process.env.WEBAPP_URL || 'http://localhost:5173',
   adminPassword: process.env.ADMIN_PASSWORD || 'admin123',
   allowDevAuth: process.env.ALLOW_DEV_AUTH === 'true',
-  shopName: 'Kisva Shop',
-  currency: "so'm",
+  shopName: 'Кисва Шоп',
+  currency: 'сўм',
   texts: {
     start: (name) =>
-      `<b>${name} aka, xush kelibsiz!</b> 👋\n\n` +
-      `Assalomu alaykum. <b>Kisva Shop</b> — Ka'bai muazzamaning muqaddas kisvasidan asl bo'laklar.\n\n` +
-      `Har bir mahsulot rasmiy sertifikat bilan taqdim etiladi.\n\n` +
-      `Buyurtma berish uchun pastdagi tugmani bosing 👇`,
+      `<b>${name} ака, хуш келибсиз!</b> 👋\n\n` +
+      `Ассалому алайкум. <b>Кисва Шоп</b> — Каъбаи муаззаманинг муқаддас кисвасидан асл бўлаклар.\n\n` +
+      `Ҳар бир маҳсулот расмий сертификат билан тақдим этилади.\n\n` +
+      `Буюртма бериш учун пастдаги тугмани босинг 👇`,
     orderAccepted:
-      'Buyurtmangiz muvaffaqiyatli qabul qilindi! Kuryerimiz tez orada bog\'lanadi 🕋',
+      'Буюртмангиз муваффақиятли қабул қилинди! Курьеримиз тез орада боғланади 🕋',
     help:
-      'Buyurtma berish uchun <b>🛍 Do\'konni ochish</b> tugmasini bosing.\n' +
-      'Savollar bo\'lsa — /start buyrug\'ini yuboring.',
+      'Буюртма бериш учун <b>🛍 Дўконни очиш</b> тугмасини босинг.\n' +
+      'Саволлар бўлса — /start буйруғини юборинг.',
   },
 };
 

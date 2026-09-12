@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import Onboarding from './pages/Onboarding.jsx';
+import Intro from './components/Intro.jsx';
 import Home from './pages/Home.jsx';
 import Catalog from './pages/Catalog.jsx';
 import Cart from './pages/Cart.jsx';
@@ -9,17 +9,8 @@ import ProductSheet from './components/ProductSheet.jsx';
 import { initTelegram } from './telegram.js';
 import { api } from './api.js';
 
-const ONBOARDING_KEY = 'kisva_onboarded';
-
 export default function App() {
-  const [showOnboarding, setShowOnboarding] = useState(() => {
-    try {
-      return localStorage.getItem(ONBOARDING_KEY) !== '1';
-    } catch {
-      return true;
-    }
-  });
-
+  const [showIntro, setShowIntro] = useState(true);
   const [tab, setTab] = useState('home');
   const [user, setUser] = useState(null);
   const [sheetProduct, setSheetProduct] = useState(null);
@@ -29,24 +20,15 @@ export default function App() {
     api.me().then(setUser).catch(() => setUser(null));
   }, []);
 
-  function finishOnboarding() {
-    try {
-      localStorage.setItem(ONBOARDING_KEY, '1');
-    } catch {
-      /* ignore */
-    }
-    setShowOnboarding(false);
-  }
-
-  if (showOnboarding) {
-    return <Onboarding onFinish={finishOnboarding} />;
+  if (showIntro) {
+    return <Intro onFinish={() => setShowIntro(false)} />;
   }
 
   return (
     <div className="app">
       {tab === 'home' && <Home user={user} onOpenProduct={setSheetProduct} />}
       {tab === 'catalog' && <Catalog onOpenProduct={setSheetProduct} />}
-      {tab === 'cart' && <Cart user={user} onNavigate={setTab} />}
+      {tab === 'cart' && <Cart user={user} onNavigate={setTab} onUserUpdate={setUser} />}
       {tab === 'profile' && <Profile user={user} onNavigate={setTab} />}
 
       <BottomNav active={tab} onChange={setTab} />

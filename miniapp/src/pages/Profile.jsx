@@ -4,9 +4,9 @@ import { useCart } from '../context/CartContext.jsx';
 import { haptic, showAlert } from '../telegram.js';
 
 const statusLabels = {
-  pending: 'Kutilmoqda',
-  delivered: 'Yetkazildi',
-  canceled: 'Bekor qilindi',
+  pending: 'Кутилмоқда',
+  delivered: 'Етказилди',
+  canceled: 'Бекор қилинди',
 };
 
 export default function Profile({ user, onNavigate }) {
@@ -23,8 +23,8 @@ export default function Profile({ user, onNavigate }) {
       .finally(() => setLoading(false));
   }, []);
 
-  const name = user?.firstName || 'Mijoz';
-  const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(' ') || 'Mijoz';
+  const name = user?.firstName || 'Мижоз';
+  const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(' ') || 'Мижоз';
 
   function reorder(order) {
     haptic('medium');
@@ -42,7 +42,7 @@ export default function Profile({ user, onNavigate }) {
         item.qty
       );
     });
-    showAlert('Mahsulotlar savatchaga qo‘shildi');
+    showAlert('Маҳсулотлар саватчага қўшилди');
     onNavigate('cart');
   }
 
@@ -57,33 +57,27 @@ export default function Profile({ user, onNavigate }) {
               @{user.username}
             </p>
           )}
-          <p className="subtitle">{user?.phone || 'Telefon raqam kiritilmagan'}</p>
+          <p className="subtitle">{user?.phone || 'Телефон рақам киритилмаган'}</p>
         </div>
       </div>
 
       <div style={{ marginTop: 18 }}>
         <button className="list-item" onClick={() => setShowOrders((v) => !v)}>
           <span style={{ fontSize: 18 }}>📜</span>
-          <span style={{ flex: 1 }}>Mening buyurtmalarim</span>
+          <span style={{ flex: 1 }}>Менинг буюртмаларим</span>
           <span className="muted">{orders.length}</span>
         </button>
 
         <div className="list-item">
           <span style={{ fontSize: 18 }}>📞</span>
-          <span style={{ flex: 1 }}>Aloqa</span>
+          <span style={{ flex: 1 }}>Алоқа</span>
           <span className="muted">+998 90 000 00 00</span>
-        </div>
-
-        <div className="list-item">
-          <span style={{ fontSize: 18 }}>🚚</span>
-          <span style={{ flex: 1 }}>Yetkazib berish</span>
-          <span className="muted">Bepul</span>
         </div>
       </div>
 
       {showOrders && (
         <>
-          <div className="section-title">Buyurtmalar tarixi</div>
+          <div className="section-title">Буюртмалар тарихи</div>
 
           {loading ? (
             <div className="loader">
@@ -92,13 +86,13 @@ export default function Profile({ user, onNavigate }) {
           ) : orders.length === 0 ? (
             <div className="empty">
               <div className="empty-emoji">📭</div>
-              Hali buyurtma qilmagansiz
+              Ҳали буюртма қилмагансиз
             </div>
           ) : (
             orders.map((order) => (
               <div className="order-card" key={order.id}>
                 <div className="order-head">
-                  <b>Buyurtma #{order.id}</b>
+                  <b>Буюртма #{order.id}</b>
                   <span className={`status ${order.status}`}>
                     {statusLabels[order.status] || order.status}
                   </span>
@@ -116,7 +110,7 @@ export default function Profile({ user, onNavigate }) {
                 ))}
 
                 <div className="price-row">
-                  <span className="price-new">{formatPrice(order.totalPrice)} so‘m</span>
+                  <span className="price-new">{formatPrice(order.totalPrice)} сўм</span>
                 </div>
 
                 <button
@@ -124,7 +118,7 @@ export default function Profile({ user, onNavigate }) {
                   style={{ marginTop: 10, padding: '11px' }}
                   onClick={() => reorder(order)}
                 >
-                  🔁 Yana shundan buyurtma qilish
+                  🔁 Яна шундан буюртма қилиш
                 </button>
               </div>
             ))

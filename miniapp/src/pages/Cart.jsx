@@ -1,24 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { api, formatPrice, resolveImage } from '../api.js';
 import { useCart } from '../context/CartContext.jsx';
 import { haptic, showAlert, requestLocation } from '../telegram.js';
+import ContactGate from '../components/ContactGate.jsx';
 
-export default function Cart({ user, onNavigate }) {
+export default function Cart({ user, onNavigate, onUserUpdate }) {
   const { items, total, changeQty, removeItem, clearCart } = useCart();
 
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
   const [note, setNote] = useState('');
   const [location, setLocation] = useState(null);
   const [locating, setLocating] = useState(false);
   const [sending, setSending] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-
-  useEffect(() => {
-    const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(' ');
-    if (fullName) setName(fullName);
-    if (user?.phone) setPhone(user.phone);
-  }, [user]);
+  const [showGate, setShowGate] = useState(false);
 
   async function getLocation() {
     setLocating(true);
@@ -27,22 +21,19 @@ export default function Cart({ user, onNavigate }) {
       setLocation(coords);
       haptic('medium');
     } catch (error) {
-      showAlert(error.message || 'Lokatsiya olinmadi');
+      showAlert(error.message || 'Локация олинмади');
     } finally {
       setLocating(false);
     }
   }
 
-  async function submitOrder() {
-    if (!name.trim()) return showAlert('Ismingizni kiriting');
-    if (!phone.trim()) return showAlert('Telefon raqamingizni kiriting');
-
+  async function placeOrder({ name, phone }) {
     setSending(true);
     try {
       await api.createOrder({
         items: items.map((i) => ({ productId: i.productId, size: i.size, qty: i.qty })),
-        name: name.trim(),
-        phone: phone.trim(),
+        name,
+        phone,
         latitude: location?.latitude,
         longitude: location?.longitude,
         note: note.trim() || null,
@@ -52,10 +43,24 @@ export default function Cart({ user, onNavigate }) {
       haptic('heavy');
       setSubmitted(true);
     } catch (error) {
-      showAlert(error.message || 'Buyurtma yuborilmadi');
+      showAlert(error.message || 'Буюртма юборилмади');
     } finally {
       setSending(false);
     }
+  }
+
+  function submitOrder() {
+    if (!user?.contactName || !user?.phone) {
+      setShowGate(true);
+      return;
+    }
+    placeOrder({ name: user.contactName, phone: user.phone });
+  }
+
+  function gateDone(updatedUser) {
+    onUserUpdate(updatedUser);
+    setShowGate(false);
+    placeOrder({ name: updatedUser.contactName, phone: updatedUser.phone });
   }
 
   function closeThankYou() {
@@ -64,16 +69,20 @@ export default function Cart({ user, onNavigate }) {
     onNavigate('home');
   }
 
+  if (showGate) {
+    return <ContactGate user={user} onDone={gateDone} />;
+  }
+
   if (submitted) {
     return (
       <div className="page">
         <div className="thankyou-card">
-          <button className="thankyou-exit" onClick={closeThankYou} aria-label="Yopish">
+          <button className="thankyou-exit" onClick={closeThankYou} aria-label="Ёпиш">
             ➜
           </button>
           <div className="thankyou-icon">🎉</div>
-          <h2>Xarid uchun rahmat!</h2>
-          <p>Admin siz bilan bog‘lanadi.</p>
+          <h2>Харид учун раҳмат!</h2>
+          <p>Админ сиз билан боғланади.</p>
         </div>
       </div>
     );
@@ -82,13 +91,13 @@ export default function Cart({ user, onNavigate }) {
   if (items.length === 0) {
     return (
       <div className="page">
-        <h1 className="title">Savatcha</h1>
+        <h1 className="title">Саватча</h1>
         <div className="empty">
           <div className="empty-emoji">🛒</div>
-          Savatchangiz bo‘sh
+          Саватчангиз бўш
           <div style={{ marginTop: 18 }}>
             <button className="btn btn-soft" onClick={() => onNavigate('catalog')}>
-              Katalogga o‘tish
+              Каталогга ўтиш
             </button>
           </div>
         </div>
@@ -98,8 +107,8 @@ export default function Cart({ user, onNavigate }) {
 
   return (
     <div className="page" style={{ paddingBottom: 210 }}>
-      <h1 className="title">Savatcha</h1>
-      <p className="subtitle">{items.length} ta mahsulot</p>
+      <h1 className="title">Саватча</h1>
+      <p className="subtitle">{items.length} та маҳсулот</p>
 
       <div style={{ marginTop: 12 }}>
         {items.map((item) => (
@@ -107,9 +116,9 @@ export default function Cart({ user, onNavigate }) {
             <img className="cart-img" src={resolveImage(item.imageUrl)} alt={item.name} />
             <div className="cart-info">
               <div className="cart-name">{item.name}</div>
-              {item.size && <div className="muted" style={{ fontSize: 12 }}>O‘lcham: {item.size}</div>}
+              {item.size && <div className="muted" style={{ fontSize: 12 }}>Ўлчам: {item.size}</div>}
               <div className="price-row" style={{ paddingTop: 2 }}>
-                <span className="price-new">{formatPrice(item.price * item.qty)} so‘m</span>
+                <span className="price-new">{formatPrice(item.price * item.qty)} сўм</span>
               </div>
               <div className="qty">
                 <button onClick={() => changeQty(item.key, -1)}>−</button>
@@ -119,7 +128,7 @@ export default function Cart({ user, onNavigate }) {
                   style={{ marginLeft: 'auto', fontSize: 13, color: 'var(--muted)', width: 'auto' }}
                   onClick={() => removeItem(item.key)}
                 >
-                  O‘chirish
+                  Ўчириш
                 </button>
               </div>
             </div>
@@ -127,45 +136,24 @@ export default function Cart({ user, onNavigate }) {
         ))}
       </div>
 
-      <div className="section-title">Yetkazib berish</div>
+      <div className="section-title">Етказиб бериш</div>
 
       <div className="field">
-        <label>Ismingiz</label>
-        <input
-          type="text"
-          placeholder="Ismingizni kiriting"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </div>
-
-      <div className="field">
-        <label>Telefon raqamingiz</label>
-        <input
-          type="tel"
-          inputMode="tel"
-          placeholder="+998 90 123 45 67"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-        />
-      </div>
-
-      <div className="field">
-        <label>Manzil (lokatsiya) — ixtiyoriy</label>
+        <label>Манзил (локация) — ихтиёрий</label>
         <button className="btn btn-outline" onClick={getLocation} disabled={locating}>
           {locating
-            ? 'Aniqlanmoqda...'
+            ? 'Аниқланмоқда...'
             : location
-              ? `📍 Lokatsiya olindi (${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)})`
-              : '📍 Lokatsiyani yuborish'}
+              ? `📍 Локация олинди (${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)})`
+              : '📍 Локацияни юбориш'}
         </button>
       </div>
 
       <div className="field">
-        <label>Izoh (ixtiyoriy)</label>
+        <label>Изоҳ (ихтиёрий)</label>
         <textarea
           rows={3}
-          placeholder="Mo‘ljal, uy raqami yoki qo‘shimcha izoh"
+          placeholder="Мўлжал, уй рақами ёки қўшимча изоҳ"
           value={note}
           onChange={(e) => setNote(e.target.value)}
         />
@@ -173,22 +161,22 @@ export default function Cart({ user, onNavigate }) {
 
       <div className="summary">
         <div className="summary-row">
-          <span className="muted">Mahsulotlar</span>
-          <span>{formatPrice(total)} so‘m</span>
+          <span className="muted">Маҳсулотлар</span>
+          <span>{formatPrice(total)} сўм</span>
         </div>
         <div className="summary-row">
-          <span className="muted">Yetkazib berish</span>
-          <span>Bepul</span>
+          <span className="muted">Етказиб бериш</span>
+          <span>Бепул</span>
         </div>
         <div className="summary-row summary-total">
-          <span>Jami</span>
-          <span>{formatPrice(total)} so‘m</span>
+          <span>Жами</span>
+          <span>{formatPrice(total)} сўм</span>
         </div>
       </div>
 
       <div className="sticky-bar">
         <button className="btn btn-accent" onClick={submitOrder} disabled={sending}>
-          {sending ? 'Yuborilmoqda...' : `Buyurtmani tasdiqlash — ${formatPrice(total)} so‘m`}
+          {sending ? 'Юборилмоқда...' : `Буюртмани тасдиқлаш — ${formatPrice(total)} сўм`}
         </button>
       </div>
     </div>

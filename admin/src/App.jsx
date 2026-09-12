@@ -20,24 +20,24 @@ export default function App() {
   return (
     <div className="layout">
       <aside className="sidebar">
-        <div className="brand">🕋 Kisva Admin</div>
+        <div className="brand">🕋 Кисва Админ</div>
 
         <button
           className={`side-link ${page === 'orders' ? 'active' : ''}`}
           onClick={() => setPage('orders')}
         >
-          📦 Buyurtmalar
+          📦 Буюртмалар
         </button>
 
         <button
           className={`side-link ${page === 'products' ? 'active' : ''}`}
           onClick={() => setPage('products')}
         >
-          🛍 Mahsulotlar
+          🛍 Маҳсулотлар
         </button>
 
         <button className="side-link side-logout" onClick={logout}>
-          ⏻ Chiqish
+          ⏻ Чиқиш
         </button>
       </aside>
 

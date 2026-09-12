@@ -26,6 +26,13 @@ const User = {
     return prisma.user.update({ where: { id: Number(id) }, data: { phone } });
   },
 
+  updateContact(id, { contactName, phone }) {
+    return prisma.user.update({
+      where: { id: Number(id) },
+      data: { contactName, phone },
+    });
+  },
+
   count() {
     return prisma.user.count();
   },

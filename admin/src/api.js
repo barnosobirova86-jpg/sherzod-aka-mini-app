@@ -49,12 +49,12 @@ async function request(path, options = {}) {
 
   if (response.status === 401) {
     clearToken();
-    throw new Error("Sessiya tugadi. Qaytadan kiring.");
+    throw new Error("Сессия тугади. Қайтадан киринг.");
   }
 
   if (!response.ok) {
     const data = await response.json().catch(() => ({}));
-    throw new Error(data.message || 'Xatolik yuz berdi');
+    throw new Error(data.message || 'Хатолик юз берди');
   }
 
   return response.json();
@@ -67,7 +67,7 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ password }),
     }).then(async (r) => {
-      if (!r.ok) throw new Error("Parol noto'g'ri");
+      if (!r.ok) throw new Error("Парол нотўғри");
       return r.json();
     }),
 
@@ -88,7 +88,7 @@ export const api = {
       body,
     }).then(async (r) => {
       const data = await r.json().catch(() => ({}));
-      if (!r.ok) throw new Error(data.message || 'Rasm yuklanmadi');
+      if (!r.ok) throw new Error(data.message || 'Расм юкланмади');
       return data;
     });
   },

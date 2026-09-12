@@ -20,15 +20,15 @@ export default function Home({ user, onOpenProduct }) {
       .finally(() => setLoading(false));
   }, [activeCategory]);
 
-  const name = user?.firstName || 'Mehmon';
-  const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(' ') || 'Mehmon';
+  const name = user?.firstName || 'Меҳмон';
+  const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(' ') || 'Меҳмон';
 
   return (
     <div className="page">
       <div className="header">
         <div>
-          <h1 className="title">{name} aka, xush kelibsiz!</h1>
-          <p className="subtitle">Assalomu alaykum 🕋</p>
+          <h1 className="title">{name} ака, хуш келибсиз!</h1>
+          <p className="subtitle">Ассалому алайкум 🕋</p>
         </div>
         <div className="avatar" title={fullName}>
           {name.charAt(0).toUpperCase()}
@@ -48,7 +48,7 @@ export default function Home({ user, onOpenProduct }) {
       ) : products.length === 0 ? (
         <div className="empty">
           <div className="empty-emoji">📦</div>
-          Bu kategoriyada mahsulot yo‘q
+          Бу категорияда маҳсулот йўқ
         </div>
       ) : (
         <div className="grid">

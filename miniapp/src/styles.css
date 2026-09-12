@@ -61,6 +61,22 @@ img {
   padding-bottom: 88px;
 }
 
+.intro {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.intro-video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 .page {
   padding: 16px;
   animation: fade 0.25s ease;
@@ -172,80 +188,6 @@ img {
   to {
     transform: rotate(360deg);
   }
-}
-
-/* ---------- Onboarding ---------- */
-
-.onboarding {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  padding: 24px;
-  background: var(--bg);
-}
-
-.onb-skip {
-  align-self: flex-end;
-  color: var(--muted);
-  font-size: 14px;
-  padding: 6px;
-}
-
-.onb-body {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  gap: 8px;
-}
-
-.onb-visual {
-  width: 190px;
-  height: 190px;
-  border-radius: 50%;
-  background: var(--accent-soft);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 74px;
-  margin-bottom: 26px;
-}
-
-.onb-title {
-  font-size: 25px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  margin: 0;
-  max-width: 300px;
-}
-
-.onb-text {
-  color: var(--muted);
-  max-width: 300px;
-  margin: 0;
-}
-
-.onb-dots {
-  display: flex;
-  gap: 6px;
-  justify-content: center;
-  margin: 26px 0;
-}
-
-.onb-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--line);
-  transition: all 0.25s ease;
-}
-
-.onb-dot.active {
-  width: 22px;
-  border-radius: 4px;
-  background: var(--accent);
 }
 
 /* ---------- Header ---------- */
@@ -1249,4 +1191,19 @@ img {
   color: var(--muted);
   margin: 0;
   font-size: 14.5px;
+}
+
+.gate-card {
+  margin-top: 60px;
+  padding: 32px 22px;
+  border-radius: 22px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.gate-icon {
+  font-size: 48px;
+  text-align: center;
+  margin-bottom: 6px;
 }

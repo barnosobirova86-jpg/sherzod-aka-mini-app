@@ -441,6 +441,10 @@ tr:last-child td {
   margin-bottom: 14px;
 }
 
+.cards-only {
+  display: none;
+}
+
 @media (max-width: 760px) {
   .layout {
     flex-direction: column;
@@ -456,6 +460,10 @@ tr:last-child td {
   }
   .brand {
     padding: 0 10px 0 4px;
+    white-space: nowrap;
+  }
+  .side-link {
+    white-space: nowrap;
   }
   .side-logout {
     margin-top: 0;
@@ -467,6 +475,98 @@ tr:last-child td {
   .form-grid {
     grid-template-columns: 1fr;
   }
+  .table-only {
+    display: none;
+  }
+  .cards-only {
+    display: flex;
+  }
+}
+
+/* ---------- Buyurtma / mahsulot kartalari (mobil) ---------- */
+
+.order-cards,
+.product-cards {
+  flex-direction: column;
+  gap: 12px;
+}
+
+.order-card-admin,
+.product-card-admin {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+}
+
+.oca-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.oca-customer {
+  margin-bottom: 4px;
+}
+
+.oca-row {
+  font-size: 13px;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.oca-items {
+  margin: 6px 0;
+}
+
+.oca-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.pca-top {
+  display: flex;
+  gap: 12px;
+}
+
+.pca-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.pca-desc {
+  color: var(--muted);
+  font-size: 12.5px;
+  margin-top: 2px;
+}
+
+.pca-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.pca-price {
+  margin-top: 8px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.pca-old {
+  color: var(--muted);
+  text-decoration: line-through;
+  font-size: 12.5px;
+}
+
+.pca-actions {
+  margin-top: 12px;
 }
 
 /* ---------- Rasm tanlash ---------- */

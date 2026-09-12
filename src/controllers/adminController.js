@@ -10,7 +10,7 @@ import { uploadImage, UPLOAD_DIR } from '../middlewares/upload.middleware.js';
 export function login(req, res) {
   const { password } = req.body;
   if (password !== config.adminPassword) {
-    return res.status(401).json({ message: "Parol noto'g'ri" });
+    return res.status(401).json({ message: 'Парол нотўғри' });
   }
   res.json({ ok: true, token: password });
 }
@@ -25,7 +25,7 @@ export async function getStats(req, res) {
     ]);
     res.json({ orders, products, users, revenue });
   } catch (error) {
-    res.status(500).json({ message: 'Server xatosi' });
+    res.status(500).json({ message: 'Сервер хатоси' });
   }
 }
 
@@ -35,7 +35,7 @@ export async function getOrders(req, res) {
   try {
     res.json(await Order.findAll({ status: req.query.status }));
   } catch (error) {
-    res.status(500).json({ message: 'Server xatosi' });
+    res.status(500).json({ message: 'Сервер хатоси' });
   }
 }
 
@@ -44,7 +44,7 @@ export async function updateOrderStatus(req, res) {
     const { status } = req.body;
     const allowed = ['pending', 'delivered', 'canceled'];
     if (!allowed.includes(status)) {
-      return res.status(400).json({ message: "Noto'g'ri holat" });
+      return res.status(400).json({ message: 'Нотўғри ҳолат' });
     }
 
     const order = await Order.updateStatus(req.params.id, status);
@@ -53,20 +53,20 @@ export async function updateOrderStatus(req, res) {
     if (status === 'delivered' && full?.user) {
       await sendMessage(
         full.user.telegramId,
-        `✅ <b>Buyurtma #${full.id}</b> yetkazib berildi.\nXaridingiz uchun rahmat! 🕋`
+        `✅ <b>Буюртма #${full.id}</b> етказиб берилди.\nХаридингиз учун раҳмат! 🕋`
       );
     }
     if (status === 'canceled' && full?.user) {
       await sendMessage(
         full.user.telegramId,
-        `❌ <b>Buyurtma #${full.id}</b> bekor qilindi.\nSavollar uchun biz bilan bog'laning.`
+        `❌ <b>Буюртма #${full.id}</b> бекор қилинди.\nСаволлар учун биз билан боғланинг.`
       );
     }
 
     res.json(order);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Holatni yangilashda xato' });
+    res.status(500).json({ message: 'Ҳолатни янгилашда хато' });
   }
 }
 
@@ -101,7 +101,7 @@ export async function getAllProducts(req, res) {
   try {
     res.json(await Product.findAll({ onlyActive: false }));
   } catch (error) {
-    res.status(500).json({ message: 'Server xatosi' });
+    res.status(500).json({ message: 'Сервер хатоси' });
   }
 }
 
@@ -109,13 +109,13 @@ export async function createProduct(req, res) {
   try {
     const data = normalizeProduct(req.body);
     if (!data.name || !data.price || !data.category) {
-      return res.status(400).json({ message: 'Nom, narx va kategoriya majburiy' });
+      return res.status(400).json({ message: 'Ном, нарх ва категория мажбурий' });
     }
     if (!data.imageUrl) data.imageUrl = 'https://picsum.photos/seed/kisva/800/800';
     res.status(201).json(await Product.create(data));
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Mahsulot qo'shilmadi" });
+    res.status(500).json({ message: 'Маҳсулот қўшилмади' });
   }
 }
 
@@ -127,7 +127,7 @@ export async function updateProduct(req, res) {
     res.json(await Product.update(req.params.id, data));
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Mahsulot yangilanmadi' });
+    res.status(500).json({ message: 'Маҳсулот янгиланмади' });
   }
 }
 
@@ -136,7 +136,7 @@ export async function deleteProduct(req, res) {
     await Product.remove(req.params.id);
     res.json({ ok: true });
   } catch (error) {
-    res.status(500).json({ message: "Mahsulot o'chirilmadi" });
+    res.status(500).json({ message: 'Маҳсулот ўчирилмади' });
   }
 }
 
@@ -148,7 +148,7 @@ export async function deleteProduct(req, res) {
 export function uploadProductImage(req, res) {
   uploadImage(req, res, (error) => {
     if (error) return res.status(400).json({ message: error.message });
-    if (!req.file) return res.status(400).json({ message: 'Rasm tanlanmadi' });
+    if (!req.file) return res.status(400).json({ message: 'Расм танланмади' });
     res.json({ url: `/uploads/${req.file.filename}`, name: req.file.filename });
   });
 }

@@ -61,7 +61,7 @@ export async function telegramAuth(req, res, next) {
     }
 
     if (!tgUser) {
-      return res.status(401).json({ message: 'Avtorizatsiya xatosi. Ilovani Telegram orqali oching.' });
+      return res.status(401).json({ message: 'Авторизация хатоси. Иловани Telegram орқали очинг.' });
     }
 
     req.user = await User.upsert({
@@ -74,7 +74,7 @@ export async function telegramAuth(req, res, next) {
     next();
   } catch (error) {
     console.error('telegramAuth xatosi:', error);
-    res.status(500).json({ message: 'Server xatosi' });
+    res.status(500).json({ message: 'Сервер хатоси' });
   }
 }
 
@@ -85,7 +85,7 @@ export async function telegramAuth(req, res, next) {
 export function adminAuth(req, res, next) {
   const password = req.header('x-admin-password');
   if (!password || password !== config.adminPassword) {
-    return res.status(401).json({ message: "Parol noto'g'ri" });
+    return res.status(401).json({ message: "Парол нотўғри" });
   }
   next();
 }

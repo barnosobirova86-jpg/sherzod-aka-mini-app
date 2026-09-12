@@ -3,10 +3,10 @@ import { haptic } from '../telegram.js';
 import { HomeIcon, SearchIcon, CartIcon, ProfileIcon } from './NavIcons.jsx';
 
 const tabs = [
-  { id: 'home', Icon: HomeIcon, label: 'Bosh sahifa' },
-  { id: 'catalog', Icon: SearchIcon, label: 'Katalog' },
-  { id: 'cart', Icon: CartIcon, label: 'Savatcha' },
-  { id: 'profile', Icon: ProfileIcon, label: 'Profil' },
+  { id: 'home', Icon: HomeIcon, label: 'Бош саҳифа' },
+  { id: 'catalog', Icon: SearchIcon, label: 'Каталог' },
+  { id: 'cart', Icon: CartIcon, label: 'Саватча' },
+  { id: 'profile', Icon: ProfileIcon, label: 'Профил' },
 ];
 
 export default function BottomNav({ active, onChange }) {

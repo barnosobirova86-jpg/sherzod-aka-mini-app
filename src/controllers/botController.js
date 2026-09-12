@@ -11,7 +11,7 @@ function shopKeyboard() {
   if (!isHttps(config.webAppUrl)) return undefined;
   return {
     reply_markup: {
-      keyboard: [[{ text: "🛍 Do'konni ochish", web_app: { url: config.webAppUrl } }]],
+      keyboard: [[{ text: '🛍 Дўконни очиш', web_app: { url: config.webAppUrl } }]],
       resize_keyboard: true,
     },
   };
@@ -23,7 +23,7 @@ function shopKeyboard() {
 function phoneKeyboard() {
   return {
     reply_markup: {
-      keyboard: [[{ text: '📱 Raqamni yuborish', request_contact: true }]],
+      keyboard: [[{ text: '📱 Рақамни юбориш', request_contact: true }]],
       resize_keyboard: true,
       one_time_keyboard: true,
     },
@@ -51,7 +51,7 @@ export async function handleStart(ctx) {
 
   if (!user.phone) {
     await ctx.reply(
-      'Buyurtmalaringizni tezroq rasmiylashtirish uchun telefon raqamingizni yuboring:',
+      'Буюртмаларингизни тезроқ расмийлаштириш учун телефон рақамингизни юборинг:',
       phoneKeyboard()
     );
   }
@@ -66,26 +66,26 @@ export async function handleContact(ctx) {
     await User.updatePhone(user.id, contact.phone_number);
   }
 
-  await ctx.reply('✅ Rahmat! Raqamingiz saqlandi.', shopKeyboard() || {});
+  await ctx.reply('✅ Раҳмат! Рақамингиз сақланди.', shopKeyboard() || {});
 }
 
 export async function handleMyOrders(ctx) {
   const user = await User.findByTelegramId(ctx.from.id);
-  if (!user) return ctx.reply('Avval /start buyrug\'ini bosing.');
+  if (!user) return ctx.reply('Аввал /start буйруғини босинг.');
 
   const orders = await Order.findByUserId(user.id);
   if (!orders.length) {
-    return ctx.reply("Sizda hali buyurtmalar yo'q 🛒");
+    return ctx.reply('Сизда ҳали буюртмалар йўқ 🛒');
   }
 
   const lines = orders.slice(0, 5).map((order) => {
     const date = new Date(order.createdAt).toLocaleDateString('uz-UZ');
     const items = (order.items || []).map((i) => `• ${i.name} × ${i.qty}`).join('\n');
-    const status = order.status === 'delivered' ? '✅ Yetkazildi' : '⏳ Kutilmoqda';
-    return `<b>#${order.id}</b> — ${date}\n${items}\n💰 ${order.totalPrice.toLocaleString('uz-UZ')} so'm\n${status}`;
+    const status = order.status === 'delivered' ? '✅ Етказилди' : '⏳ Кутилмоқда';
+    return `<b>#${order.id}</b> — ${date}\n${items}\n💰 ${order.totalPrice.toLocaleString('uz-UZ')} сўм\n${status}`;
   });
 
-  await ctx.replyWithHTML(`📜 <b>Buyurtmalaringiz</b>\n\n${lines.join('\n\n')}`);
+  await ctx.replyWithHTML(`📜 <b>Буюртмаларингиз</b>\n\n${lines.join('\n\n')}`);
 }
 
 export async function handleHelp(ctx) {
@@ -106,8 +106,8 @@ export function buildOrderMessage(order) {
 
   return (
     `${config.texts.orderAccepted}\n\n` +
-    `<b>Buyurtma #${order.id}</b>\n` +
+    `<b>Буюртма #${order.id}</b>\n` +
     `${items}\n\n` +
-    `💰 Jami: <b>${order.totalPrice.toLocaleString('uz-UZ')} so'm</b>`
+    `💰 Жами: <b>${order.totalPrice.toLocaleString('uz-UZ')} сўм</b>`
   );
 }

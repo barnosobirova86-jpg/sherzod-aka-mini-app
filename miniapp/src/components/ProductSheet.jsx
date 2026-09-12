@@ -26,11 +26,11 @@ export default function ProductSheet({ product, onClose }) {
           <h2>{product.name}</h2>
           <div className="price-row">
             <span className="price-new" style={{ fontSize: 18 }}>
-              {formatPrice(product.price)} so‘m
+              {formatPrice(product.price)} сўм
             </span>
             {product.oldPrice > 0 && (
               <span className="price-old" style={{ fontSize: 14 }}>
-                {formatPrice(product.oldPrice)} so‘m
+                {formatPrice(product.oldPrice)} сўм
               </span>
             )}
           </div>
@@ -42,7 +42,7 @@ export default function ProductSheet({ product, onClose }) {
           {product.features?.length > 0 && (
             <>
               <div className="section-title" style={{ marginBottom: 0 }}>
-                Tarkibi
+                Таркиби
               </div>
               <ul className="features">
                 {product.features.map((feature, i) => (
@@ -55,7 +55,7 @@ export default function ProductSheet({ product, onClose }) {
           {product.sizes?.length > 0 && (
             <>
               <div className="section-title" style={{ marginBottom: 0 }}>
-                O‘lchamni tanlang
+                Ўлчамни танланг
               </div>
               <div className="sizes">
                 {product.sizes.map((item) => (
@@ -75,7 +75,7 @@ export default function ProductSheet({ product, onClose }) {
           )}
 
           <div className="section-title" style={{ marginBottom: 0 }}>
-            Soni
+            Сони
           </div>
           <div className="qty" style={{ marginTop: 10 }}>
             <button onClick={() => setQty((q) => Math.max(1, q - 1))}>−</button>
@@ -86,7 +86,7 @@ export default function ProductSheet({ product, onClose }) {
 
         <div className="sheet-footer">
           <button className="btn btn-accent" onClick={submit}>
-            Savatchaga qo‘shish — {formatPrice(product.price * qty)} so‘m
+            Саватчага қўшиш — {formatPrice(product.price * qty)} сўм
           </button>
         </div>
       </div>
