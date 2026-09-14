@@ -110,6 +110,15 @@ export const api = {
 
 export const formatPrice = (value) => Number(value || 0).toLocaleString('uz-UZ');
 
+/**
+ * Narxni mahsulot valyutasiga mos holda formatlaydi:
+ * UZS -> "1 234 сўм", USD -> "$1,234"
+ */
+export const formatMoney = (value, currency = 'UZS') =>
+  currency === 'USD'
+    ? `$${Number(value || 0).toLocaleString('en-US')}`
+    : `${formatPrice(value)} сўм`;
+
 export const formatDate = (value) =>
   new Date(value).toLocaleString('uz-UZ', {
     day: '2-digit',

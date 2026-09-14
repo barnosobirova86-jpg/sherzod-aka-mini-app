@@ -100,6 +100,7 @@ export async function createOrder(req, res) {
         productId: product.id,
         name: product.name,
         price: product.price,
+        currency: product.currency || 'UZS',
         imageUrl: product.imageUrl,
         size: item.size || null,
         qty,

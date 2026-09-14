@@ -36,6 +36,7 @@ export function CartProvider({ children }) {
           productId: product.id,
           name: product.name,
           price: product.price,
+          currency: product.currency || 'UZS',
           oldPrice: product.oldPrice,
           imageUrl: product.imageUrl,
           size,
@@ -61,10 +62,19 @@ export function CartProvider({ children }) {
     setItems([]);
   }
 
-  const total = useMemo(() => items.reduce((sum, i) => sum + i.price * i.qty, 0), [items]);
+  // Har bir valyuta bo'yicha alohida jami (savatchada UZS va USD mahsulotlar
+  // aralash bo'lishi mumkin, shuning uchun ular birlashtirilmaydi)
+  const totalsByCurrency = useMemo(() => {
+    const map = new Map();
+    for (const item of items) {
+      const currency = item.currency || 'UZS';
+      map.set(currency, (map.get(currency) || 0) + item.price * item.qty);
+    }
+    return [...map.entries()].map(([currency, amount]) => ({ currency, amount }));
+  }, [items]);
   const count = useMemo(() => items.reduce((sum, i) => sum + i.qty, 0), [items]);
 
-  const value = { items, addItem, removeItem, changeQty, clearCart, total, count };
+  const value = { items, addItem, removeItem, changeQty, clearCart, totalsByCurrency, count };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

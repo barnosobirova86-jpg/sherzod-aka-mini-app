@@ -30,6 +30,7 @@ model Product {
   imageUrl      String
   oldPrice      Int?
   price         Int
+  currency      String   @default("UZS")
   category      String
   stock         Int      @default(0)
   sizes         String[] @default([])

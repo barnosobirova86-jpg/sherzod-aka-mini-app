@@ -90,6 +90,7 @@ function normalizeProduct(body) {
     category: String(body.category || '').trim(),
     price: Number(body.price) || 0,
     oldPrice: body.oldPrice ? Number(body.oldPrice) : null,
+    currency: body.currency === 'USD' ? 'USD' : 'UZS',
     stock: Math.max(0, Number(body.stock) || 0),
     sizes: toArray(body.sizes),
     features: toArray(body.features),

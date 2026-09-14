@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { formatPrice, resolveImage } from '../api.js';
+import { formatMoney, resolveImage } from '../api.js';
 import { haptic } from '../telegram.js';
 import { useCart } from '../context/CartContext.jsx';
 
@@ -29,11 +29,11 @@ export default function ProductSheet({ product, onClose }) {
           <h2>{product.name}</h2>
           <div className="price-row">
             <span className="price-new" style={{ fontSize: 18 }}>
-              {formatPrice(product.price)} сўм
+              {formatMoney(product.price, product.currency)}
             </span>
             {product.oldPrice > 0 && (
               <span className="price-old" style={{ fontSize: 14 }}>
-                {formatPrice(product.oldPrice)} сўм
+                {formatMoney(product.oldPrice, product.currency)}
               </span>
             )}
           </div>
@@ -96,7 +96,7 @@ export default function ProductSheet({ product, onClose }) {
           <button className="btn btn-accent" onClick={submit} disabled={outOfStock}>
             {outOfStock
               ? 'Тугаган'
-              : `Саватчага қўшиш — ${formatPrice(product.price * qty)} сўм`}
+              : `Саватчага қўшиш — ${formatMoney(product.price * qty, product.currency)}`}
           </button>
         </div>
       </div>

@@ -1,11 +1,15 @@
 import { useState } from 'react';
-import { api, formatPrice, resolveImage } from '../api.js';
+import { api, formatMoney, resolveImage } from '../api.js';
 import { useCart } from '../context/CartContext.jsx';
 import { haptic, showAlert, requestLocation } from '../telegram.js';
 import ContactGate from '../components/ContactGate.jsx';
 
+function formatTotals(totalsByCurrency) {
+  return totalsByCurrency.map((t) => formatMoney(t.amount, t.currency)).join(' + ');
+}
+
 export default function Cart({ user, onNavigate, onUserUpdate }) {
-  const { items, total, changeQty, removeItem, clearCart } = useCart();
+  const { items, totalsByCurrency, changeQty, removeItem, clearCart } = useCart();
 
   const [note, setNote] = useState('');
   const [location, setLocation] = useState(null);
@@ -105,6 +109,8 @@ export default function Cart({ user, onNavigate, onUserUpdate }) {
     );
   }
 
+  const totalLabel = formatTotals(totalsByCurrency);
+
   return (
     <div className="page" style={{ paddingBottom: 210 }}>
       <h1 className="title">Саватча</h1>
@@ -118,7 +124,7 @@ export default function Cart({ user, onNavigate, onUserUpdate }) {
               <div className="cart-name">{item.name}</div>
               {item.size && <div className="muted" style={{ fontSize: 12 }}>Ўлчам: {item.size}</div>}
               <div className="price-row" style={{ paddingTop: 2 }}>
-                <span className="price-new">{formatPrice(item.price * item.qty)} сўм</span>
+                <span className="price-new">{formatMoney(item.price * item.qty, item.currency)}</span>
               </div>
               <div className="qty">
                 <button onClick={() => changeQty(item.key, -1)}>−</button>
@@ -162,7 +168,7 @@ export default function Cart({ user, onNavigate, onUserUpdate }) {
       <div className="summary">
         <div className="summary-row">
           <span className="muted">Маҳсулотлар</span>
-          <span>{formatPrice(total)} сўм</span>
+          <span>{totalLabel}</span>
         </div>
         <div className="summary-row">
           <span className="muted">Етказиб бериш</span>
@@ -170,13 +176,13 @@ export default function Cart({ user, onNavigate, onUserUpdate }) {
         </div>
         <div className="summary-row summary-total">
           <span>Жами</span>
-          <span>{formatPrice(total)} сўм</span>
+          <span>{totalLabel}</span>
         </div>
       </div>
 
       <div className="sticky-bar">
         <button className="btn btn-accent" onClick={submitOrder} disabled={sending}>
-          {sending ? 'Юборилмоқда...' : `Буюртмани тасдиқлаш — ${formatPrice(total)} сўм`}
+          {sending ? 'Юборилмоқда...' : `Буюртмани тасдиқлаш — ${totalLabel}`}
         </button>
       </div>
     </div>

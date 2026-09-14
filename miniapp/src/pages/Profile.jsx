@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { api, formatPrice } from '../api.js';
+import { api, formatMoney } from '../api.js';
 import { useCart } from '../context/CartContext.jsx';
 import { haptic, showAlert } from '../telegram.js';
 
@@ -8,6 +8,16 @@ const statusLabels = {
   delivered: 'Етказилди',
   canceled: 'Бекор қилинди',
 };
+
+function orderTotalLabel(order) {
+  const map = new Map();
+  for (const item of order.items || []) {
+    const currency = item.currency || 'UZS';
+    map.set(currency, (map.get(currency) || 0) + item.price * item.qty);
+  }
+  if (map.size === 0) return formatMoney(order.totalPrice);
+  return [...map.entries()].map(([currency, amount]) => formatMoney(amount, currency)).join(' + ');
+}
 
 export default function Profile({ user, onNavigate }) {
   const { addItem } = useCart();
@@ -34,6 +44,7 @@ export default function Profile({ user, onNavigate }) {
           id: item.productId,
           name: item.name,
           price: item.price,
+          currency: item.currency || 'UZS',
           oldPrice: null,
           imageUrl: item.imageUrl || 'https://picsum.photos/seed/kisva/300/300',
           sizes: [],
@@ -110,7 +121,7 @@ export default function Profile({ user, onNavigate }) {
                 ))}
 
                 <div className="price-row">
-                  <span className="price-new">{formatPrice(order.totalPrice)} сўм</span>
+                  <span className="price-new">{orderTotalLabel(order)}</span>
                 </div>
 
                 <button

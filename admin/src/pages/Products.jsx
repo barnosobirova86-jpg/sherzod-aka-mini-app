@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { api, formatPrice, resolveImage } from '../api.js';
+import { api, formatMoney, resolveImage } from '../api.js';
 import { CATEGORIES } from '../categories.js';
 
 const emptyForm = {
@@ -9,6 +9,7 @@ const emptyForm = {
   category: CATEGORIES[0],
   price: '',
   oldPrice: '',
+  currency: 'UZS',
   stock: '0',
   sizes: 'S, M, L, XL',
   features: '',
@@ -88,6 +89,7 @@ export default function Products({ onExpire }) {
       category: product.category,
       price: String(product.price),
       oldPrice: product.oldPrice ? String(product.oldPrice) : '',
+      currency: product.currency || 'UZS',
       stock: String(product.stock ?? 0),
       sizes: (product.sizes || []).join(', '),
       features: (product.features || []).join('\n'),
@@ -196,10 +198,10 @@ export default function Products({ onExpire }) {
                       <td>{product.category}</td>
                       <td>{(product.sizes || []).join(', ') || '—'}</td>
                       <td style={{ color: 'var(--muted)', textDecoration: 'line-through' }}>
-                        {product.oldPrice ? formatPrice(product.oldPrice) : '—'}
+                        {product.oldPrice ? formatMoney(product.oldPrice, product.currency) : '—'}
                       </td>
                       <td style={{ whiteSpace: 'nowrap' }}>
-                        <b>{formatPrice(product.price)}</b> сўм
+                        <b>{formatMoney(product.price, product.currency)}</b>
                       </td>
                       <td>
                         {product.stock > 0 ? (
@@ -269,9 +271,9 @@ export default function Products({ onExpire }) {
                 </div>
 
                 <div className="pca-price">
-                  <b>{formatPrice(product.price)} сўм</b>
+                  <b>{formatMoney(product.price, product.currency)}</b>
                   {product.oldPrice > 0 && (
-                    <span className="pca-old">{formatPrice(product.oldPrice)}</span>
+                    <span className="pca-old">{formatMoney(product.oldPrice, product.currency)}</span>
                   )}
                 </div>
 
@@ -389,12 +391,20 @@ export default function Products({ onExpire }) {
               </div>
 
               <div className="field">
-                <label>Эски нарх (сўм)</label>
+                <label>Валюта</label>
+                <select {...field('currency')}>
+                  <option value="UZS">Сўм</option>
+                  <option value="USD">Доллар ($)</option>
+                </select>
+              </div>
+
+              <div className="field">
+                <label>Эски нарх</label>
                 <input {...field('oldPrice')} type="number" placeholder="450000" />
               </div>
 
               <div className="field">
-                <label>Янги нарх (сўм) *</label>
+                <label>Янги нарх *</label>
                 <input {...field('price')} type="number" required placeholder="390000" />
               </div>
 

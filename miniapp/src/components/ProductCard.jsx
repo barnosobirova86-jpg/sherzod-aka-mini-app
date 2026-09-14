@@ -1,4 +1,4 @@
-import { formatPrice, resolveImage } from '../api.js';
+import { formatMoney, resolveImage } from '../api.js';
 import { haptic } from '../telegram.js';
 import { useCart } from '../context/CartContext.jsx';
 
@@ -64,9 +64,9 @@ export default function ProductCard({ product, onOpen }) {
       <div className="card-body">
         <div className="card-name">{product.name}</div>
         <div className="price-row">
-          <span className="price-new">{formatPrice(product.price)} сўм</span>
+          <span className="price-new">{formatMoney(product.price, product.currency)}</span>
           {product.oldPrice > 0 && (
-            <span className="price-old">{formatPrice(product.oldPrice)}</span>
+            <span className="price-old">{formatMoney(product.oldPrice, product.currency)}</span>
           )}
         </div>
         {!outOfStock && <div className="card-stock">Омборда: {stock} дона</div>}

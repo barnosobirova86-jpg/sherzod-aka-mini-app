@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { api, eventsUrl, formatPrice, formatDate } from '../api.js';
+import { api, eventsUrl, formatPrice, formatMoney, formatDate } from '../api.js';
 
 const filters = [
   { id: 'all', label: 'Ҳаммаси' },
@@ -63,6 +63,16 @@ export default function Orders({ onExpire }) {
     } catch (err) {
       alert(err.message);
     }
+  }
+
+  function orderTotalLabel(order) {
+    const map = new Map();
+    for (const item of order.items || []) {
+      const currency = item.currency || 'UZS';
+      map.set(currency, (map.get(currency) || 0) + item.price * item.qty);
+    }
+    if (map.size === 0) return formatMoney(order.totalPrice);
+    return [...map.entries()].map(([currency, amount]) => formatMoney(amount, currency)).join(' + ');
   }
 
   function customerName(order) {
@@ -200,7 +210,7 @@ export default function Orders({ onExpire }) {
                         )}
                       </td>
                       <td style={{ whiteSpace: 'nowrap' }}>
-                        <b>{formatPrice(order.totalPrice)}</b> сўм
+                        <b>{orderTotalLabel(order)}</b>
                       </td>
                       <td>
                         {order.latitude && order.longitude ? (
@@ -270,7 +280,7 @@ export default function Orders({ onExpire }) {
                 )}
 
                 <div className="oca-footer">
-                  <b>{formatPrice(order.totalPrice)} сўм</b>
+                  <b>{orderTotalLabel(order)}</b>
                   <span className="muted">{formatDate(order.createdAt)}</span>
                 </div>
 
