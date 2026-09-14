@@ -9,7 +9,9 @@ import {
   updateProduct,
   deleteProduct,
   uploadProductImage,
+  uploadProductVideo,
   listUploads,
+  listVideoUploads,
 } from '../controllers/adminController.js';
 
 const router = Router();
@@ -47,5 +49,8 @@ router.delete('/products/:id', deleteProduct);
 
 router.post('/upload', uploadProductImage);
 router.get('/uploads', listUploads);
+
+router.post('/upload-video', uploadProductVideo);
+router.get('/video-uploads', listVideoUploads);
 
 export default router;

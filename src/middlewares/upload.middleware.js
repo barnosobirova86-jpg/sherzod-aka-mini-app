@@ -46,3 +46,12 @@ export const uploadImage = multer({
     cb(new Error('Faqat rasm fayllari qabul qilinadi'));
   },
 }).single('image');
+
+export const uploadVideo = multer({
+  storage,
+  limits: { fileSize: 200 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('video/')) return cb(null, true);
+    cb(new Error('Faqat video fayllari qabul qilinadi'));
+  },
+}).single('video');

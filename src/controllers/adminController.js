@@ -4,7 +4,7 @@ import Product from '../models/Product.js';
 import Order from '../models/Order.js';
 import User from '../models/User.js';
 import { sendMessage } from '../core/bot.js';
-import { uploadImage, UPLOAD_DIR } from '../middlewares/upload.middleware.js';
+import { uploadImage, uploadVideo, UPLOAD_DIR } from '../middlewares/upload.middleware.js';
 
 export async function getStats(req, res) {
   try {
@@ -78,6 +78,7 @@ function normalizeProduct(body) {
     name: String(body.name || '').trim(),
     description: String(body.description || '').trim(),
     imageUrl: String(body.imageUrl || '').trim(),
+    videoUrl: body.videoUrl ? String(body.videoUrl).trim() : null,
     category: String(body.category || '').trim(),
     price: Number(body.price) || 0,
     oldPrice: body.oldPrice ? Number(body.oldPrice) : null,
@@ -147,6 +148,17 @@ export function uploadProductImage(req, res) {
 }
 
 /**
+ * Kompyuterdan video yuklash -> /uploads/<fayl nomi>
+ */
+export function uploadProductVideo(req, res) {
+  uploadVideo(req, res, (error) => {
+    if (error) return res.status(400).json({ message: error.message });
+    if (!req.file) return res.status(400).json({ message: 'Видео танланмади' });
+    res.json({ url: `/uploads/${req.file.filename}`, name: req.file.filename });
+  });
+}
+
+/**
  * public/uploads papkasidagi barcha rasmlar ro'yxati
  */
 export function listUploads(req, res) {
@@ -154,6 +166,27 @@ export function listUploads(req, res) {
     const files = fs
       .readdirSync(UPLOAD_DIR)
       .filter((name) => /\.(jpe?g|png|webp|gif|avif|bmp|tiff?|heic|heif|svg)$/i.test(name))
+      .map((name) => ({
+        name,
+        url: `/uploads/${name}`,
+        time: fs.statSync(path.join(UPLOAD_DIR, name)).mtimeMs,
+      }))
+      .sort((a, b) => b.time - a.time);
+
+    res.json(files);
+  } catch (error) {
+    res.json([]);
+  }
+}
+
+/**
+ * public/uploads papkasidagi barcha videolar ro'yxati
+ */
+export function listVideoUploads(req, res) {
+  try {
+    const files = fs
+      .readdirSync(UPLOAD_DIR)
+      .filter((name) => /\.(mp4|mov|webm|mkv|avi|m4v)$/i.test(name))
       .map((name) => ({
         name,
         url: `/uploads/${name}`,

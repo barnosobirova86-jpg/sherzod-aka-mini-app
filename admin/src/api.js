@@ -58,6 +58,21 @@ export const api = {
     });
   },
 
+  videoUploads: () => request('/video-uploads'),
+
+  uploadVideo: (file) => {
+    const body = new FormData();
+    body.append('video', file);
+    return fetch(BASE + '/upload-video', {
+      method: 'POST',
+      body,
+    }).then(async (r) => {
+      const data = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(data.message || 'Видео юкланмади');
+      return data;
+    });
+  },
+
   products: () => request('/products'),
   createProduct: (data) => request('/products', { method: 'POST', body: JSON.stringify(data) }),
   updateProduct: (id, data) =>

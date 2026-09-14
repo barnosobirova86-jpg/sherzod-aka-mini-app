@@ -28,6 +28,7 @@ model Product {
   name          String
   description   String
   imageUrl      String
+  videoUrl      String?
   oldPrice      Int?
   price         Int
   currency      String   @default("UZS")

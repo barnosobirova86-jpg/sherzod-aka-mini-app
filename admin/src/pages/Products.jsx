@@ -6,6 +6,7 @@ const emptyForm = {
   name: '',
   description: '',
   imageUrl: '',
+  videoUrl: '',
   category: CATEGORIES[0],
   price: '',
   oldPrice: '',
@@ -26,7 +27,10 @@ export default function Products() {
   const [saving, setSaving] = useState(false);
   const [gallery, setGallery] = useState([]);
   const [uploading, setUploading] = useState(false);
+  const [videoGallery, setVideoGallery] = useState([]);
+  const [uploadingVideo, setUploadingVideo] = useState(false);
   const fileRef = useRef(null);
+  const videoFileRef = useRef(null);
 
   async function load() {
     try {
@@ -46,6 +50,11 @@ export default function Products() {
   // Modal ochilganda papkadagi rasmlar ro'yxatini olish
   useEffect(() => {
     if (editing) api.uploads().then(setGallery).catch(() => setGallery([]));
+  }, [editing]);
+
+  // Modal ochilganda papkadagi videolar ro'yxatini olish
+  useEffect(() => {
+    if (editing) api.videoUploads().then(setVideoGallery).catch(() => setVideoGallery([]));
   }, [editing]);
 
   // Modal ochiq paytda orqa fon qotib tursin (faqat modal ichi scroll bo'ladi)
@@ -75,6 +84,23 @@ export default function Products() {
     }
   }
 
+  async function handleVideoUpload(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setUploadingVideo(true);
+    try {
+      const result = await api.uploadVideo(file);
+      setForm((prev) => ({ ...prev, videoUrl: result.url }));
+      setVideoGallery(await api.videoUploads().catch(() => videoGallery));
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setUploadingVideo(false);
+      if (videoFileRef.current) videoFileRef.current.value = '';
+    }
+  }
+
   function openNew() {
     setForm(emptyForm);
     setEditing('new');
@@ -85,6 +111,7 @@ export default function Products() {
       name: product.name,
       description: product.description,
       imageUrl: product.imageUrl,
+      videoUrl: product.videoUrl || '',
       category: product.category,
       price: String(product.price),
       oldPrice: product.oldPrice ? String(product.oldPrice) : '',
@@ -304,6 +331,73 @@ export default function Products() {
               <div className="field full">
                 <label>Таърифи</label>
                 <textarea {...field('description')} rows={3} placeholder="Қисқача таъриф" />
+              </div>
+
+              <div className="field full">
+                <label>Маҳсулот видеоси (ихтиёрий, расмдан олдин кўринади)</label>
+
+                <div className="image-picker">
+                  <div className="image-preview">
+                    {form.videoUrl ? (
+                      <video src={resolveImage(form.videoUrl)} muted style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    ) : (
+                      <span>Видео йўқ</span>
+                    )}
+                  </div>
+
+                  <div className="image-actions">
+                    <input
+                      ref={videoFileRef}
+                      type="file"
+                      accept="video/*"
+                      onChange={handleVideoUpload}
+                      style={{ display: 'none' }}
+                    />
+                    <button
+                      type="button"
+                      className="btn btn-accent btn-sm"
+                      onClick={() => videoFileRef.current?.click()}
+                      disabled={uploadingVideo}
+                    >
+                      {uploadingVideo ? 'Юкланмоқда...' : '🎬 Видео жойлаш'}
+                    </button>
+                    {form.videoUrl && (
+                      <button
+                        type="button"
+                        className="btn btn-light btn-sm"
+                        onClick={() => setForm((prev) => ({ ...prev, videoUrl: '' }))}
+                      >
+                        Видеони олиб ташлаш
+                      </button>
+                    )}
+                    <input
+                      {...field('videoUrl')}
+                      placeholder="ёки видео ҳаволасини шу ерга қўйинг"
+                      style={{ marginTop: 4 }}
+                    />
+                  </div>
+                </div>
+
+                {videoGallery.length > 0 && (
+                  <>
+                    <div className="gallery-title">
+                      Юкланган видеолар ({videoGallery.length}) — танлаш учун босинг
+                    </div>
+                    <div className="gallery">
+                      {videoGallery.map((item) => (
+                        <button
+                          type="button"
+                          key={item.name}
+                          className={`gallery-item ${form.videoUrl === item.url ? 'active' : ''}`}
+                          title={item.name}
+                          onClick={() => setForm((prev) => ({ ...prev, videoUrl: item.url }))}
+                        >
+                          <video src={resolveImage(item.url)} muted />
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
 
               <div className="field full">
