@@ -49,7 +49,8 @@ export const uploadImage = multer({
 
 export const uploadVideo = multer({
   storage,
-  limits: { fileSize: 200 * 1024 * 1024 },
+  // 4K, 5 daqiqagacha bo'lgan videolar uchun (iPhone HEVC ~2-2.5 GB atrofida bo'lishi mumkin)
+  limits: { fileSize: 3 * 1024 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     if (file.mimetype.startsWith('video/')) return cb(null, true);
     cb(new Error('Faqat video fayllari qabul qilinadi'));

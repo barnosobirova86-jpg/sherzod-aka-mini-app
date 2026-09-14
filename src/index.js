@@ -47,9 +47,14 @@ app.use((req, res) => res.status(404).json({ message: 'Топилмади' }));
 async function start() {
   await connectDatabase();
 
-  app.listen(config.port, () => {
+  const server = app.listen(config.port, () => {
     console.log(`🚀 API ishga tushdi: http://localhost:${config.port}`);
   });
+
+  // Katta video fayllar (4K, bir necha GB) sekin tarmoqda uzoq yuklanishi
+  // mumkin — server ularni vaqtidan oldin uzib qo'ymasligi uchun.
+  server.requestTimeout = 20 * 60 * 1000; // 20 daqiqa
+  server.headersTimeout = 20 * 60 * 1000 + 5000;
 
   try {
     const me = await bot.telegram.getMe();
