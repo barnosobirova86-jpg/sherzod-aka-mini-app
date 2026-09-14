@@ -24,7 +24,7 @@ export default function ProductSheet({ product, onClose }) {
         <div className="sheet-handle" />
 
         <div className="sheet-scroll">
-          {product.videoUrl && (
+          {product.videoUrl ? (
             <video
               className="sheet-img"
               src={resolveImage(product.videoUrl)}
@@ -32,8 +32,9 @@ export default function ProductSheet({ product, onClose }) {
               playsInline
               style={{ background: '#000' }}
             />
+          ) : (
+            <img className="sheet-img" src={resolveImage(product.imageUrl)} alt={product.name} />
           )}
-          <img className="sheet-img" src={resolveImage(product.imageUrl)} alt={product.name} />
 
           <h2>{product.name}</h2>
           <div className="price-row">
