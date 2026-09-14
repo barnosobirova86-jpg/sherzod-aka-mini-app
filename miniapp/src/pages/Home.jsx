@@ -27,7 +27,7 @@ export default function Home({ user, onOpenProduct }) {
     <div className="page">
       <div className="header">
         <div>
-          <h1 className="title">{name}, хуш келибсиз!</h1>
+          <h1 className="title">{name} ака, хуш келибсиз!</h1>
           <p className="subtitle">Ассалому алайкум 🕋</p>
         </div>
         <div className="avatar" title={fullName}>

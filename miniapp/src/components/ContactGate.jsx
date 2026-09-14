@@ -35,7 +35,7 @@ export default function ContactGate({ user, onDone }) {
       <div className="gate-card">
         <div className="gate-icon">🕋</div>
         <h1 className="title" style={{ textAlign: 'center' }}>
-          Танишайлик
+          Буюртмани расмийлаштириш
         </h1>
         <p className="subtitle" style={{ textAlign: 'center' }}>
           Буюртма бериш учун исмингиз ва телефон рақамингизни киритинг
