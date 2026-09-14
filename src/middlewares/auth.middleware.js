@@ -77,15 +77,3 @@ export async function telegramAuth(req, res, next) {
     res.status(500).json({ message: 'Сервер хатоси' });
   }
 }
-
-/**
- * Admin panel so'rovlarini himoyalash.
- * Header: x-admin-password
- */
-export function adminAuth(req, res, next) {
-  const password = req.header('x-admin-password');
-  if (!password || password !== config.adminPassword) {
-    return res.status(401).json({ message: "Парол нотўғри" });
-  }
-  next();
-}

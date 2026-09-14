@@ -2,7 +2,6 @@
 // Deploy paytida VITE_API_URL environment o'zgaruvchisi orqali beriladi.
 const API_ROOT = import.meta.env.VITE_API_URL || '';
 const BASE = `${API_ROOT}/api/admin`;
-const TOKEN_KEY = 'kisva_admin_token';
 
 /**
  * "/uploads/rasm.jpg" kabi nisbiy rasm manzilini to'liq (backend) manzilga aylantiradi.
@@ -13,36 +12,11 @@ export function resolveImage(url) {
   return `${API_ROOT}${url}`;
 }
 
-export function getToken() {
-  try {
-    return localStorage.getItem(TOKEN_KEY) || '';
-  } catch {
-    return '';
-  }
-}
-
-export function setToken(token) {
-  try {
-    localStorage.setItem(TOKEN_KEY, token);
-  } catch {
-    /* ignore */
-  }
-}
-
-export function clearToken() {
-  try {
-    localStorage.removeItem(TOKEN_KEY);
-  } catch {
-    /* ignore */
-  }
-}
-
 /**
- * Yangi buyurtmalarni jonli kuzatish uchun manzil (EventSource maxsus
- * header yubora olmagani uchun parol query orqali beriladi).
+ * Yangi buyurtmalarni jonli kuzatish uchun manzil.
  */
 export function eventsUrl() {
-  return `${BASE}/events?password=${encodeURIComponent(getToken())}`;
+  return `${BASE}/events`;
 }
 
 async function request(path, options = {}) {
@@ -50,15 +24,9 @@ async function request(path, options = {}) {
     ...options,
     headers: {
       'Content-Type': 'application/json',
-      'x-admin-password': getToken(),
       ...(options.headers || {}),
     },
   });
-
-  if (response.status === 401) {
-    clearToken();
-    throw new Error("Сессия тугади. Қайтадан киринг.");
-  }
 
   if (!response.ok) {
     const data = await response.json().catch(() => ({}));
@@ -69,16 +37,6 @@ async function request(path, options = {}) {
 }
 
 export const api = {
-  login: (password) =>
-    fetch(BASE + '/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password }),
-    }).then(async (r) => {
-      if (!r.ok) throw new Error("Парол нотўғри");
-      return r.json();
-    }),
-
   stats: () => request('/stats'),
 
   orders: (status) => request(`/orders${status && status !== 'all' ? `?status=${status}` : ''}`),
@@ -92,7 +50,6 @@ export const api = {
     body.append('image', file);
     return fetch(BASE + '/upload', {
       method: 'POST',
-      headers: { 'x-admin-password': getToken() },
       body,
     }).then(async (r) => {
       const data = await r.json().catch(() => ({}));

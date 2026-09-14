@@ -17,7 +17,7 @@ const emptyForm = {
   isActive: true,
 };
 
-export default function Products({ onExpire }) {
+export default function Products() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -34,7 +34,6 @@ export default function Products({ onExpire }) {
       setError('');
     } catch (err) {
       setError(err.message);
-      if (err.message.includes('Сессия')) onExpire();
     } finally {
       setLoading(false);
     }

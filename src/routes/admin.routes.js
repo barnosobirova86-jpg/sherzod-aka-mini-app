@@ -1,9 +1,6 @@
 import { Router } from 'express';
-import { adminAuth } from '../middlewares/auth.middleware.js';
-import config from '../config/default.js';
 import { addClient, removeClient } from '../core/sse.js';
 import {
-  login,
   getStats,
   getOrders,
   updateOrderStatus,
@@ -17,17 +14,10 @@ import {
 
 const router = Router();
 
-router.post('/login', login);
-
 /**
  * Yangi buyurtmalarni jonli (real-time) kuzatish uchun oqim.
- * EventSource maxsus header yubora olmagani uchun parol query orqali tekshiriladi.
  */
 router.get('/events', (req, res) => {
-  if (req.query.password !== config.adminPassword) {
-    return res.status(401).end();
-  }
-
   res.set({
     'Content-Type': 'text/event-stream',
     'Cache-Control': 'no-cache',
@@ -44,8 +34,6 @@ router.get('/events', (req, res) => {
     removeClient(res);
   });
 });
-
-router.use(adminAuth);
 
 router.get('/stats', getStats);
 

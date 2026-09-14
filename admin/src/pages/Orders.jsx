@@ -14,7 +14,7 @@ const statusLabels = {
   canceled: 'Бекор қилинган',
 };
 
-export default function Orders({ onExpire }) {
+export default function Orders() {
   const [orders, setOrders] = useState([]);
   const [stats, setStats] = useState(null);
   const [filter, setFilter] = useState('all');
@@ -29,11 +29,10 @@ export default function Orders({ onExpire }) {
       setError('');
     } catch (err) {
       setError(err.message);
-      if (err.message.includes('Сессия')) onExpire();
     } finally {
       setLoading(false);
     }
-  }, [filter, onExpire]);
+  }, [filter]);
 
   useEffect(() => {
     setLoading(true);

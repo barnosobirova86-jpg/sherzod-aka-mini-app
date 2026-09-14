@@ -3,17 +3,8 @@ import path from 'path';
 import Product from '../models/Product.js';
 import Order from '../models/Order.js';
 import User from '../models/User.js';
-import config from '../config/default.js';
 import { sendMessage } from '../core/bot.js';
 import { uploadImage, UPLOAD_DIR } from '../middlewares/upload.middleware.js';
-
-export function login(req, res) {
-  const { password } = req.body;
-  if (password !== config.adminPassword) {
-    return res.status(401).json({ message: 'Парол нотўғри' });
-  }
-  res.json({ ok: true, token: password });
-}
 
 export async function getStats(req, res) {
   try {
