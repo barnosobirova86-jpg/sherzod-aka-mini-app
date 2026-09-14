@@ -29,6 +29,8 @@ model Product {
   description   String
   imageUrl      String
   videoUrl      String?
+  images        String[] @default([])
+  videos        String[] @default([])
   oldPrice      Int?
   price         Int
   currency      String   @default("UZS")
@@ -36,6 +38,7 @@ model Product {
   stock         Int      @default(0)
   sizes         String[] @default([])
   features      String[] @default([])
+  reviews       Json     @default("[]")
   isRecommended Boolean  @default(false)
   isActive      Boolean  @default(true)
   createdAt     DateTime @default(now())

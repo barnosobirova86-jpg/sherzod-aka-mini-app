@@ -74,11 +74,29 @@ function normalizeProduct(body) {
     return [];
   };
 
+  const toStringArray = (value) =>
+    Array.isArray(value)
+      ? value.map((v) => String(v || '').trim()).filter(Boolean)
+      : [];
+
+  const toReviews = (value) => {
+    if (!Array.isArray(value)) return [];
+    return value
+      .filter((r) => r && String(r.text || '').trim())
+      .map((r) => ({
+        name: String(r.name || '').trim() || 'Мижоз',
+        rating: Math.min(5, Math.max(1, Number(r.rating) || 5)),
+        text: String(r.text || '').trim(),
+      }));
+  };
+
   return {
     name: String(body.name || '').trim(),
     description: String(body.description || '').trim(),
     imageUrl: String(body.imageUrl || '').trim(),
     videoUrl: body.videoUrl ? String(body.videoUrl).trim() : null,
+    images: toStringArray(body.images),
+    videos: toStringArray(body.videos),
     category: String(body.category || '').trim(),
     price: Number(body.price) || 0,
     oldPrice: body.oldPrice ? Number(body.oldPrice) : null,
@@ -86,6 +104,7 @@ function normalizeProduct(body) {
     stock: Math.max(0, Number(body.stock) || 0),
     sizes: toArray(body.sizes),
     features: toArray(body.features),
+    reviews: toReviews(body.reviews),
     isRecommended: Boolean(body.isRecommended),
     isActive: body.isActive === undefined ? true : Boolean(body.isActive),
   };

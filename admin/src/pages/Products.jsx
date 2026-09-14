@@ -7,6 +7,8 @@ const emptyForm = {
   description: '',
   imageUrl: '',
   videoUrl: '',
+  images: [],
+  videos: [],
   category: CATEGORIES[0],
   price: '',
   oldPrice: '',
@@ -14,9 +16,12 @@ const emptyForm = {
   stock: '0',
   sizes: 'S, M, L, XL',
   features: '',
+  reviews: [],
   isRecommended: false,
   isActive: true,
 };
+
+const emptyReview = { name: '', rating: 5, text: '' };
 
 export default function Products() {
   const [products, setProducts] = useState([]);
@@ -29,8 +34,12 @@ export default function Products() {
   const [uploading, setUploading] = useState(false);
   const [videoGallery, setVideoGallery] = useState([]);
   const [uploadingVideo, setUploadingVideo] = useState(false);
+  const [uploadingMore, setUploadingMore] = useState(false);
+  const [uploadingMoreVideos, setUploadingMoreVideos] = useState(false);
   const fileRef = useRef(null);
   const videoFileRef = useRef(null);
+  const moreImagesRef = useRef(null);
+  const moreVideosRef = useRef(null);
 
   async function load() {
     try {
@@ -101,6 +110,67 @@ export default function Products() {
     }
   }
 
+  async function handleMoreImages(event) {
+    const files = [...(event.target.files || [])];
+    if (!files.length) return;
+
+    setUploadingMore(true);
+    try {
+      for (const file of files) {
+        const result = await api.uploadImage(file);
+        setForm((prev) => ({ ...prev, images: [...prev.images, result.url] }));
+      }
+      setGallery(await api.uploads().catch(() => gallery));
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setUploadingMore(false);
+      if (moreImagesRef.current) moreImagesRef.current.value = '';
+    }
+  }
+
+  async function handleMoreVideos(event) {
+    const files = [...(event.target.files || [])];
+    if (!files.length) return;
+
+    setUploadingMoreVideos(true);
+    try {
+      for (const file of files) {
+        const result = await api.uploadVideo(file);
+        setForm((prev) => ({ ...prev, videos: [...prev.videos, result.url] }));
+      }
+      setVideoGallery(await api.videoUploads().catch(() => videoGallery));
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setUploadingMoreVideos(false);
+      if (moreVideosRef.current) moreVideosRef.current.value = '';
+    }
+  }
+
+  function removeImageAt(index) {
+    setForm((prev) => ({ ...prev, images: prev.images.filter((_, i) => i !== index) }));
+  }
+
+  function removeVideoAt(index) {
+    setForm((prev) => ({ ...prev, videos: prev.videos.filter((_, i) => i !== index) }));
+  }
+
+  function addReview() {
+    setForm((prev) => ({ ...prev, reviews: [...prev.reviews, { ...emptyReview }] }));
+  }
+
+  function updateReview(index, key, value) {
+    setForm((prev) => ({
+      ...prev,
+      reviews: prev.reviews.map((r, i) => (i === index ? { ...r, [key]: value } : r)),
+    }));
+  }
+
+  function removeReview(index) {
+    setForm((prev) => ({ ...prev, reviews: prev.reviews.filter((_, i) => i !== index) }));
+  }
+
   function openNew() {
     setForm(emptyForm);
     setEditing('new');
@@ -112,6 +182,8 @@ export default function Products() {
       description: product.description,
       imageUrl: product.imageUrl,
       videoUrl: product.videoUrl || '',
+      images: product.images || [],
+      videos: product.videos || [],
       category: product.category,
       price: String(product.price),
       oldPrice: product.oldPrice ? String(product.oldPrice) : '',
@@ -119,6 +191,7 @@ export default function Products() {
       stock: String(product.stock ?? 0),
       sizes: (product.sizes || []).join(', '),
       features: (product.features || []).join('\n'),
+      reviews: product.reviews || [],
       isRecommended: product.isRecommended,
       isActive: product.isActive,
     });
@@ -398,6 +471,42 @@ export default function Products() {
                     </div>
                   </>
                 )}
+
+                <label style={{ marginTop: 14, display: 'block' }}>Қўшимча видеолар</label>
+                <input
+                  ref={moreVideosRef}
+                  type="file"
+                  accept="video/*"
+                  multiple
+                  onChange={handleMoreVideos}
+                  style={{ display: 'none' }}
+                />
+                <button
+                  type="button"
+                  className="btn btn-light btn-sm"
+                  onClick={() => moreVideosRef.current?.click()}
+                  disabled={uploadingMoreVideos}
+                  style={{ marginTop: 6 }}
+                >
+                  {uploadingMoreVideos ? 'Юкланмоқда...' : '🎬 Яна видео қўшиш (бир нечта танлаш мумкин)'}
+                </button>
+                {form.videos.length > 0 && (
+                  <div className="gallery" style={{ marginTop: 8 }}>
+                    {form.videos.map((url, i) => (
+                      <div key={url + i} className="gallery-item active" style={{ position: 'relative' }}>
+                        <video src={resolveImage(url)} muted />
+                        <button
+                          type="button"
+                          className="btn btn-danger btn-sm"
+                          onClick={() => removeVideoAt(i)}
+                          style={{ position: 'absolute', top: 2, right: 2, padding: '2px 6px' }}
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="field full">
@@ -465,6 +574,42 @@ export default function Products() {
                     </div>
                   </>
                 )}
+
+                <label style={{ marginTop: 14, display: 'block' }}>Қўшимча расмлар</label>
+                <input
+                  ref={moreImagesRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleMoreImages}
+                  style={{ display: 'none' }}
+                />
+                <button
+                  type="button"
+                  className="btn btn-light btn-sm"
+                  onClick={() => moreImagesRef.current?.click()}
+                  disabled={uploadingMore}
+                  style={{ marginTop: 6 }}
+                >
+                  {uploadingMore ? 'Юкланмоқда...' : '📁 Яна расм қўшиш (бир нечта танлаш мумкин)'}
+                </button>
+                {form.images.length > 0 && (
+                  <div className="gallery" style={{ marginTop: 8 }}>
+                    {form.images.map((url, i) => (
+                      <div key={url + i} className="gallery-item active" style={{ position: 'relative' }}>
+                        <img src={resolveImage(url)} alt="" />
+                        <button
+                          type="button"
+                          className="btn btn-danger btn-sm"
+                          onClick={() => removeImageAt(i)}
+                          style={{ position: 'absolute', top: 2, right: 2, padding: '2px 6px' }}
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="field">
@@ -513,6 +658,58 @@ export default function Products() {
                   rows={4}
                   placeholder={'100% пахта мато\nМаккадан оригинал\nСовға қутиси билан'}
                 />
+              </div>
+
+              <div className="field full">
+                <label>Мижоз шарҳлари (сиз ўзингиз қўшасиз)</label>
+                {form.reviews.map((review, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      display: 'flex',
+                      gap: 8,
+                      marginBottom: 8,
+                      padding: 10,
+                      border: '1px solid var(--line)',
+                      borderRadius: 10,
+                      flexWrap: 'wrap',
+                    }}
+                  >
+                    <input
+                      style={{ flex: '1 1 140px' }}
+                      placeholder="Исм"
+                      value={review.name}
+                      onChange={(e) => updateReview(i, 'name', e.target.value)}
+                    />
+                    <select
+                      style={{ flex: '0 0 90px' }}
+                      value={review.rating}
+                      onChange={(e) => updateReview(i, 'rating', Number(e.target.value))}
+                    >
+                      {[5, 4, 3, 2, 1].map((n) => (
+                        <option key={n} value={n}>
+                          {'★'.repeat(n)}
+                        </option>
+                      ))}
+                    </select>
+                    <input
+                      style={{ flex: '1 1 100%' }}
+                      placeholder="Шарҳ матни"
+                      value={review.text}
+                      onChange={(e) => updateReview(i, 'text', e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      className="btn btn-danger btn-sm"
+                      onClick={() => removeReview(i)}
+                    >
+                      ✕ Ўчириш
+                    </button>
+                  </div>
+                ))}
+                <button type="button" className="btn btn-light btn-sm" onClick={addReview}>
+                  + Шарҳ қўшиш
+                </button>
               </div>
 
               <label className="checkbox">

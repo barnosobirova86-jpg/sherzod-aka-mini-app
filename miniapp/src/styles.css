@@ -578,6 +578,51 @@ img {
   background: var(--soft);
 }
 
+.sheet-gallery {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 10px;
+  border-radius: 18px;
+}
+
+.sheet-gallery-item {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  border-radius: 18px;
+}
+
+.reviews {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.review {
+  background: var(--soft);
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+
+.review-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.review-stars {
+  color: #f0a500;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+.review p {
+  margin: 6px 0 0;
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
 .sheet h2 {
   font-size: 20px;
   font-weight: 700;

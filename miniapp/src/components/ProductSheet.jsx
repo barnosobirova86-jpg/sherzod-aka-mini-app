@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { formatMoney, resolveImage } from '../api.js';
 import { haptic } from '../telegram.js';
 import { useCart } from '../context/CartContext.jsx';
@@ -9,6 +9,15 @@ export default function ProductSheet({ product, onClose }) {
   const [qty, setQty] = useState(1);
   const stock = product.stock ?? 0;
   const outOfStock = stock <= 0;
+
+  const media = useMemo(() => {
+    const items = [];
+    if (product.videoUrl) items.push({ type: 'video', url: product.videoUrl });
+    for (const url of product.videos || []) items.push({ type: 'video', url });
+    if (product.imageUrl) items.push({ type: 'image', url: product.imageUrl });
+    for (const url of product.images || []) items.push({ type: 'image', url });
+    return items;
+  }, [product]);
 
   function submit() {
     if (outOfStock) return;
@@ -24,10 +33,32 @@ export default function ProductSheet({ product, onClose }) {
         <div className="sheet-handle" />
 
         <div className="sheet-scroll">
-          {product.videoUrl ? (
+          {media.length > 1 ? (
+            <div className="sheet-gallery">
+              {media.map((item, i) =>
+                item.type === 'video' ? (
+                  <video
+                    key={item.url + i}
+                    className="sheet-img sheet-gallery-item"
+                    src={resolveImage(item.url)}
+                    controls
+                    playsInline
+                    style={{ background: '#000' }}
+                  />
+                ) : (
+                  <img
+                    key={item.url + i}
+                    className="sheet-img sheet-gallery-item"
+                    src={resolveImage(item.url)}
+                    alt={product.name}
+                  />
+                )
+              )}
+            </div>
+          ) : media[0]?.type === 'video' ? (
             <video
               className="sheet-img"
-              src={resolveImage(product.videoUrl)}
+              src={resolveImage(media[0].url)}
               controls
               playsInline
               style={{ background: '#000' }}
@@ -100,6 +131,23 @@ export default function ProductSheet({ product, onClose }) {
           <div className="muted" style={{ fontSize: 12.5, marginTop: 6 }}>
             {outOfStock ? 'Тугаган' : `Омборда: ${stock} дона`}
           </div>
+
+          {product.reviews?.length > 0 && (
+            <>
+              <div className="section-title">Мижозлар шарҳлари</div>
+              <div className="reviews">
+                {product.reviews.map((review, i) => (
+                  <div className="review" key={i}>
+                    <div className="review-head">
+                      <b>{review.name}</b>
+                      <span className="review-stars">{'★'.repeat(review.rating || 5)}</span>
+                    </div>
+                    <p>{review.text}</p>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
 
         <div className="sheet-footer">
