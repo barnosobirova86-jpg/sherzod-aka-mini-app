@@ -38,13 +38,11 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => cb(null, safeName(file.originalname)),
 });
 
-const ALLOWED = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/avif'];
-
 export const uploadImage = multer({
   storage,
-  limits: { fileSize: 8 * 1024 * 1024 },
+  limits: { fileSize: 50 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
-    if (ALLOWED.includes(file.mimetype)) return cb(null, true);
-    cb(new Error('Faqat rasm fayllari (jpg, png, webp, gif) qabul qilinadi'));
+    if (file.mimetype.startsWith('image/')) return cb(null, true);
+    cb(new Error('Faqat rasm fayllari qabul qilinadi'));
   },
 }).single('image');

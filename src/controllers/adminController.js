@@ -153,7 +153,7 @@ export function listUploads(req, res) {
   try {
     const files = fs
       .readdirSync(UPLOAD_DIR)
-      .filter((name) => /\.(jpe?g|png|webp|gif|avif)$/i.test(name))
+      .filter((name) => /\.(jpe?g|png|webp|gif|avif|bmp|tiff?|heic|heif|svg)$/i.test(name))
       .map((name) => ({
         name,
         url: `/uploads/${name}`,
