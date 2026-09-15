@@ -16,7 +16,7 @@ const config = {
   texts: {
     start: () =>
       `<b>Hurmatli mijoz, xush kelibsiz!</b> 👋\n\n` +
-      `Assalomu alaykum ART-SHERZOD galereyasiga xush kelibsiz!\n\n` +
+      `Assalomu alaykum! ART-SHERZOD galereyasiga tashrifingizdan xursandmiz.\n\n` +
       `Har bir Kisva Ka‘ba po‘shtimiz sertifikatga ega.\n\n` +
       `Buyurtma berish uchun pastdagi 🛍 Do‘kon tugmasini bosing 👇`,
     orderAccepted: 'Xarid uchun rahmat! Admin siz bilan bog‘lanadi 🕋',
