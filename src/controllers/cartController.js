@@ -132,11 +132,10 @@ export async function createOrder(req, res) {
       items = [],
       name,
       phone,
+      extraPhone,
       address,
       latitude,
       longitude,
-      fromLatitude,
-      fromLongitude,
       note,
     } = req.body;
 
@@ -171,13 +170,20 @@ export async function createOrder(req, res) {
       return res.status(400).json({ message: 'Mahsulotlar topilmadi' });
     }
 
-    if (phone && phone !== req.user.phone) {
-      await User.updatePhone(req.user.id, phone);
+    // Savatchada kiritilgan raqamlar profilda ham saqlanib qoladi
+    const mainPhone = phone?.trim() || req.user.phone || null;
+    const secondPhone =
+      extraPhone === undefined ? req.user.extraPhone : extraPhone?.trim() || null;
+
+    if (mainPhone !== req.user.phone || secondPhone !== req.user.extraPhone) {
+      await User.updateContact(req.user.id, {
+        ...(mainPhone !== req.user.phone ? { phone: mainPhone } : {}),
+        ...(secondPhone !== req.user.extraPhone ? { extraPhone: secondPhone } : {}),
+      });
     }
 
-    // Asosiy raqam + mijoz qo‘shgan qo‘shimcha raqam (admin ikkalasini ko‘radi)
-    const mainPhone = phone || req.user.phone || null;
-    const phoneLabel = [mainPhone, req.user.extraPhone].filter(Boolean).join(' / ') || null;
+    // Admin ikkala raqamni ham ko‘radi
+    const phoneLabel = [mainPhone, secondPhone].filter(Boolean).join(' / ') || null;
 
     const order = await Order.create({
       userId: req.user.id,
@@ -188,8 +194,6 @@ export async function createOrder(req, res) {
       address: address?.trim() || null,
       latitude: latitude ? Number(latitude) : null,
       longitude: longitude ? Number(longitude) : null,
-      fromLatitude: fromLatitude ? Number(fromLatitude) : null,
-      fromLongitude: fromLongitude ? Number(fromLongitude) : null,
       note: note || null,
     });
 

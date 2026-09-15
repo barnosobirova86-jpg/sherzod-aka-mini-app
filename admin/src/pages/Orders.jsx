@@ -83,33 +83,21 @@ export default function Orders() {
   }
 
   function AddressCell({ order }) {
-    const hasA = order.fromLatitude && order.fromLongitude;
-    const hasB = order.latitude && order.longitude;
+    const hasPoint = order.latitude && order.longitude;
 
-    if (!order.address && !hasA && !hasB) return '—';
+    if (!order.address && !hasPoint) return '—';
 
     return (
       <div style={{ fontSize: 13, lineHeight: 1.5 }}>
         {order.address && <div>{order.address}</div>}
-        {hasA && (
-          <a
-            className="link"
-            href={`https://maps.google.com/?q=${order.fromLatitude},${order.fromLongitude}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            📍 A (qayerdan)
-          </a>
-        )}
-        {hasA && hasB && ' · '}
-        {hasB && (
+        {hasPoint && (
           <a
             className="link"
             href={`https://maps.google.com/?q=${order.latitude},${order.longitude}`}
             target="_blank"
             rel="noreferrer"
           >
-            📍 B (qayerga)
+            📍 Xaritada ko‘rish
           </a>
         )}
       </div>

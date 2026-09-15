@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { api, formatMoney, resolveImage } from '../api.js';
 import { useCart } from '../context/CartContext.jsx';
 import { haptic, showAlert, requestLocation } from '../telegram.js';
@@ -14,29 +14,32 @@ export default function Cart({ user, onNavigate, onUserUpdate }) {
 
   const [note, setNote] = useState('');
   const [address, setAddress] = useState('');
-  const [pointA, setPointA] = useState(null);
-  const [pointB, setPointB] = useState(null);
+  const [point, setPointState] = useState(null);
+  const [phone, setPhone] = useState(user?.phone || '');
+  const [extraPhone, setExtraPhone] = useState(user?.extraPhone || '');
   const [locating, setLocating] = useState(false);
   const [sending, setSending] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [showGate, setShowGate] = useState(false);
 
-  const setPoint = useCallback((key, point) => {
-    if (key === 'A') setPointA(point);
-    else setPointB(point);
-  }, []);
+  const setPoint = useCallback((value) => setPointState(value), []);
 
-  function clearPoints() {
+  // Telegram raqami kechroq kelishi mumkin — kelgach maydonlarga to‘ldiriladi
+  useEffect(() => {
+    if (user?.phone) setPhone((current) => current || user.phone);
+    if (user?.extraPhone) setExtraPhone((current) => current || user.extraPhone);
+  }, [user?.phone, user?.extraPhone]);
+
+  function clearPoint() {
     haptic('light');
-    setPointA(null);
-    setPointB(null);
+    setPointState(null);
   }
 
   async function useMyLocation() {
     setLocating(true);
     try {
       const coords = await requestLocation();
-      setPointA({ lat: coords.latitude, lng: coords.longitude });
+      setPointState({ lat: coords.latitude, lng: coords.longitude });
       haptic('medium');
     } catch (error) {
       showAlert(error.message || 'Lokatsiya olinmadi');
@@ -45,18 +48,17 @@ export default function Cart({ user, onNavigate, onUserUpdate }) {
     }
   }
 
-  async function placeOrder({ name, phone }) {
+  async function placeOrder({ name, phone: orderPhone }) {
     setSending(true);
     try {
       await api.createOrder({
         items: items.map((i) => ({ productId: i.productId, size: i.size, qty: i.qty })),
         name,
-        phone,
+        phone: orderPhone,
+        extraPhone: extraPhone.trim() || null,
         address: address.trim() || null,
-        latitude: pointB?.lat,
-        longitude: pointB?.lng,
-        fromLatitude: pointA?.lat,
-        fromLongitude: pointA?.lng,
+        latitude: point?.lat,
+        longitude: point?.lng,
         note: note.trim() || null,
       });
 
@@ -71,11 +73,14 @@ export default function Cart({ user, onNavigate, onUserUpdate }) {
   }
 
   function submitOrder() {
-    if (!user?.contactName || !user?.phone) {
+    if (!phone.trim()) {
+      return showAlert('Aloqa uchun telefon raqamingizni kiriting');
+    }
+    if (!user?.contactName) {
       setShowGate(true);
       return;
     }
-    placeOrder({ name: user.contactName, phone: user.phone });
+    placeOrder({ name: user.contactName, phone: phone.trim() });
   }
 
   function gateDone(updatedUser) {
@@ -173,37 +178,42 @@ export default function Cart({ user, onNavigate, onUserUpdate }) {
 
       <div className="field">
         <label>Xaritada belgilang</label>
-        <MapPicker pointA={pointA} pointB={pointB} onChange={setPoint} />
+        <MapPicker point={point} onChange={setPoint} />
 
         <div className="map-actions">
           <button className="btn btn-outline btn-sm" onClick={useMyLocation} disabled={locating}>
-            {locating ? 'Aniqlanmoqda...' : '📍 Mening joylashuvim (A)'}
+            {locating ? 'Aniqlanmoqda...' : '📍 Mening joylashuvim'}
           </button>
-          {(pointA || pointB) && (
-            <button className="btn btn-light btn-sm" onClick={clearPoints}>
-              Nuqtalarni tozalash
+          {point && (
+            <button className="btn btn-light btn-sm" onClick={clearPoint}>
+              Belgini olib tashlash
             </button>
           )}
         </div>
+      </div>
 
-        <div className="map-summary">
-          <div>
-            <span className="map-summary-dot" style={{ background: '#147a4f' }}>
-              A
-            </span>
-            {pointA
-              ? `${pointA.lat.toFixed(5)}, ${pointA.lng.toFixed(5)}`
-              : 'belgilanmagan'}
-          </div>
-          <div>
-            <span className="map-summary-dot" style={{ background: '#c0392b' }}>
-              B
-            </span>
-            {pointB
-              ? `${pointB.lat.toFixed(5)}, ${pointB.lng.toFixed(5)}`
-              : 'belgilanmagan'}
-          </div>
-        </div>
+      <div className="section-title">Aloqa uchun</div>
+
+      <div className="field">
+        <label>Telefon raqamingiz</label>
+        <input
+          type="tel"
+          inputMode="tel"
+          placeholder="+998 90 123 45 67"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+        />
+      </div>
+
+      <div className="field">
+        <label>Qo‘shimcha telefon raqamingiz (ixtiyoriy)</label>
+        <input
+          type="tel"
+          inputMode="tel"
+          placeholder="+998 91 234 56 78"
+          value={extraPhone}
+          onChange={(e) => setExtraPhone(e.target.value)}
+        />
       </div>
 
       <div className="field">
