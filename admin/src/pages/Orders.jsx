@@ -2,16 +2,16 @@ import { useCallback, useEffect, useState } from 'react';
 import { api, eventsUrl, formatPrice, formatMoney, formatDate } from '../api.js';
 
 const filters = [
-  { id: 'all', label: 'Ҳаммаси' },
-  { id: 'pending', label: 'Кутилмоқда' },
-  { id: 'delivered', label: 'Етказилди' },
-  { id: 'canceled', label: 'Бекор қилинган' },
+  { id: 'all', label: 'Hammasi' },
+  { id: 'pending', label: 'Kutilmoqda' },
+  { id: 'delivered', label: 'Yetkazildi' },
+  { id: 'canceled', label: 'Bekor qilingan' },
 ];
 
 const statusLabels = {
-  pending: 'Кутилмоқда',
-  delivered: 'Етказилди',
-  canceled: 'Бекор қилинган',
+  pending: 'Kutilmoqda',
+  delivered: 'Yetkazildi',
+  canceled: 'Bekor qilingan',
 };
 
 export default function Orders() {
@@ -93,12 +93,12 @@ export default function Orders() {
       <div className="row-actions">
         {order.status !== 'delivered' && (
           <button className="btn btn-accent btn-sm" onClick={() => changeStatus(order.id, 'delivered')}>
-            ✓ Етказилди
+            ✓ Yetkazildi
           </button>
         )}
         {order.status === 'pending' && (
           <button className="btn btn-danger btn-sm" onClick={() => changeStatus(order.id, 'canceled')}>
-            ✕ Бекор
+            ✕ Bekor
           </button>
         )}
       </div>
@@ -109,30 +109,30 @@ export default function Orders() {
     <>
       <div className="page-head">
         <div>
-          <h1>Буюртмалар</h1>
-          <p>Янги буюртмалар шу заҳоти автоматик пайдо бўлади</p>
+          <h1>Buyurtmalar</h1>
+          <p>Yangi buyurtmalar shu zahoti avtomatik paydo bo‘ladi</p>
         </div>
         <button className="btn btn-light" onClick={load}>
-          🔄 Янгилаш
+          🔄 Yangilash
         </button>
       </div>
 
       {stats && (
         <div className="stats">
           <div className="stat">
-            <span>Жами буюртмалар</span>
+            <span>Jami buyurtmalar</span>
             <b>{stats.orders}</b>
           </div>
           <div className="stat">
-            <span>Умумий савдо</span>
-            <b>{formatPrice(stats.revenue)} сўм</b>
+            <span>Umumiy savdo</span>
+            <b>{formatPrice(stats.revenue)} so‘m</b>
           </div>
           <div className="stat">
-            <span>Мижозлар</span>
+            <span>Mijozlar</span>
             <b>{stats.users}</b>
           </div>
           <div className="stat">
-            <span>Маҳсулотлар</span>
+            <span>Mahsulotlar</span>
             <b>{stats.products}</b>
           </div>
         </div>
@@ -154,11 +154,11 @@ export default function Orders() {
 
       {loading ? (
         <div className="card">
-          <div className="loading">Юкланмоқда...</div>
+          <div className="loading">Yuklanmoqda...</div>
         </div>
       ) : orders.length === 0 ? (
         <div className="card">
-          <div className="empty">Буюртмалар топилмади</div>
+          <div className="empty">Buyurtmalar topilmadi</div>
         </div>
       ) : (
         <>
@@ -168,14 +168,14 @@ export default function Orders() {
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>Мижоз</th>
-                    <th>Телефон</th>
-                    <th>Маҳсулотлар</th>
-                    <th>Жами</th>
-                    <th>Манзил</th>
-                    <th>Сана</th>
-                    <th>Ҳолат</th>
-                    <th>Амаллар</th>
+                    <th>Mijoz</th>
+                    <th>Telefon</th>
+                    <th>Mahsulotlar</th>
+                    <th>Jami</th>
+                    <th>Manzil</th>
+                    <th>Sana</th>
+                    <th>Holat</th>
+                    <th>Amallar</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -219,7 +219,7 @@ export default function Orders() {
                             target="_blank"
                             rel="noreferrer"
                           >
-                            📍 Харитада
+                            📍 Xaritada
                           </a>
                         ) : (
                           '—'
@@ -274,7 +274,7 @@ export default function Orders() {
                     target="_blank"
                     rel="noreferrer"
                   >
-                    📍 Харитада
+                    📍 Xaritada
                   </a>
                 )}
 

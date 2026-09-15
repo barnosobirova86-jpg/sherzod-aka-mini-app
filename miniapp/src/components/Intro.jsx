@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { resolveImage } from '../api.js';
 
-// Ba'zi telefonlarda (ayniqsa Android) .MOV formatini ochib bo'lmasligi
-// mumkin — shunday holatda ilova "qotib qolgandek" ko'rinmasligi uchun
-// video ishlamasa yoki uzoq yuklanib qolsa, ilovaga avtomatik o'tkazamiz.
+// Ba‘zi telefonlarda (ayniqsa Android) .MOV formatini ochib bo‘lmasligi
+// mumkin — shunday holatda ilova "qotib qolgandek" ko‘rinmasligi uchun
+// video ishlamasa yoki uzoq yuklanib qolsa, ilovaga avtomatik o‘tkazamiz.
 const FALLBACK_MS = 6000;
 
 export default function Intro({ onFinish }) {

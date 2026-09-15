@@ -56,17 +56,17 @@ export default function Products() {
     load();
   }, []);
 
-  // Modal ochilganda papkadagi rasmlar ro'yxatini olish
+  // Modal ochilganda papkadagi rasmlar ro‘yxatini olish
   useEffect(() => {
     if (editing) api.uploads().then(setGallery).catch(() => setGallery([]));
   }, [editing]);
 
-  // Modal ochilganda papkadagi videolar ro'yxatini olish
+  // Modal ochilganda papkadagi videolar ro‘yxatini olish
   useEffect(() => {
     if (editing) api.videoUploads().then(setVideoGallery).catch(() => setVideoGallery([]));
   }, [editing]);
 
-  // Modal ochiq paytda orqa fon qotib tursin (faqat modal ichi scroll bo'ladi)
+  // Modal ochiq paytda orqa fon qotib tursin (faqat modal ichi scroll bo‘ladi)
   useEffect(() => {
     if (editing) {
       document.body.style.overflow = 'hidden';
@@ -222,7 +222,7 @@ export default function Products() {
   }
 
   async function remove(product) {
-    if (!confirm(`"${product.name}" ўчирилсинми?`)) return;
+    if (!confirm(`"${product.name}" o‘chirilsinmi?`)) return;
     try {
       await api.deleteProduct(product.id);
       load();
@@ -245,11 +245,11 @@ export default function Products() {
     <>
       <div className="page-head">
         <div>
-          <h1>Маҳсулотлар</h1>
-          <p>Янги маҳсулот қўшинг, нарх ва расмларни таҳрирланг</p>
+          <h1>Mahsulotlar</h1>
+          <p>Yangi mahsulot qo‘shing, narx va rasmlarni tahrirlang</p>
         </div>
         <button className="btn btn-accent" onClick={openNew}>
-          + Янги маҳсулот
+          + Yangi mahsulot
         </button>
       </div>
 
@@ -257,11 +257,11 @@ export default function Products() {
 
       {loading ? (
         <div className="card">
-          <div className="loading">Юкланмоқда...</div>
+          <div className="loading">Yuklanmoqda...</div>
         </div>
       ) : products.length === 0 ? (
         <div className="card">
-          <div className="empty">Маҳсулотлар йўқ</div>
+          <div className="empty">Mahsulotlar yo‘q</div>
         </div>
       ) : (
         <>
@@ -270,15 +270,15 @@ export default function Products() {
               <table>
                 <thead>
                   <tr>
-                    <th>Расм</th>
-                    <th>Номи</th>
-                    <th>Категория</th>
-                    <th>Ўлчамлар</th>
-                    <th>Эски нарх</th>
-                    <th>Нарх</th>
-                    <th>Омборда</th>
-                    <th>Ҳолат</th>
-                    <th>Амаллар</th>
+                    <th>Rasm</th>
+                    <th>Nomi</th>
+                    <th>Kategoriya</th>
+                    <th>O‘lchamlar</th>
+                    <th>Eski narx</th>
+                    <th>Narx</th>
+                    <th>Omborda</th>
+                    <th>Holat</th>
+                    <th>Amallar</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -304,30 +304,30 @@ export default function Products() {
                       </td>
                       <td>
                         {product.stock > 0 ? (
-                          <span className="badge delivered">{product.stock} дона</span>
+                          <span className="badge delivered">{product.stock} dona</span>
                         ) : (
-                          <span className="badge canceled">Тугаган</span>
+                          <span className="badge canceled">Tugagan</span>
                         )}
                       </td>
                       <td>
                         {product.isActive ? (
-                          <span className="badge delivered">Фаол</span>
+                          <span className="badge delivered">Faol</span>
                         ) : (
-                          <span className="badge muted">Яширилган</span>
+                          <span className="badge muted">Yashirilgan</span>
                         )}
                         {product.isRecommended && (
                           <div style={{ marginTop: 4 }}>
-                            <span className="badge pending">Тавсия</span>
+                            <span className="badge pending">Tavsiya</span>
                           </div>
                         )}
                       </td>
                       <td>
                         <div className="row-actions">
                           <button className="btn btn-light btn-sm" onClick={() => openEdit(product)}>
-                            ✎ Таҳрирлаш
+                            ✎ Tahrirlash
                           </button>
                           <button className="btn btn-danger btn-sm" onClick={() => remove(product)}>
-                            🗑 Ўчириш
+                            🗑 O‘chirish
                           </button>
                         </div>
                       </td>
@@ -355,15 +355,15 @@ export default function Products() {
                         <span className="badge muted">{product.sizes.join(', ')}</span>
                       )}
                       {product.isActive ? (
-                        <span className="badge delivered">Фаол</span>
+                        <span className="badge delivered">Faol</span>
                       ) : (
-                        <span className="badge muted">Яширилган</span>
+                        <span className="badge muted">Yashirilgan</span>
                       )}
-                      {product.isRecommended && <span className="badge pending">Тавсия</span>}
+                      {product.isRecommended && <span className="badge pending">Tavsiya</span>}
                       {product.stock > 0 ? (
-                        <span className="badge delivered">{product.stock} дона</span>
+                        <span className="badge delivered">{product.stock} dona</span>
                       ) : (
-                        <span className="badge canceled">Тугаган</span>
+                        <span className="badge canceled">Tugagan</span>
                       )}
                     </div>
                   </div>
@@ -378,10 +378,10 @@ export default function Products() {
 
                 <div className="row-actions pca-actions">
                   <button className="btn btn-light btn-sm" onClick={() => openEdit(product)}>
-                    ✎ Таҳрирлаш
+                    ✎ Tahrirlash
                   </button>
                   <button className="btn btn-danger btn-sm" onClick={() => remove(product)}>
-                    🗑 Ўчириш
+                    🗑 O‘chirish
                   </button>
                 </div>
               </div>
@@ -393,28 +393,28 @@ export default function Products() {
       {editing && (
         <div className="modal-backdrop" onClick={() => setEditing(null)}>
           <form className="modal" onClick={(e) => e.stopPropagation()} onSubmit={save}>
-            <h2>{editing === 'new' ? 'Янги маҳсулот' : 'Маҳсулотни таҳрирлаш'}</h2>
+            <h2>{editing === 'new' ? 'Yangi mahsulot' : 'Mahsulotni tahrirlash'}</h2>
 
             <div className="form-grid">
               <div className="field full">
-                <label>Номи *</label>
-                <input {...field('name')} required placeholder="Макка пўшти — Оқ" />
+                <label>Nomi *</label>
+                <input {...field('name')} required placeholder="Makka po‘shti — Oq" />
               </div>
 
               <div className="field full">
-                <label>Таърифи</label>
-                <textarea {...field('description')} rows={3} placeholder="Қисқача таъриф" />
+                <label>Ta‘rifi</label>
+                <textarea {...field('description')} rows={3} placeholder="Qisqacha ta‘rif" />
               </div>
 
               <div className="field full">
-                <label>Маҳсулот видеоси (ихтиёрий, расмдан олдин кўринади)</label>
+                <label>Mahsulot videosi (ixtiyoriy, rasmdan oldin ko‘rinadi)</label>
 
                 <div className="image-picker">
                   <div className="image-preview">
                     {form.videoUrl ? (
                       <video src={resolveImage(form.videoUrl)} muted style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     ) : (
-                      <span>Видео йўқ</span>
+                      <span>Video yo‘q</span>
                     )}
                   </div>
 
@@ -432,7 +432,7 @@ export default function Products() {
                       onClick={() => videoFileRef.current?.click()}
                       disabled={uploadingVideo}
                     >
-                      {uploadingVideo ? 'Юкланмоқда...' : '🎬 Видео жойлаш'}
+                      {uploadingVideo ? 'Yuklanmoqda...' : '🎬 Video joylash'}
                     </button>
                     {form.videoUrl && (
                       <button
@@ -440,12 +440,12 @@ export default function Products() {
                         className="btn btn-light btn-sm"
                         onClick={() => setForm((prev) => ({ ...prev, videoUrl: '' }))}
                       >
-                        Видеони олиб ташлаш
+                        Videoni olib tashlash
                       </button>
                     )}
                     <input
                       {...field('videoUrl')}
-                      placeholder="ёки видео ҳаволасини шу ерга қўйинг"
+                      placeholder="yoki video havolasini shu yerga qo‘ying"
                       style={{ marginTop: 4 }}
                     />
                   </div>
@@ -454,7 +454,7 @@ export default function Products() {
                 {videoGallery.length > 0 && (
                   <>
                     <div className="gallery-title">
-                      Юкланган видеолар ({videoGallery.length}) — танлаш учун босинг
+                      Yuklangan videolar ({videoGallery.length}) — tanlash uchun bosing
                     </div>
                     <div className="gallery">
                       {videoGallery.map((item) => (
@@ -472,7 +472,7 @@ export default function Products() {
                   </>
                 )}
 
-                <label style={{ marginTop: 14, display: 'block' }}>Қўшимча видеолар</label>
+                <label style={{ marginTop: 14, display: 'block' }}>Qo‘shimcha videolar</label>
                 <input
                   ref={moreVideosRef}
                   type="file"
@@ -488,7 +488,7 @@ export default function Products() {
                   disabled={uploadingMoreVideos}
                   style={{ marginTop: 6 }}
                 >
-                  {uploadingMoreVideos ? 'Юкланмоқда...' : '🎬 Яна видео қўшиш (бир нечта танлаш мумкин)'}
+                  {uploadingMoreVideos ? 'Yuklanmoqda...' : '🎬 Yana video qo‘shish (bir nechta tanlash mumkin)'}
                 </button>
                 {form.videos.length > 0 && (
                   <div className="gallery" style={{ marginTop: 8 }}>
@@ -510,14 +510,14 @@ export default function Products() {
               </div>
 
               <div className="field full">
-                <label>Маҳсулот расми</label>
+                <label>Mahsulot rasmi</label>
 
                 <div className="image-picker">
                   <div className="image-preview">
                     {form.imageUrl ? (
                       <img src={resolveImage(form.imageUrl)} alt="" />
                     ) : (
-                      <span>Расм йўқ</span>
+                      <span>Rasm yo‘q</span>
                     )}
                   </div>
 
@@ -535,7 +535,7 @@ export default function Products() {
                       onClick={() => fileRef.current?.click()}
                       disabled={uploading}
                     >
-                      {uploading ? 'Юкланмоқда...' : '📁 Расм жойлаш'}
+                      {uploading ? 'Yuklanmoqda...' : '📁 Rasm joylash'}
                     </button>
                     {form.imageUrl && (
                       <button
@@ -543,12 +543,12 @@ export default function Products() {
                         className="btn btn-light btn-sm"
                         onClick={() => setForm((prev) => ({ ...prev, imageUrl: '' }))}
                       >
-                        Расмни олиб ташлаш
+                        Rasmni olib tashlash
                       </button>
                     )}
                     <input
                       {...field('imageUrl')}
-                      placeholder="ёки расм ҳаволасини шу ерга қўйинг"
+                      placeholder="yoki rasm havolasini shu yerga qo‘ying"
                       style={{ marginTop: 4 }}
                     />
                   </div>
@@ -557,7 +557,7 @@ export default function Products() {
                 {gallery.length > 0 && (
                   <>
                     <div className="gallery-title">
-                      Юкланган расмлар ({gallery.length}) — танлаш учун босинг
+                      Yuklangan rasmlar ({gallery.length}) — tanlash uchun bosing
                     </div>
                     <div className="gallery">
                       {gallery.map((item) => (
@@ -575,7 +575,7 @@ export default function Products() {
                   </>
                 )}
 
-                <label style={{ marginTop: 14, display: 'block' }}>Қўшимча расмлар</label>
+                <label style={{ marginTop: 14, display: 'block' }}>Qo‘shimcha rasmlar</label>
                 <input
                   ref={moreImagesRef}
                   type="file"
@@ -591,7 +591,7 @@ export default function Products() {
                   disabled={uploadingMore}
                   style={{ marginTop: 6 }}
                 >
-                  {uploadingMore ? 'Юкланмоқда...' : '📁 Яна расм қўшиш (бир нечта танлаш мумкин)'}
+                  {uploadingMore ? 'Yuklanmoqda...' : '📁 Yana rasm qo‘shish (bir nechta tanlash mumkin)'}
                 </button>
                 {form.images.length > 0 && (
                   <div className="gallery" style={{ marginTop: 8 }}>
@@ -613,7 +613,7 @@ export default function Products() {
               </div>
 
               <div className="field">
-                <label>Категория *</label>
+                <label>Kategoriya *</label>
                 <select {...field('category')} required>
                   {CATEGORIES.map((cat) => (
                     <option key={cat} value={cat}>
@@ -624,44 +624,44 @@ export default function Products() {
               </div>
 
               <div className="field">
-                <label>Ўлчамлар (вергул билан)</label>
+                <label>O‘lchamlar (vergul bilan)</label>
                 <input {...field('sizes')} placeholder="S, M, L, XL" />
               </div>
 
               <div className="field">
-                <label>Валюта</label>
+                <label>Valyuta</label>
                 <select {...field('currency')}>
-                  <option value="UZS">Сўм</option>
-                  <option value="USD">Доллар ($)</option>
+                  <option value="UZS">So‘m</option>
+                  <option value="USD">Dollar ($)</option>
                 </select>
               </div>
 
               <div className="field">
-                <label>Эски нарх</label>
+                <label>Eski narx</label>
                 <input {...field('oldPrice')} type="number" placeholder="450000" />
               </div>
 
               <div className="field">
-                <label>Янги нарх *</label>
+                <label>Yangi narx *</label>
                 <input {...field('price')} type="number" required placeholder="390000" />
               </div>
 
               <div className="field">
-                <label>Омборда қанча бор (дона)</label>
+                <label>Omborda qancha bor (dona)</label>
                 <input {...field('stock')} type="number" min="0" placeholder="10" />
               </div>
 
               <div className="field full">
-                <label>Таркиби / хусусиятлари (ҳар бири янги қатордан)</label>
+                <label>Tarkibi / xususiyatlari (har biri yangi qatordan)</label>
                 <textarea
                   {...field('features')}
                   rows={4}
-                  placeholder={'100% пахта мато\nМаккадан оригинал\nСовға қутиси билан'}
+                  placeholder={'100% paxta mato\nMakkadan original\nSovg‘a qutisi bilan'}
                 />
               </div>
 
               <div className="field full">
-                <label>Мижоз шарҳлари (сиз ўзингиз қўшасиз)</label>
+                <label>Mijoz sharhlari (siz o‘zingiz qo‘shasiz)</label>
                 {form.reviews.map((review, i) => (
                   <div
                     key={i}
@@ -677,7 +677,7 @@ export default function Products() {
                   >
                     <input
                       style={{ flex: '1 1 140px' }}
-                      placeholder="Исм"
+                      placeholder="Ism"
                       value={review.name}
                       onChange={(e) => updateReview(i, 'name', e.target.value)}
                     />
@@ -694,7 +694,7 @@ export default function Products() {
                     </select>
                     <input
                       style={{ flex: '1 1 100%' }}
-                      placeholder="Шарҳ матни"
+                      placeholder="Sharh matni"
                       value={review.text}
                       onChange={(e) => updateReview(i, 'text', e.target.value)}
                     />
@@ -703,32 +703,32 @@ export default function Products() {
                       className="btn btn-danger btn-sm"
                       onClick={() => removeReview(i)}
                     >
-                      ✕ Ўчириш
+                      ✕ O‘chirish
                     </button>
                   </div>
                 ))}
                 <button type="button" className="btn btn-light btn-sm" onClick={addReview}>
-                  + Шарҳ қўшиш
+                  + Sharh qo‘shish
                 </button>
               </div>
 
               <label className="checkbox">
                 <input type="checkbox" {...check('isActive')} />
-                Дўконда кўринсин
+                Do‘konda ko‘rinsin
               </label>
 
               <label className="checkbox">
                 <input type="checkbox" {...check('isRecommended')} />
-                Саватчада тавсия қилинсин
+                Savatchada tavsiya qilinsin
               </label>
             </div>
 
             <div className="modal-actions">
               <button type="button" className="btn btn-light" onClick={() => setEditing(null)}>
-                Бекор қилиш
+                Bekor qilish
               </button>
               <button className="btn btn-accent" disabled={saving}>
-                {saving ? 'Сақланмоқда...' : 'Сақлаш'}
+                {saving ? 'Saqlanmoqda...' : 'Saqlash'}
               </button>
             </div>
           </form>

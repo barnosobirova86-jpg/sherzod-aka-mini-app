@@ -17,15 +17,15 @@ app.use(cors());
 
 const WEBHOOK_PATH = '/telegram/webhook';
 
-// Render.com kabi xostinglar avtomatik ravishda o'z ochiq manzilini beradi.
-// U mavjud bo'lsa — webhook rejimi (uxlab qolsa ham keyingi xabarda uyg'onadi).
-// Bo'lmasa (o'z kompyuteringizda) — oddiy polling rejimi ishlaydi.
+// Render.com kabi xostinglar avtomatik ravishda o‘z ochiq manzilini beradi.
+// U mavjud bo‘lsa — webhook rejimi (uxlab qolsa ham keyingi xabarda uyg‘onadi).
+// Bo‘lmasa (o‘z kompyuteringizda) — oddiy polling rejimi ishlaydi.
 const publicUrl = process.env.RENDER_EXTERNAL_URL || process.env.PUBLIC_URL || '';
 
 const bot = registerBotHandlers();
 
-// Webhook yo'li BOSHQA hamma routedan (va 404 tutuvchidan) oldin ro'yxatdan
-// o'tishi shart — aks holda Telegram xabarlari hech qachon botga yetib bormaydi.
+// Webhook yo‘li BOSHQA hamma routedan (va 404 tutuvchidan) oldin ro‘yxatdan
+// o‘tishi shart — aks holda Telegram xabarlari hech qachon botga yetib bormaydi.
 if (publicUrl) {
   app.use(bot.webhookCallback(WEBHOOK_PATH));
 }
@@ -42,7 +42,7 @@ app.get('/', (req, res) => {
 app.use('/api', clientRoutes);
 app.use('/api/admin', adminRoutes);
 
-app.use((req, res) => res.status(404).json({ message: 'Топилмади' }));
+app.use((req, res) => res.status(404).json({ message: 'Topilmadi' }));
 
 async function start() {
   await connectDatabase();
@@ -52,7 +52,7 @@ async function start() {
   });
 
   // Katta video fayllar (4K, bir necha GB) sekin tarmoqda uzoq yuklanishi
-  // mumkin — server ularni vaqtidan oldin uzib qo'ymasligi uchun.
+  // mumkin — server ularni vaqtidan oldin uzib qo‘ymasligi uchun.
   server.requestTimeout = 20 * 60 * 1000; // 20 daqiqa
   server.headersTimeout = 20 * 60 * 1000 + 5000;
 
@@ -75,7 +75,7 @@ async function start() {
   }
 
   const shutdown = async (signal) => {
-    console.log(`\n${signal} — to'xtatilmoqda...`);
+    console.log(`\n${signal} — to‘xtatilmoqda...`);
     if (!publicUrl) bot.stop(signal);
     await disconnectDatabase();
     process.exit(0);

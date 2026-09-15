@@ -43,7 +43,7 @@ export default function ProductCard({ product, onOpen }) {
         <img src={resolveImage(product.imageUrl)} alt={product.name} loading="lazy" />
         {discount > 0 && <span className="card-badge">-{discount}%</span>}
         {outOfStock ? (
-          <span className="card-out">Тугаган</span>
+          <span className="card-out">Tugagan</span>
         ) : qty > 0 ? (
           <div className="card-qty-stepper" onClick={(e) => e.stopPropagation()}>
             <button className="card-qty-btn" onClick={decrease} aria-label="Kamaytirish">
@@ -69,7 +69,7 @@ export default function ProductCard({ product, onOpen }) {
             <span className="price-old">{formatMoney(product.oldPrice, product.currency)}</span>
           )}
         </div>
-        {!outOfStock && <div className="card-stock">Омборда: {stock} дона</div>}
+        {!outOfStock && <div className="card-stock">Omborda: {stock} dona</div>}
       </div>
     </div>
   );

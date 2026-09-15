@@ -9,10 +9,10 @@ const SLIDES = [
   '/uploads/banner-5.jpg',
 ];
 
-// Silliq, cheksiz aylanish uchun oxiriga birinchi rasmning nusxasi qo'shiladi
+// Silliq, cheksiz aylanish uchun oxiriga birinchi rasmning nusxasi qo‘shiladi
 const LOOP_SLIDES = [...SLIDES, SLIDES[0]];
 
-const DISPLAY_MS = 3000; // har bir rasm shuncha vaqt to'liq ko'rinib turadi
+const DISPLAY_MS = 3000; // har bir rasm shuncha vaqt to‘liq ko‘rinib turadi
 
 export default function Banner() {
   const [index, setIndex] = useState(0);
@@ -28,7 +28,7 @@ export default function Banner() {
 
   function handleTransitionEnd() {
     if (index === SLIDES.length) {
-      // Nusxa rasmga yetganda, ko'rinmas holda haqiqiy boshiga qaytamiz
+      // Nusxa rasmga yetganda, ko‘rinmas holda haqiqiy boshiga qaytamiz
       setWithTransition(false);
       setIndex(0);
     }

@@ -25,7 +25,7 @@ export default function Cart({ user, onNavigate, onUserUpdate }) {
       setLocation(coords);
       haptic('medium');
     } catch (error) {
-      showAlert(error.message || 'Локация олинмади');
+      showAlert(error.message || 'Lokatsiya olinmadi');
     } finally {
       setLocating(false);
     }
@@ -47,7 +47,7 @@ export default function Cart({ user, onNavigate, onUserUpdate }) {
       haptic('heavy');
       setSubmitted(true);
     } catch (error) {
-      showAlert(error.message || 'Буюртма юборилмади');
+      showAlert(error.message || 'Buyurtma yuborilmadi');
     } finally {
       setSending(false);
     }
@@ -81,12 +81,12 @@ export default function Cart({ user, onNavigate, onUserUpdate }) {
     return (
       <div className="page">
         <div className="thankyou-card">
-          <button className="thankyou-exit" onClick={closeThankYou} aria-label="Ёпиш">
+          <button className="thankyou-exit" onClick={closeThankYou} aria-label="Yopish">
             ➜
           </button>
           <div className="thankyou-icon">🎉</div>
-          <h2>Харид учун раҳмат!</h2>
-          <p>Админ сиз билан боғланади.</p>
+          <h2>Xarid uchun rahmat!</h2>
+          <p>Admin siz bilan bog‘lanadi.</p>
         </div>
       </div>
     );
@@ -95,13 +95,13 @@ export default function Cart({ user, onNavigate, onUserUpdate }) {
   if (items.length === 0) {
     return (
       <div className="page">
-        <h1 className="title">Саватча</h1>
+        <h1 className="title">Savatcha</h1>
         <div className="empty">
           <div className="empty-emoji">🛒</div>
-          Саватчангиз бўш
+          Savatchangiz bo‘sh
           <div style={{ marginTop: 18 }}>
             <button className="btn btn-soft" onClick={() => onNavigate('catalog')}>
-              Каталогга ўтиш
+              Katalogga o‘tish
             </button>
           </div>
         </div>
@@ -113,8 +113,8 @@ export default function Cart({ user, onNavigate, onUserUpdate }) {
 
   return (
     <div className="page" style={{ paddingBottom: 210 }}>
-      <h1 className="title">Саватча</h1>
-      <p className="subtitle">{items.length} та маҳсулот</p>
+      <h1 className="title">Savatcha</h1>
+      <p className="subtitle">{items.length} ta mahsulot</p>
 
       <div style={{ marginTop: 12 }}>
         {items.map((item) => (
@@ -122,7 +122,7 @@ export default function Cart({ user, onNavigate, onUserUpdate }) {
             <img className="cart-img" src={resolveImage(item.imageUrl)} alt={item.name} />
             <div className="cart-info">
               <div className="cart-name">{item.name}</div>
-              {item.size && <div className="muted" style={{ fontSize: 12 }}>Ўлчам: {item.size}</div>}
+              {item.size && <div className="muted" style={{ fontSize: 12 }}>O‘lcham: {item.size}</div>}
               <div className="price-row" style={{ paddingTop: 2 }}>
                 <span className="price-new">{formatMoney(item.price * item.qty, item.currency)}</span>
               </div>
@@ -134,7 +134,7 @@ export default function Cart({ user, onNavigate, onUserUpdate }) {
                   style={{ marginLeft: 'auto', fontSize: 13, color: 'var(--muted)', width: 'auto' }}
                   onClick={() => removeItem(item.key)}
                 >
-                  Ўчириш
+                  O‘chirish
                 </button>
               </div>
             </div>
@@ -142,24 +142,24 @@ export default function Cart({ user, onNavigate, onUserUpdate }) {
         ))}
       </div>
 
-      <div className="section-title">Етказиб бериш</div>
+      <div className="section-title">Yetkazib berish</div>
 
       <div className="field">
-        <label>Манзил (локация) — ихтиёрий</label>
+        <label>Manzil (lokatsiya) — ixtiyoriy</label>
         <button className="btn btn-outline" onClick={getLocation} disabled={locating}>
           {locating
-            ? 'Аниқланмоқда...'
+            ? 'Aniqlanmoqda...'
             : location
-              ? `📍 Локация олинди (${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)})`
-              : '📍 Локацияни юбориш'}
+              ? `📍 Lokatsiya olindi (${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)})`
+              : '📍 Lokatsiyani yuborish'}
         </button>
       </div>
 
       <div className="field">
-        <label>Изоҳ (ихтиёрий)</label>
+        <label>Izoh (ixtiyoriy)</label>
         <textarea
           rows={3}
-          placeholder="Мўлжал, уй рақами ёки қўшимча изоҳ"
+          placeholder="Mo‘ljal, uy raqami yoki qo‘shimcha izoh"
           value={note}
           onChange={(e) => setNote(e.target.value)}
         />
@@ -167,22 +167,22 @@ export default function Cart({ user, onNavigate, onUserUpdate }) {
 
       <div className="summary">
         <div className="summary-row">
-          <span className="muted">Маҳсулотлар</span>
+          <span className="muted">Mahsulotlar</span>
           <span>{totalLabel}</span>
         </div>
         <div className="summary-row">
-          <span className="muted">Етказиб бериш</span>
-          <span>Бепул</span>
+          <span className="muted">Yetkazib berish</span>
+          <span>Bepul</span>
         </div>
         <div className="summary-row summary-total">
-          <span>Жами</span>
+          <span>Jami</span>
           <span>{totalLabel}</span>
         </div>
       </div>
 
       <div className="sticky-bar">
         <button className="btn btn-accent" onClick={submitOrder} disabled={sending}>
-          {sending ? 'Юборилмоқда...' : `Буюртмани тасдиқлаш — ${totalLabel}`}
+          {sending ? 'Yuborilmoqda...' : `Buyurtmani tasdiqlash — ${totalLabel}`}
         </button>
       </div>
     </div>

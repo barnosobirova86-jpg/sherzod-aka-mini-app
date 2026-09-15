@@ -11,19 +11,19 @@ const config = {
   webAppUrl: process.env.WEBAPP_URL || 'http://localhost:5173',
   adminPassword: process.env.ADMIN_PASSWORD || 'admin123',
   allowDevAuth: process.env.ALLOW_DEV_AUTH === 'true',
-  shopName: 'Кисва Шоп',
-  currency: 'сўм',
+  shopName: 'Kisva Shop',
+  currency: 'so‘m',
   texts: {
     start: (name) =>
-      `<b>${name}, хуш келибсиз!</b> 👋\n\n` +
-      `Ассалому алайкум АРТ-ШЕРЗОД галереясига хуш келибсиз!\n\n` +
-      `Ҳар бир Кисва Каъба пўштимиз сертификатга эга.\n\n` +
-      `Буюртма бериш учун пастдаги тугмани босинг 👇`,
+      `<b>${name}, xush kelibsiz!</b> 👋\n\n` +
+      `Assalomu alaykum ART-SHERZOD galereyasiga xush kelibsiz!\n\n` +
+      `Har bir Kisva Ka‘ba po‘shtimiz sertifikatga ega.\n\n` +
+      `Buyurtma berish uchun pastdagi tugmani bosing 👇`,
     orderAccepted:
-      'Буюртмангиз муваффақиятли қабул қилинди! Курьеримиз тез орада боғланади 🕋',
+      'Buyurtmangiz muvaffaqiyatli qabul qilindi! Kuryerimiz tez orada bog‘lanadi 🕋',
     help:
-      'Буюртма бериш учун <b>🛍 Дўконни очиш</b> тугмасини босинг.\n' +
-      'Саволлар бўлса — /start буйруғини юборинг.',
+      'Buyurtma berish uchun <b>🛍 Do‘konni ochish</b> tugmasini bosing.\n' +
+      'Savollar bo‘lsa — /start buyrug‘ini yuboring.',
   },
 };
 

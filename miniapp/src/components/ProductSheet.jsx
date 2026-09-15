@@ -86,7 +86,7 @@ export default function ProductSheet({ product, onClose }) {
           {product.features?.length > 0 && (
             <>
               <div className="section-title" style={{ marginBottom: 0 }}>
-                Таркиби
+                Tarkibi
               </div>
               <ul className="features">
                 {product.features.map((feature, i) => (
@@ -99,7 +99,7 @@ export default function ProductSheet({ product, onClose }) {
           {product.sizes?.length > 0 && (
             <>
               <div className="section-title" style={{ marginBottom: 0 }}>
-                Ўлчамни танланг
+                O‘lchamni tanlang
               </div>
               <div className="sizes">
                 {product.sizes.map((item) => (
@@ -119,7 +119,7 @@ export default function ProductSheet({ product, onClose }) {
           )}
 
           <div className="section-title" style={{ marginBottom: 0 }}>
-            Сони
+            Soni
           </div>
           <div className="qty" style={{ marginTop: 10 }}>
             <button onClick={() => setQty((q) => Math.max(1, q - 1))}>−</button>
@@ -129,12 +129,12 @@ export default function ProductSheet({ product, onClose }) {
             </button>
           </div>
           <div className="muted" style={{ fontSize: 12.5, marginTop: 6 }}>
-            {outOfStock ? 'Тугаган' : `Омборда: ${stock} дона`}
+            {outOfStock ? 'Tugagan' : `Omborda: ${stock} dona`}
           </div>
 
           {product.reviews?.length > 0 && (
             <>
-              <div className="section-title">Мижозлар шарҳлари</div>
+              <div className="section-title">Mijozlar sharhlari</div>
               <div className="reviews">
                 {product.reviews.map((review, i) => (
                   <div className="review" key={i}>
@@ -153,8 +153,8 @@ export default function ProductSheet({ product, onClose }) {
         <div className="sheet-footer">
           <button className="btn btn-accent" onClick={submit} disabled={outOfStock}>
             {outOfStock
-              ? 'Тугаган'
-              : `Саватчага қўшиш — ${formatMoney(product.price * qty, product.currency)}`}
+              ? 'Tugagan'
+              : `Savatchaga qo‘shish — ${formatMoney(product.price * qty, product.currency)}`}
           </button>
         </div>
       </div>

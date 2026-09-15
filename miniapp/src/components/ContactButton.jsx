@@ -1,6 +1,6 @@
 import { haptic, openTelegramProfile } from '../telegram.js';
 
-// Diqqat: username shu yerda, ko'rinadigan matnda emas
+// Diqqat: username shu yerda, ko‘rinadigan matnda emas
 const ADMIN_USERNAME = 'ArtSherzod';
 
 export default function ContactButton() {
@@ -12,7 +12,7 @@ export default function ContactButton() {
   return (
     <button className="contact-btn" onClick={handleClick}>
       <span className="contact-arrow contact-arrow-left">➜</span>
-      <span className="contact-btn-text">АРТ ХИЗМАТЛАРИМИЗ УЧУН БОСИНГ</span>
+      <span className="contact-btn-text">ART XIZMATLARIMIZ UCHUN BOSING</span>
       <span className="contact-arrow contact-arrow-right">➜</span>
     </button>
   );

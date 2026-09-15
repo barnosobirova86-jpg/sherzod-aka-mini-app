@@ -3,7 +3,7 @@ import config from '../config/default.js';
 import User from '../models/User.js';
 
 /**
- * Telegram initData ni imzo (hash) bo'yicha tekshirish
+ * Telegram initData ni imzo (hash) bo‘yicha tekshirish
  */
 function verifyInitData(initData, botToken) {
   try {
@@ -11,9 +11,9 @@ function verifyInitData(initData, botToken) {
     const hash = params.get('hash');
     if (!hash) return null;
 
-    // Faqat 'hash' o'zi tekshiruv qatoridan chiqariladi — 'signature'
+    // Faqat 'hash' o‘zi tekshiruv qatoridan chiqariladi — 'signature'
     // (Ed25519, uchinchi tomon tekshiruvi uchun) qolgan maydonlar qatorida
-    // qoladi, chunki Telegram HMAC hash'ni aynan shu maydon bilan birga
+    // qoladi, chunki Telegram HMAC hash‘ni aynan shu maydon bilan birga
     // hisoblaydi.
     params.delete('hash');
 
@@ -38,7 +38,7 @@ function verifyInitData(initData, botToken) {
 }
 
 /**
- * Mini App so'rovlarini himoyalash.
+ * Mini App so‘rovlarini himoyalash.
  * Header: x-telegram-init-data
  */
 export async function telegramAuth(req, res, next) {
@@ -61,7 +61,7 @@ export async function telegramAuth(req, res, next) {
     }
 
     if (!tgUser) {
-      return res.status(401).json({ message: 'Авторизация хатоси. Иловани Telegram орқали очинг.' });
+      return res.status(401).json({ message: 'Avtorizatsiya xatosi. Ilovani Telegram orqali oching.' });
     }
 
     req.user = await User.upsert({
@@ -74,6 +74,6 @@ export async function telegramAuth(req, res, next) {
     next();
   } catch (error) {
     console.error('telegramAuth xatosi:', error);
-    res.status(500).json({ message: 'Сервер хатоси' });
+    res.status(500).json({ message: 'Server xatosi' });
   }
 }

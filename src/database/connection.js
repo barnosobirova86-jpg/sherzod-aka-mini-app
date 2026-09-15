@@ -5,9 +5,9 @@ const prisma = new PrismaClient({
 });
 
 /**
- * Neon (bepul tarif) baza faol so'rov bo'lmasa uxlab qoladi va
- * birinchi ulanish ba'zan bir necha soniya kechikadi yoki muvaffaqiyatsiz
- * bo'ladi — shu sababli bir necha marta qayta urinamiz.
+ * Neon (bepul tarif) baza faol so‘rov bo‘lmasa uxlab qoladi va
+ * birinchi ulanish ba‘zan bir necha soniya kechikadi yoki muvaffaqiyatsiz
+ * bo‘ladi — shu sababli bir necha marta qayta urinamiz.
  */
 export async function connectDatabase(retries = 5, delayMs = 2000) {
   for (let attempt = 1; attempt <= retries; attempt += 1) {

@@ -62,8 +62,8 @@ export function CartProvider({ children }) {
     setItems([]);
   }
 
-  // Har bir valyuta bo'yicha alohida jami (savatchada UZS va USD mahsulotlar
-  // aralash bo'lishi mumkin, shuning uchun ular birlashtirilmaydi)
+  // Har bir valyuta bo‘yicha alohida jami (savatchada UZS va USD mahsulotlar
+  // aralash bo‘lishi mumkin, shuning uchun ular birlashtirilmaydi)
   const totalsByCurrency = useMemo(() => {
     const map = new Map();
     for (const item of items) {

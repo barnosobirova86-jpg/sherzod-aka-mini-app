@@ -20,8 +20,8 @@ export default function Catalog({ initialCategory, onOpenProduct }) {
 
   return (
     <div className="page">
-      <h1 className="title">Каталог</h1>
-      <p className="subtitle">Барча маҳсулотларимиз</p>
+      <h1 className="title">Katalog</h1>
+      <p className="subtitle">Barcha mahsulotlarimiz</p>
 
       <div className="chips" style={{ marginTop: 16 }}>
         <button
@@ -31,7 +31,7 @@ export default function Catalog({ initialCategory, onOpenProduct }) {
             setActive('all');
           }}
         >
-          Ҳаммаси
+          Hammasi
         </button>
         {CATEGORIES.map((category) => (
           <button
@@ -54,7 +54,7 @@ export default function Catalog({ initialCategory, onOpenProduct }) {
       ) : products.length === 0 ? (
         <div className="empty">
           <div className="empty-emoji">📦</div>
-          Бу категорияда маҳсулот йўқ
+          Bu kategoriyada mahsulot yo‘q
         </div>
       ) : (
         <div className="grid">

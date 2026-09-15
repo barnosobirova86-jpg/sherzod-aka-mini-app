@@ -1,10 +1,10 @@
-// Netlify'ga joylashtirilganda backend boshqa manzilda turadi.
-// Deploy paytida VITE_API_URL environment o'zgaruvchisi orqali beriladi.
+// Netlify‘ga joylashtirilganda backend boshqa manzilda turadi.
+// Deploy paytida VITE_API_URL environment o‘zgaruvchisi orqali beriladi.
 const API_ROOT = import.meta.env.VITE_API_URL || '';
 const BASE = `${API_ROOT}/api/admin`;
 
 /**
- * "/uploads/rasm.jpg" kabi nisbiy rasm manzilini to'liq (backend) manzilga aylantiradi.
+ * "/uploads/rasm.jpg" kabi nisbiy rasm manzilini to‘liq (backend) manzilga aylantiradi.
  */
 export function resolveImage(url) {
   if (!url) return url;
@@ -30,7 +30,7 @@ async function request(path, options = {}) {
 
   if (!response.ok) {
     const data = await response.json().catch(() => ({}));
-    throw new Error(data.message || 'Хатолик юз берди');
+    throw new Error(data.message || 'Xatolik yuz berdi');
   }
 
   return response.json();
@@ -53,7 +53,7 @@ export const api = {
       body,
     }).then(async (r) => {
       const data = await r.json().catch(() => ({}));
-      if (!r.ok) throw new Error(data.message || 'Расм юкланмади');
+      if (!r.ok) throw new Error(data.message || 'Rasm yuklanmadi');
       return data;
     });
   },
@@ -68,7 +68,7 @@ export const api = {
       body,
     }).then(async (r) => {
       const data = await r.json().catch(() => ({}));
-      if (!r.ok) throw new Error(data.message || 'Видео юкланмади');
+      if (!r.ok) throw new Error(data.message || 'Video yuklanmadi');
       return data;
     });
   },
@@ -84,12 +84,12 @@ export const formatPrice = (value) => Number(value || 0).toLocaleString('uz-UZ')
 
 /**
  * Narxni mahsulot valyutasiga mos holda formatlaydi:
- * UZS -> "1 234 сўм", USD -> "$1,234"
+ * UZS -> "1 234 so‘m", USD -> "$1,234"
  */
 export const formatMoney = (value, currency = 'UZS') =>
   currency === 'USD'
     ? `$${Number(value || 0).toLocaleString('en-US')}`
-    : `${formatPrice(value)} сўм`;
+    : `${formatPrice(value)} so‘m`;
 
 export const formatDate = (value) =>
   new Date(value).toLocaleString('uz-UZ', {

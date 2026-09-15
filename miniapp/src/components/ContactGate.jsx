@@ -12,7 +12,7 @@ export default function ContactGate({ user, onDone }) {
   async function submit(event) {
     event.preventDefault();
     if (!name.trim() || !phone.trim()) {
-      return showAlert('Исмингиз ва телефон рақамингизни киритинг');
+      return showAlert('Ismingiz va telefon raqamingizni kiriting');
     }
 
     setSaving(true);
@@ -24,7 +24,7 @@ export default function ContactGate({ user, onDone }) {
       haptic('medium');
       onDone(updated);
     } catch (error) {
-      showAlert(error.message || 'Хатолик юз берди');
+      showAlert(error.message || 'Xatolik yuz berdi');
     } finally {
       setSaving(false);
     }
@@ -35,18 +35,18 @@ export default function ContactGate({ user, onDone }) {
       <div className="gate-card">
         <div className="gate-icon">🕋</div>
         <h1 className="title" style={{ textAlign: 'center' }}>
-          Буюртмани расмийлаштириш
+          Buyurtmani rasmiylashtirish
         </h1>
         <p className="subtitle" style={{ textAlign: 'center' }}>
-          Буюртма бериш учун исмингиз ва телефон рақамингизни киритинг
+          Buyurtma berish uchun ismingiz va telefon raqamingizni kiriting
         </p>
 
         <form onSubmit={submit}>
           <div className="field">
-            <label>Исмингиз</label>
+            <label>Ismingiz</label>
             <input
               type="text"
-              placeholder="Исмингизни киритинг"
+              placeholder="Ismingizni kiriting"
               value={name}
               onChange={(e) => setName(e.target.value)}
               autoFocus
@@ -54,7 +54,7 @@ export default function ContactGate({ user, onDone }) {
           </div>
 
           <div className="field">
-            <label>Телефон рақамингиз</label>
+            <label>Telefon raqamingiz</label>
             <input
               type="tel"
               inputMode="tel"
@@ -65,7 +65,7 @@ export default function ContactGate({ user, onDone }) {
           </div>
 
           <button className="btn btn-accent" style={{ width: '100%', marginTop: 8 }} disabled={saving}>
-            {saving ? 'Сақланмоқда...' : 'Давом этиш'}
+            {saving ? 'Saqlanmoqda...' : 'Davom etish'}
           </button>
         </form>
       </div>

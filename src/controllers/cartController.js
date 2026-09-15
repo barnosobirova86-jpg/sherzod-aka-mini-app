@@ -11,17 +11,17 @@ export async function getProducts(req, res) {
     res.json(products);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Маҳсулотларни олишда хато' });
+    res.status(500).json({ message: 'Mahsulotlarni olishda xato' });
   }
 }
 
 export async function getProduct(req, res) {
   try {
     const product = await Product.findById(req.params.id);
-    if (!product) return res.status(404).json({ message: 'Маҳсулот топилмади' });
+    if (!product) return res.status(404).json({ message: 'Mahsulot topilmadi' });
     res.json(product);
   } catch (error) {
-    res.status(500).json({ message: 'Сервер хатоси' });
+    res.status(500).json({ message: 'Server xatosi' });
   }
 }
 
@@ -29,7 +29,7 @@ export async function getCategories(req, res) {
   try {
     res.json(await Product.categories());
   } catch (error) {
-    res.status(500).json({ message: 'Сервер хатоси' });
+    res.status(500).json({ message: 'Server xatosi' });
   }
 }
 
@@ -37,7 +37,7 @@ export async function getRecommended(req, res) {
   try {
     res.json(await Product.findRecommended());
   } catch (error) {
-    res.status(500).json({ message: 'Сервер хатоси' });
+    res.status(500).json({ message: 'Server xatosi' });
   }
 }
 
@@ -54,14 +54,14 @@ export async function updateProfile(req, res) {
     const phone = String(req.body.phone || '').trim();
 
     if (!contactName || !phone) {
-      return res.status(400).json({ message: 'Исм ва телефон рақами мажбурий' });
+      return res.status(400).json({ message: 'Ism va telefon raqami majburiy' });
     }
 
     const user = await User.updateContact(req.user.id, { contactName, phone });
     res.json(user);
   } catch (error) {
     console.error('updateProfile xatosi:', error);
-    res.status(500).json({ message: 'Сервер хатоси' });
+    res.status(500).json({ message: 'Server xatosi' });
   }
 }
 
@@ -69,7 +69,7 @@ export async function getMyOrders(req, res) {
   try {
     res.json(await Order.findByUserId(req.user.id));
   } catch (error) {
-    res.status(500).json({ message: 'Сервер хатоси' });
+    res.status(500).json({ message: 'Server xatosi' });
   }
 }
 
@@ -82,7 +82,7 @@ export async function createOrder(req, res) {
     const { items = [], name, phone, latitude, longitude, note } = req.body;
 
     if (!Array.isArray(items) || items.length === 0) {
-      return res.status(400).json({ message: 'Саватча бўш' });
+      return res.status(400).json({ message: 'Savatcha bo‘sh' });
     }
 
     const preparedItems = [];
@@ -109,7 +109,7 @@ export async function createOrder(req, res) {
     }
 
     if (!preparedItems.length) {
-      return res.status(400).json({ message: 'Маҳсулотлар топилмади' });
+      return res.status(400).json({ message: 'Mahsulotlar topilmadi' });
     }
 
     if (phone && phone !== req.user.phone) {
@@ -136,6 +136,6 @@ export async function createOrder(req, res) {
     res.status(201).json(order);
   } catch (error) {
     console.error('createOrder xatosi:', error);
-    res.status(500).json({ message: 'Буюртма сақланмади' });
+    res.status(500).json({ message: 'Buyurtma saqlanmadi' });
   }
 }

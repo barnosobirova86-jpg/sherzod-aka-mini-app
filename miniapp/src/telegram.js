@@ -20,7 +20,7 @@ export function haptic(type = 'light') {
   try {
     tg?.HapticFeedback?.impactOccurred(type);
   } catch {
-    /* qo'llab-quvvatlanmaydi */
+    /* qo‘llab-quvvatlanmaydi */
   }
 }
 
@@ -66,11 +66,11 @@ export function requestLocation() {
 
 function browserLocation(resolve, reject) {
   if (!navigator.geolocation) {
-    return reject(new Error('Қурилмангиз локацияни қўллаб-қувватламайди'));
+    return reject(new Error('Qurilmangiz lokatsiyani qo‘llab-quvvatlamaydi'));
   }
   navigator.geolocation.getCurrentPosition(
     (pos) => resolve({ latitude: pos.coords.latitude, longitude: pos.coords.longitude }),
-    () => reject(new Error('Локацияга рухсат берилмади')),
+    () => reject(new Error('Lokatsiyaga ruxsat berilmadi')),
     { enableHighAccuracy: true, timeout: 10000 }
   );
 }

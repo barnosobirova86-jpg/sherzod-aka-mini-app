@@ -8,20 +8,20 @@ export default function App() {
   return (
     <div className="layout">
       <aside className="sidebar">
-        <div className="brand">🕋 Кисва Админ</div>
+        <div className="brand">🕋 Kisva Admin</div>
 
         <button
           className={`side-link ${page === 'orders' ? 'active' : ''}`}
           onClick={() => setPage('orders')}
         >
-          📦 Буюртмалар
+          📦 Buyurtmalar
         </button>
 
         <button
           className={`side-link ${page === 'products' ? 'active' : ''}`}
           onClick={() => setPage('products')}
         >
-          🛍 Маҳсулотлар
+          🛍 Mahsulotlar
         </button>
       </aside>
 

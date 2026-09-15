@@ -5,25 +5,25 @@ import Order from '../models/Order.js';
 const isHttps = (url) => typeof url === 'string' && url.startsWith('https://');
 
 /**
- * Mini App'ni ochadigan klaviatura
+ * Mini App‘ni ochadigan klaviatura
  */
 function shopKeyboard() {
   if (!isHttps(config.webAppUrl)) return undefined;
   return {
     reply_markup: {
-      keyboard: [[{ text: '🛍 Дўконни очиш', web_app: { url: config.webAppUrl } }]],
+      keyboard: [[{ text: '🛍 Do‘konni ochish', web_app: { url: config.webAppUrl } }]],
       resize_keyboard: true,
     },
   };
 }
 
 /**
- * Telefon raqam so'rash klaviaturasi
+ * Telefon raqam so‘rash klaviaturasi
  */
 function phoneKeyboard() {
   return {
     reply_markup: {
-      keyboard: [[{ text: '📱 Рақамни юбориш', request_contact: true }]],
+      keyboard: [[{ text: '📱 Raqamni yuborish', request_contact: true }]],
       resize_keyboard: true,
       one_time_keyboard: true,
     },
@@ -44,14 +44,14 @@ export async function handleStart(ctx) {
   if (!isHttps(config.webAppUrl)) {
     await ctx.replyWithHTML(
       "⚠️ <b>Diqqat (faqat dasturchi uchun):</b>\n" +
-        "Mini App tugmasi ko'rinmayapti, chunki <code>WEBAPP_URL</code> hali HTTPS emas.\n" +
-        "ngrok'ni ishga tushiring va <code>.env</code> faylidagi <code>WEBAPP_URL</code> ni yangilang."
+        "Mini App tugmasi ko‘rinmayapti, chunki <code>WEBAPP_URL</code> hali HTTPS emas.\n" +
+        "ngrok‘ni ishga tushiring va <code>.env</code> faylidagi <code>WEBAPP_URL</code> ni yangilang."
     );
   }
 
   if (!user.phone) {
     await ctx.reply(
-      'Буюртмаларингизни тезроқ расмийлаштириш учун телефон рақамингизни юборинг:',
+      'Buyurtmalaringizni tezroq rasmiylashtirish uchun telefon raqamingizni yuboring:',
       phoneKeyboard()
     );
   }
@@ -66,26 +66,26 @@ export async function handleContact(ctx) {
     await User.updatePhone(user.id, contact.phone_number);
   }
 
-  await ctx.reply('✅ Раҳмат! Рақамингиз сақланди.', shopKeyboard() || {});
+  await ctx.reply('✅ Rahmat! Raqamingiz saqlandi.', shopKeyboard() || {});
 }
 
 export async function handleMyOrders(ctx) {
   const user = await User.findByTelegramId(ctx.from.id);
-  if (!user) return ctx.reply('Аввал /start буйруғини босинг.');
+  if (!user) return ctx.reply('Avval /start buyrug‘ini bosing.');
 
   const orders = await Order.findByUserId(user.id);
   if (!orders.length) {
-    return ctx.reply('Сизда ҳали буюртмалар йўқ 🛒');
+    return ctx.reply('Sizda hali buyurtmalar yo‘q 🛒');
   }
 
   const lines = orders.slice(0, 5).map((order) => {
     const date = new Date(order.createdAt).toLocaleDateString('uz-UZ');
     const items = (order.items || []).map((i) => `• ${i.name} × ${i.qty}`).join('\n');
-    const status = order.status === 'delivered' ? '✅ Етказилди' : '⏳ Кутилмоқда';
-    return `<b>#${order.id}</b> — ${date}\n${items}\n💰 ${order.totalPrice.toLocaleString('uz-UZ')} сўм\n${status}`;
+    const status = order.status === 'delivered' ? '✅ Yetkazildi' : '⏳ Kutilmoqda';
+    return `<b>#${order.id}</b> — ${date}\n${items}\n💰 ${order.totalPrice.toLocaleString('uz-UZ')} so‘m\n${status}`;
   });
 
-  await ctx.replyWithHTML(`📜 <b>Буюртмаларингиз</b>\n\n${lines.join('\n\n')}`);
+  await ctx.replyWithHTML(`📜 <b>Buyurtmalaringiz</b>\n\n${lines.join('\n\n')}`);
 }
 
 export async function handleHelp(ctx) {
@@ -106,8 +106,8 @@ export function buildOrderMessage(order) {
 
   return (
     `${config.texts.orderAccepted}\n\n` +
-    `<b>Буюртма #${order.id}</b>\n` +
+    `<b>Buyurtma #${order.id}</b>\n` +
     `${items}\n\n` +
-    `💰 Жами: <b>${order.totalPrice.toLocaleString('uz-UZ')} сўм</b>`
+    `💰 Jami: <b>${order.totalPrice.toLocaleString('uz-UZ')} so‘m</b>`
   );
 }

@@ -16,7 +16,7 @@ export async function getStats(req, res) {
     ]);
     res.json({ orders, products, users, revenue });
   } catch (error) {
-    res.status(500).json({ message: 'Сервер хатоси' });
+    res.status(500).json({ message: 'Server xatosi' });
   }
 }
 
@@ -26,7 +26,7 @@ export async function getOrders(req, res) {
   try {
     res.json(await Order.findAll({ status: req.query.status }));
   } catch (error) {
-    res.status(500).json({ message: 'Сервер хатоси' });
+    res.status(500).json({ message: 'Server xatosi' });
   }
 }
 
@@ -35,7 +35,7 @@ export async function updateOrderStatus(req, res) {
     const { status } = req.body;
     const allowed = ['pending', 'delivered', 'canceled'];
     if (!allowed.includes(status)) {
-      return res.status(400).json({ message: 'Нотўғри ҳолат' });
+      return res.status(400).json({ message: 'Noto‘g‘ri holat' });
     }
 
     const order = await Order.updateStatus(req.params.id, status);
@@ -44,20 +44,20 @@ export async function updateOrderStatus(req, res) {
     if (status === 'delivered' && full?.user) {
       await sendMessage(
         full.user.telegramId,
-        `✅ <b>Буюртма #${full.id}</b> етказиб берилди.\nХаридингиз учун раҳмат! 🕋`
+        `✅ <b>Buyurtma #${full.id}</b> yetkazib berildi.\nXaridingiz uchun rahmat! 🕋`
       );
     }
     if (status === 'canceled' && full?.user) {
       await sendMessage(
         full.user.telegramId,
-        `❌ <b>Буюртма #${full.id}</b> бекор қилинди.\nСаволлар учун биз билан боғланинг.`
+        `❌ <b>Buyurtma #${full.id}</b> bekor qilindi.\nSavollar uchun biz bilan bog‘laning.`
       );
     }
 
     res.json(order);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Ҳолатни янгилашда хато' });
+    res.status(500).json({ message: 'Holatni yangilashda xato' });
   }
 }
 
@@ -84,7 +84,7 @@ function normalizeProduct(body) {
     return value
       .filter((r) => r && String(r.text || '').trim())
       .map((r) => ({
-        name: String(r.name || '').trim() || 'Мижоз',
+        name: String(r.name || '').trim() || 'Mijoz',
         rating: Math.min(5, Math.max(1, Number(r.rating) || 5)),
         text: String(r.text || '').trim(),
       }));
@@ -114,7 +114,7 @@ export async function getAllProducts(req, res) {
   try {
     res.json(await Product.findAll({ onlyActive: false }));
   } catch (error) {
-    res.status(500).json({ message: 'Сервер хатоси' });
+    res.status(500).json({ message: 'Server xatosi' });
   }
 }
 
@@ -122,25 +122,25 @@ export async function createProduct(req, res) {
   try {
     const data = normalizeProduct(req.body);
     if (!data.name || !data.price || !data.category) {
-      return res.status(400).json({ message: 'Ном, нарх ва категория мажбурий' });
+      return res.status(400).json({ message: 'Nom, narx va kategoriya majburiy' });
     }
     if (!data.imageUrl) data.imageUrl = 'https://picsum.photos/seed/kisva/800/800';
     res.status(201).json(await Product.create(data));
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Маҳсулот қўшилмади' });
+    res.status(500).json({ message: 'Mahsulot qo‘shilmadi' });
   }
 }
 
 export async function updateProduct(req, res) {
   try {
     const data = normalizeProduct(req.body);
-    // Rasm bo'sh yuborilsa — eskisi saqlanib qoladi
+    // Rasm bo‘sh yuborilsa — eskisi saqlanib qoladi
     if (!data.imageUrl) delete data.imageUrl;
     res.json(await Product.update(req.params.id, data));
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Маҳсулот янгиланмади' });
+    res.status(500).json({ message: 'Mahsulot yangilanmadi' });
   }
 }
 
@@ -149,7 +149,7 @@ export async function deleteProduct(req, res) {
     await Product.remove(req.params.id);
     res.json({ ok: true });
   } catch (error) {
-    res.status(500).json({ message: 'Маҳсулот ўчирилмади' });
+    res.status(500).json({ message: 'Mahsulot o‘chirilmadi' });
   }
 }
 
@@ -161,7 +161,7 @@ export async function deleteProduct(req, res) {
 export function uploadProductImage(req, res) {
   uploadImage(req, res, (error) => {
     if (error) return res.status(400).json({ message: error.message });
-    if (!req.file) return res.status(400).json({ message: 'Расм танланмади' });
+    if (!req.file) return res.status(400).json({ message: 'Rasm tanlanmadi' });
     res.json({ url: `/uploads/${req.file.filename}`, name: req.file.filename });
   });
 }
@@ -172,13 +172,13 @@ export function uploadProductImage(req, res) {
 export function uploadProductVideo(req, res) {
   uploadVideo(req, res, (error) => {
     if (error) return res.status(400).json({ message: error.message });
-    if (!req.file) return res.status(400).json({ message: 'Видео танланмади' });
+    if (!req.file) return res.status(400).json({ message: 'Video tanlanmadi' });
     res.json({ url: `/uploads/${req.file.filename}`, name: req.file.filename });
   });
 }
 
 /**
- * public/uploads papkasidagi barcha rasmlar ro'yxati
+ * public/uploads papkasidagi barcha rasmlar ro‘yxati
  */
 export function listUploads(req, res) {
   try {
@@ -199,7 +199,7 @@ export function listUploads(req, res) {
 }
 
 /**
- * public/uploads papkasidagi barcha videolar ro'yxati
+ * public/uploads papkasidagi barcha videolar ro‘yxati
  */
 export function listVideoUploads(req, res) {
   try {
