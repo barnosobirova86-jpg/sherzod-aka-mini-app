@@ -6,6 +6,7 @@ import User from '../models/User.js';
 import { sendMessage } from '../core/bot.js';
 import { uploadImage, uploadVideo, UPLOAD_DIR } from '../middlewares/upload.middleware.js';
 import { storeUpload, listCloudFiles } from '../core/storage.js';
+import { processImage, processVideo } from '../core/mediaProcessor.js';
 
 export async function getStats(req, res) {
   try {
@@ -157,24 +158,26 @@ export async function deleteProduct(req, res) {
 /* ---------------- RASMLAR ---------------- */
 
 /**
- * Kompyuterdan rasm yuklash -> /uploads/<fayl nomi>
+ * Rasm yuklash -> siqiladi (HEIC ham WEBP ga o‘tadi) -> /uploads/<fayl nomi>
  */
 export function uploadProductImage(req, res) {
   uploadImage(req, res, async (error) => {
     if (error) return res.status(400).json({ message: error.message });
     if (!req.file) return res.status(400).json({ message: 'Rasm tanlanmadi' });
+    await processImage(req.file);
     const url = await storeUpload(req.file);
     res.json({ url, name: req.file.filename });
   });
 }
 
 /**
- * Kompyuterdan video yuklash -> /uploads/<fayl nomi>
+ * Video yuklash -> 1080p MP4 ga siqiladi -> /uploads/<fayl nomi>
  */
 export function uploadProductVideo(req, res) {
   uploadVideo(req, res, async (error) => {
     if (error) return res.status(400).json({ message: error.message });
     if (!req.file) return res.status(400).json({ message: 'Video tanlanmadi' });
+    await processVideo(req.file);
     const url = await storeUpload(req.file);
     res.json({ url, name: req.file.filename });
   });

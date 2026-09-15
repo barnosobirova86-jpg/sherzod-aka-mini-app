@@ -38,21 +38,30 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => cb(null, safeName(file.originalname)),
 });
 
+/*
+ * Ba‘zi telefonlar (ayniqsa iPhone HEIC va Android‘dagi ba‘zi formatlar uchun)
+ * fayl turini "application/octet-stream" deb yuboradi. Shu sababli faqat
+ * mimetype‘ga ishonmaymiz — fayl kengaytmasini ham tekshiramiz.
+ */
+const IMAGE_EXT = /\.(jpe?g|jfif|png|webp|gif|avif|bmp|tiff?|heic|heif|svg|ico|dng|raw|cr2|nef|arw)$/i;
+const VIDEO_EXT = /\.(mp4|mov|m4v|webm|mkv|avi|3gp|hevc|mpe?g|wmv|flv|ts)$/i;
+
+const accept = (prefix, extPattern, label) => (req, file, cb) => {
+  const ok =
+    (file.mimetype || '').startsWith(`${prefix}/`) || extPattern.test(file.originalname || '');
+  if (ok) return cb(null, true);
+  cb(new Error(`Faqat ${label} fayllari qabul qilinadi`));
+};
+
 export const uploadImage = multer({
   storage,
   limits: { fileSize: 50 * 1024 * 1024 },
-  fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) return cb(null, true);
-    cb(new Error('Faqat rasm fayllari qabul qilinadi'));
-  },
+  fileFilter: accept('image', IMAGE_EXT, 'rasm'),
 }).single('image');
 
 export const uploadVideo = multer({
   storage,
   // 4K, 5 daqiqagacha bo‘lgan videolar uchun (iPhone HEVC ~2-2.5 GB atrofida bo‘lishi mumkin)
   limits: { fileSize: 3 * 1024 * 1024 * 1024 },
-  fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith('video/')) return cb(null, true);
-    cb(new Error('Faqat video fayllari qabul qilinadi'));
-  },
+  fileFilter: accept('video', VIDEO_EXT, 'video'),
 }).single('video');
