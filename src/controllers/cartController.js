@@ -25,6 +25,42 @@ export async function getProduct(req, res) {
   }
 }
 
+/**
+ * Mijoz mahsulotga sharh qoldiradi
+ */
+export async function addReview(req, res) {
+  try {
+    const text = String(req.body.text || '').trim();
+    if (!text) {
+      return res.status(400).json({ message: 'Sharh matnini yozing' });
+    }
+
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ message: 'Mahsulot topilmadi' });
+
+    const review = {
+      name:
+        req.user.contactName ||
+        [req.user.firstName, req.user.lastName].filter(Boolean).join(' ') ||
+        'Mijoz',
+      rating: Math.min(5, Math.max(1, Number(req.body.rating) || 5)),
+      text: text.slice(0, 500),
+      createdAt: new Date().toISOString(),
+    };
+
+    const reviews = [review, ...(Array.isArray(product.reviews) ? product.reviews : [])].slice(
+      0,
+      100
+    );
+
+    const updated = await Product.update(product.id, { reviews });
+    res.status(201).json(updated.reviews);
+  } catch (error) {
+    console.error('addReview xatosi:', error);
+    res.status(500).json({ message: 'Sharh saqlanmadi' });
+  }
+}
+
 export async function getCategories(req, res) {
   try {
     res.json(await Product.categories());

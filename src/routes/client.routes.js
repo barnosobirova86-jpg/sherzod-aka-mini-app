@@ -9,6 +9,7 @@ import {
   getMyOrders,
   createOrder,
   updateProfile,
+  addReview,
 } from '../controllers/cartController.js';
 
 const router = Router();
@@ -22,5 +23,6 @@ router.get('/me', telegramAuth, getMe);
 router.post('/profile', telegramAuth, updateProfile);
 router.get('/orders', telegramAuth, getMyOrders);
 router.post('/orders', telegramAuth, createOrder);
+router.post('/products/:id/reviews', telegramAuth, addReview);
 
 export default router;

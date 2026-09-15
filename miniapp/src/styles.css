@@ -1379,3 +1379,45 @@ img {
   align-items: center;
   gap: 8px;
 }
+
+/* ---------- Sharh qoldirish formasi ---------- */
+
+.review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.review-form textarea {
+  width: 100%;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  resize: vertical;
+}
+
+.review-form textarea:focus {
+  border-color: var(--accent);
+}
+
+.review-stars-pick {
+  display: flex;
+  gap: 4px;
+}
+
+.review-stars-pick .star {
+  font-size: 24px;
+  line-height: 1;
+  color: var(--line);
+  background: none;
+  padding: 0 2px;
+}
+
+.review-stars-pick .star.on {
+  color: #f0a500;
+}

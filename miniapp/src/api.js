@@ -43,6 +43,11 @@ export const api = {
   myOrders: () => request('/orders'),
   createOrder: (payload) =>
     request('/orders', { method: 'POST', body: JSON.stringify(payload) }),
+  addReview: (productId, payload) =>
+    request(`/products/${productId}/reviews`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
 };
 
 export const formatPrice = (value) => Number(value || 0).toLocaleString('uz-UZ');

@@ -82,7 +82,7 @@ export async function handleMyOrders(ctx) {
     const date = new Date(order.createdAt).toLocaleDateString('uz-UZ');
     const items = (order.items || []).map((i) => `• ${i.name} × ${i.qty}`).join('\n');
     const status = order.status === 'delivered' ? '✅ Yetkazildi' : '⏳ Kutilmoqda';
-    return `<b>#${order.id}</b> — ${date}\n${items}\n💰 ${order.totalPrice.toLocaleString('uz-UZ')} so‘m\n${status}`;
+    return `<b>#${order.id}</b> — ${date}\n${items}\n💰 ${orderTotalLabel(order)}\n${status}`;
   });
 
   await ctx.replyWithHTML(`📜 <b>Buyurtmalaringiz</b>\n\n${lines.join('\n\n')}`);
@@ -97,11 +97,39 @@ export async function handleFallback(ctx) {
 }
 
 /**
+ * Narxni mahsulot valyutasiga mos holda yozadi: UZS -> "1 234 so‘m", USD -> "$1,234"
+ */
+function formatMoney(value, currency) {
+  return currency === 'USD'
+    ? `$${Number(value || 0).toLocaleString('en-US')}`
+    : `${Number(value || 0).toLocaleString('uz-UZ')} so‘m`;
+}
+
+/**
+ * Buyurtma jamisi — har bir valyuta bo'yicha alohida hisoblanadi
+ */
+export function orderTotalLabel(order) {
+  const totals = new Map();
+  for (const item of order.items || []) {
+    const currency = item.currency || 'UZS';
+    totals.set(currency, (totals.get(currency) || 0) + item.price * item.qty);
+  }
+  if (!totals.size) return formatMoney(order.totalPrice, 'UZS');
+  return [...totals.entries()].map(([currency, sum]) => formatMoney(sum, currency)).join(' + ');
+}
+
+/**
  * Buyurtma qabul qilinganda mijozga yuboriladigan xabar
  */
 export function buildOrderMessage(order) {
   const items = (order.items || [])
-    .map((i) => `• ${i.name}${i.size ? ` (${i.size})` : ''} × ${i.qty}`)
+    .map(
+      (i) =>
+        `• ${i.name}${i.size ? ` (${i.size})` : ''} × ${i.qty} — ${formatMoney(
+          i.price * i.qty,
+          i.currency
+        )}`
+    )
     .join('\n');
 
   return (
@@ -109,6 +137,6 @@ export function buildOrderMessage(order) {
     `<b>Buyurtma #${order.id}</b>\n` +
     `${items}\n\n` +
     (order.address ? `🏠 Manzil: ${order.address}\n` : '') +
-    `💰 Jami: <b>${order.totalPrice.toLocaleString('uz-UZ')} so‘m</b>`
+    `💰 Jami: <b>${orderTotalLabel(order)}</b>`
   );
 }

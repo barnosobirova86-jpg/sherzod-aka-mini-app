@@ -1,14 +1,39 @@
 import { useMemo, useState } from 'react';
-import { formatMoney, resolveImage } from '../api.js';
-import { haptic } from '../telegram.js';
+import { api, formatMoney, resolveImage } from '../api.js';
+import { haptic, showAlert } from '../telegram.js';
 import { useCart } from '../context/CartContext.jsx';
 
 export default function ProductSheet({ product, onClose }) {
   const { addItem } = useCart();
   const [size, setSize] = useState(product.sizes?.[0] || null);
   const [qty, setQty] = useState(1);
+  const [reviews, setReviews] = useState(product.reviews || []);
+  const [reviewText, setReviewText] = useState('');
+  const [reviewRating, setReviewRating] = useState(5);
+  const [sendingReview, setSendingReview] = useState(false);
   const stock = product.stock ?? 0;
   const outOfStock = stock <= 0;
+
+  async function sendReview(event) {
+    event.preventDefault();
+    if (!reviewText.trim()) return showAlert('Sharh matnini yozing');
+
+    setSendingReview(true);
+    try {
+      const updated = await api.addReview(product.id, {
+        rating: reviewRating,
+        text: reviewText.trim(),
+      });
+      setReviews(updated);
+      setReviewText('');
+      setReviewRating(5);
+      haptic('medium');
+    } catch (error) {
+      showAlert(error.message || 'Sharh saqlanmadi');
+    } finally {
+      setSendingReview(false);
+    }
+  }
 
   const media = useMemo(() => {
     const items = [];
@@ -132,21 +157,54 @@ export default function ProductSheet({ product, onClose }) {
             {outOfStock ? 'Tugagan' : `Omborda: ${stock} dona`}
           </div>
 
-          {product.reviews?.length > 0 && (
-            <>
-              <div className="section-title">Mijozlar sharhlari</div>
-              <div className="reviews">
-                {product.reviews.map((review, i) => (
-                  <div className="review" key={i}>
-                    <div className="review-head">
-                      <b>{review.name}</b>
-                      <span className="review-stars">{'★'.repeat(review.rating || 5)}</span>
-                    </div>
-                    <p>{review.text}</p>
+          <div className="section-title">Mijozlar sharhlari</div>
+
+          <form className="review-form" onSubmit={sendReview}>
+            <div className="review-stars-pick">
+              {[1, 2, 3, 4, 5].map((n) => (
+                <button
+                  type="button"
+                  key={n}
+                  className={`star ${n <= reviewRating ? 'on' : ''}`}
+                  onClick={() => {
+                    haptic('light');
+                    setReviewRating(n);
+                  }}
+                  aria-label={`${n} yulduz`}
+                >
+                  ★
+                </button>
+              ))}
+            </div>
+
+            <textarea
+              rows={2}
+              placeholder="Mahsulot haqida fikringizni yozing"
+              value={reviewText}
+              onChange={(e) => setReviewText(e.target.value)}
+            />
+
+            <button className="btn btn-soft" disabled={sendingReview}>
+              {sendingReview ? 'Yuborilmoqda...' : 'Sharh qoldirish'}
+            </button>
+          </form>
+
+          {reviews.length > 0 ? (
+            <div className="reviews">
+              {reviews.map((review, i) => (
+                <div className="review" key={i}>
+                  <div className="review-head">
+                    <b>{review.name}</b>
+                    <span className="review-stars">{'★'.repeat(review.rating || 5)}</span>
                   </div>
-                ))}
-              </div>
-            </>
+                  <p>{review.text}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="muted" style={{ fontSize: 13, margin: 0 }}>
+              Hozircha sharh yo‘q — birinchi bo‘lib fikr bildiring
+            </p>
           )}
         </div>
 
