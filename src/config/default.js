@@ -18,11 +18,10 @@ const config = {
       `<b>${name}, xush kelibsiz!</b> 👋\n\n` +
       `Assalomu alaykum ART-SHERZOD galereyasiga xush kelibsiz!\n\n` +
       `Har bir Kisva Ka‘ba po‘shtimiz sertifikatga ega.\n\n` +
-      `Buyurtma berish uchun pastdagi tugmani bosing 👇`,
-    orderAccepted:
-      'Buyurtmangiz muvaffaqiyatli qabul qilindi! Kuryerimiz tez orada bog‘lanadi 🕋',
+      `Buyurtma berish uchun pastdagi 🛍 Do‘kon tugmasini bosing 👇`,
+    orderAccepted: 'Xarid uchun rahmat! Admin siz bilan bog‘lanadi 🕋',
     help:
-      'Buyurtma berish uchun <b>🛍 Do‘konni ochish</b> tugmasini bosing.\n' +
+      'Buyurtma berish uchun <b>🛍 Do‘kon</b> tugmasini bosing.\n' +
       'Savollar bo‘lsa — /start buyrug‘ini yuboring.',
   },
 };

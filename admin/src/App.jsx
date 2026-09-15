@@ -8,7 +8,7 @@ export default function App() {
   return (
     <div className="layout">
       <aside className="sidebar">
-        <div className="brand">🕋 Kisva Admin</div>
+        <div className="brand">🕋 ART-SHERZOD Admin</div>
 
         <button
           className={`side-link ${page === 'orders' ? 'active' : ''}`}

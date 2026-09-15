@@ -11,7 +11,7 @@ function shopKeyboard() {
   if (!isHttps(config.webAppUrl)) return undefined;
   return {
     reply_markup: {
-      keyboard: [[{ text: '🛍 Do‘konni ochish', web_app: { url: config.webAppUrl } }]],
+      keyboard: [[{ text: '🛍 Do‘kon', web_app: { url: config.webAppUrl } }]],
       resize_keyboard: true,
     },
   };
@@ -51,7 +51,7 @@ export async function handleStart(ctx) {
 
   if (!user.phone) {
     await ctx.reply(
-      'Buyurtmalaringizni tezroq rasmiylashtirish uchun telefon raqamingizni yuboring:',
+      'Buyurtmani tezroq rasmiylashtirish uchun telefon raqamingizni yuboring:',
       phoneKeyboard()
     );
   }
@@ -85,7 +85,7 @@ export async function handleMyOrders(ctx) {
     return `<b>#${order.id}</b> — ${date}\n${items}\n💰 ${orderTotalLabel(order)}\n${status}`;
   });
 
-  await ctx.replyWithHTML(`📜 <b>Buyurtmalaringiz</b>\n\n${lines.join('\n\n')}`);
+  await ctx.replyWithHTML(`📜 <b>Mening buyurtmalarim</b>\n\n${lines.join('\n\n')}`);
 }
 
 export async function handleHelp(ctx) {
