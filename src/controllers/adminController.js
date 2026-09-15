@@ -5,6 +5,7 @@ import Order from '../models/Order.js';
 import User from '../models/User.js';
 import { sendMessage } from '../core/bot.js';
 import { uploadImage, uploadVideo, UPLOAD_DIR } from '../middlewares/upload.middleware.js';
+import { storeUpload, listCloudFiles } from '../core/storage.js';
 
 export async function getStats(req, res) {
   try {
@@ -159,10 +160,11 @@ export async function deleteProduct(req, res) {
  * Kompyuterdan rasm yuklash -> /uploads/<fayl nomi>
  */
 export function uploadProductImage(req, res) {
-  uploadImage(req, res, (error) => {
+  uploadImage(req, res, async (error) => {
     if (error) return res.status(400).json({ message: error.message });
     if (!req.file) return res.status(400).json({ message: 'Rasm tanlanmadi' });
-    res.json({ url: `/uploads/${req.file.filename}`, name: req.file.filename });
+    const url = await storeUpload(req.file);
+    res.json({ url, name: req.file.filename });
   });
 }
 
@@ -170,21 +172,26 @@ export function uploadProductImage(req, res) {
  * Kompyuterdan video yuklash -> /uploads/<fayl nomi>
  */
 export function uploadProductVideo(req, res) {
-  uploadVideo(req, res, (error) => {
+  uploadVideo(req, res, async (error) => {
     if (error) return res.status(400).json({ message: error.message });
     if (!req.file) return res.status(400).json({ message: 'Video tanlanmadi' });
-    res.json({ url: `/uploads/${req.file.filename}`, name: req.file.filename });
+    const url = await storeUpload(req.file);
+    res.json({ url, name: req.file.filename });
   });
 }
 
 /**
  * public/uploads papkasidagi barcha rasmlar ro‘yxati
  */
-export function listUploads(req, res) {
+export async function listUploads(req, res) {
+  const match = /\.(jpe?g|png|webp|gif|avif|bmp|tiff?|heic|heif|svg)$/i;
   try {
+    const cloud = await listCloudFiles(match);
+    if (cloud) return res.json(cloud);
+
     const files = fs
       .readdirSync(UPLOAD_DIR)
-      .filter((name) => /\.(jpe?g|png|webp|gif|avif|bmp|tiff?|heic|heif|svg)$/i.test(name))
+      .filter((name) => match.test(name))
       .map((name) => ({
         name,
         url: `/uploads/${name}`,
@@ -201,11 +208,15 @@ export function listUploads(req, res) {
 /**
  * public/uploads papkasidagi barcha videolar ro‘yxati
  */
-export function listVideoUploads(req, res) {
+export async function listVideoUploads(req, res) {
+  const match = /\.(mp4|mov|webm|mkv|avi|m4v)$/i;
   try {
+    const cloud = await listCloudFiles(match);
+    if (cloud) return res.json(cloud);
+
     const files = fs
       .readdirSync(UPLOAD_DIR)
-      .filter((name) => /\.(mp4|mov|webm|mkv|avi|m4v)$/i.test(name))
+      .filter((name) => match.test(name))
       .map((name) => ({
         name,
         url: `/uploads/${name}`,
