@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import { createClient } from '@supabase/supabase-js';
 import {
   S3Client,
   PutObjectCommand,
@@ -14,12 +13,13 @@ import {
  *   1. Supabase Storage  — SUPABASE_URL + SUPABASE_SERVICE_KEY berilsa
  *   2. S3‘ga mos ombor   — S3_ENDPOINT + S3_BUCKET + kalitlar berilsa
  *      (Backblaze B2, Cloudflare R2, Wasabi va boshqalar)
- *   3. Mahalliy disk     — hech narsa sozlanmagan bo‘lsa (hozirgi holat)
+ *   3. Mahalliy disk     — hech narsa sozlanmagan bo‘lsa
  *
- * Hech qanday sozlama kiritilmasa, ilova avvalgidek ishlayveradi.
+ * Supabase bilan uning rasmiy kutubxonasi orqali emas, oddiy HTTP so‘rov
+ * orqali ishlaymiz: kutubxona Node 22 talab qiladi, Render‘da esa Node 20.
  */
 
-const SUPABASE_URL = process.env.SUPABASE_URL || '';
+const SUPABASE_URL = (process.env.SUPABASE_URL || '').replace(/\/+$/, '');
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY || '';
 const SUPABASE_BUCKET = process.env.SUPABASE_BUCKET || 'uploads';
 
@@ -36,8 +36,6 @@ const s3Ready = Boolean(S3_ENDPOINT && S3_BUCKET && S3_KEY_ID && S3_SECRET);
 
 export const cloudEnabled = supabaseReady || s3Ready;
 export const cloudProvider = supabaseReady ? 'supabase' : s3Ready ? 's3' : 'local';
-
-const supabase = supabaseReady ? createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
 const s3 = s3Ready
   ? new S3Client({
@@ -64,6 +62,14 @@ const MIME = {
 const mimeOf = (file) =>
   file.mimetype || MIME[path.extname(file.filename).toLowerCase()] || 'application/octet-stream';
 
+const supabaseHeaders = () => ({
+  Authorization: `Bearer ${SUPABASE_KEY}`,
+  apikey: SUPABASE_KEY,
+});
+
+const supabasePublicUrl = (name) =>
+  `${SUPABASE_URL}/storage/v1/object/public/${SUPABASE_BUCKET}/${encodeURIComponent(name)}`;
+
 const s3PublicUrl = (name) =>
   S3_PUBLIC_URL
     ? `${S3_PUBLIC_URL}/${encodeURIComponent(name)}`
@@ -79,25 +85,33 @@ export async function storeUpload(file) {
 
   try {
     const contentType = mimeOf(file);
+    const body = await fs.promises.readFile(file.path);
     let url;
 
     if (supabaseReady) {
-      const { error } = await supabase.storage
-        .from(SUPABASE_BUCKET)
-        .upload(file.filename, fs.createReadStream(file.path), {
-          contentType,
-          upsert: true,
-          duplex: 'half',
-        });
-      if (error) throw error;
-      url = supabase.storage.from(SUPABASE_BUCKET).getPublicUrl(file.filename).data.publicUrl;
+      const response = await fetch(
+        `${SUPABASE_URL}/storage/v1/object/${SUPABASE_BUCKET}/${encodeURIComponent(file.filename)}`,
+        {
+          method: 'POST',
+          headers: {
+            ...supabaseHeaders(),
+            'Content-Type': contentType,
+            'x-upsert': 'true',
+          },
+          body,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Supabase ${response.status}: ${await response.text()}`);
+      }
+      url = supabasePublicUrl(file.filename);
     } else {
-      // S3 oqim bilan ishlaganda hajmni talab qiladi — fayl siqilgani uchun kichik
       await s3.send(
         new PutObjectCommand({
           Bucket: S3_BUCKET,
           Key: file.filename,
-          Body: await fs.promises.readFile(file.path),
+          Body: body,
           ContentType: contentType,
         })
       );
@@ -124,17 +138,26 @@ export async function listCloudFiles(match) {
 
   try {
     if (supabaseReady) {
-      const { data, error } = await supabase.storage.from(SUPABASE_BUCKET).list('', {
-        limit: 500,
-        sortBy: { column: 'created_at', order: 'desc' },
+      const response = await fetch(`${SUPABASE_URL}/storage/v1/object/list/${SUPABASE_BUCKET}`, {
+        method: 'POST',
+        headers: { ...supabaseHeaders(), 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prefix: '',
+          limit: 500,
+          sortBy: { column: 'created_at', order: 'desc' },
+        }),
       });
-      if (error) throw error;
 
+      if (!response.ok) {
+        throw new Error(`Supabase ${response.status}: ${await response.text()}`);
+      }
+
+      const data = await response.json();
       return data
         .filter((f) => match.test(f.name))
         .map((f) => ({
           name: f.name,
-          url: supabase.storage.from(SUPABASE_BUCKET).getPublicUrl(f.name).data.publicUrl,
+          url: supabasePublicUrl(f.name),
           time: new Date(f.created_at || Date.now()).getTime(),
         }));
     }
