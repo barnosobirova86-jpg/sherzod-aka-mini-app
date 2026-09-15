@@ -11,8 +11,14 @@ ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 const MAX_IMAGE_SIDE = 2000;
 const IMAGE_QUALITY = 82;
 
-/* Video 1080p ga tushiriladi — telefon ekrani uchun yetarli */
-const MAX_VIDEO_HEIGHT = 1080;
+/*
+ * Video 720p ga tushiriladi — telefon ekrani uchun yetarli va serverning
+ * xotirasi kam bo'lsa ham siqilib ulguradi.
+ * VIDEO_THREADS=1 muhim: aks holda ffmpeg serverdagi barcha yadrolarga
+ * qarab ko'p oqim ochadi va 512 MB xotirali serverni "o'ldiradi".
+ */
+const MAX_VIDEO_HEIGHT = Number(process.env.VIDEO_MAX_HEIGHT) || 720;
+const VIDEO_THREADS = process.env.VIDEO_THREADS || '1';
 
 const isHeic = (file) => {
   const ext = path.extname(file.filename).toLowerCase();
@@ -93,11 +99,17 @@ export async function processVideo(file) {
         '-vf',
         `scale=-2:'min(${MAX_VIDEO_HEIGHT},ih)'`,
         '-crf',
-        '26',
+        '28',
         '-preset',
         'veryfast',
+        '-threads',
+        VIDEO_THREADS,
+        '-x264-params',
+        `threads=${VIDEO_THREADS}:lookahead-threads=1:sliced-threads=0`,
         '-pix_fmt',
         'yuv420p',
+        '-max_muxing_queue_size',
+        '256',
         '-movflags',
         '+faststart',
       ])
