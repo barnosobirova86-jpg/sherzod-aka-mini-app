@@ -82,6 +82,40 @@ export default function Orders() {
     );
   }
 
+  function AddressCell({ order }) {
+    const hasA = order.fromLatitude && order.fromLongitude;
+    const hasB = order.latitude && order.longitude;
+
+    if (!order.address && !hasA && !hasB) return '—';
+
+    return (
+      <div style={{ fontSize: 13, lineHeight: 1.5 }}>
+        {order.address && <div>{order.address}</div>}
+        {hasA && (
+          <a
+            className="link"
+            href={`https://maps.google.com/?q=${order.fromLatitude},${order.fromLongitude}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            📍 A (qayerdan)
+          </a>
+        )}
+        {hasA && hasB && ' · '}
+        {hasB && (
+          <a
+            className="link"
+            href={`https://maps.google.com/?q=${order.latitude},${order.longitude}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            📍 B (qayerga)
+          </a>
+        )}
+      </div>
+    );
+  }
+
   function StatusBadge({ order }) {
     return (
       <span className={`badge ${order.status}`}>{statusLabels[order.status] || order.status}</span>
@@ -211,19 +245,8 @@ export default function Orders() {
                       <td style={{ whiteSpace: 'nowrap' }}>
                         <b>{orderTotalLabel(order)}</b>
                       </td>
-                      <td>
-                        {order.latitude && order.longitude ? (
-                          <a
-                            className="link"
-                            href={`https://maps.google.com/?q=${order.latitude},${order.longitude}`}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            📍 Xaritada
-                          </a>
-                        ) : (
-                          '—'
-                        )}
+                      <td style={{ maxWidth: 220 }}>
+                        <AddressCell order={order} />
                       </td>
                       <td style={{ whiteSpace: 'nowrap' }}>{formatDate(order.createdAt)}</td>
                       <td>
@@ -267,16 +290,9 @@ export default function Orders() {
 
                 {order.note && <div className="oca-row muted">💬 {order.note}</div>}
 
-                {order.latitude && order.longitude && (
-                  <a
-                    className="link oca-row"
-                    href={`https://maps.google.com/?q=${order.latitude},${order.longitude}`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    📍 Xaritada
-                  </a>
-                )}
+                <div className="oca-row">
+                  <AddressCell order={order} />
+                </div>
 
                 <div className="oca-footer">
                   <b>{orderTotalLabel(order)}</b>

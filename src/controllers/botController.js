@@ -108,6 +108,7 @@ export function buildOrderMessage(order) {
     `${config.texts.orderAccepted}\n\n` +
     `<b>Buyurtma #${order.id}</b>\n` +
     `${items}\n\n` +
+    (order.address ? `🏠 Manzil: ${order.address}\n` : '') +
     `💰 Jami: <b>${order.totalPrice.toLocaleString('uz-UZ')} so‘m</b>`
   );
 }

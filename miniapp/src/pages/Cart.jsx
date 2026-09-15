@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { api, formatMoney, resolveImage } from '../api.js';
 import { useCart } from '../context/CartContext.jsx';
 import { haptic, showAlert, requestLocation } from '../telegram.js';
 import ContactGate from '../components/ContactGate.jsx';
+import MapPicker from '../components/MapPicker.jsx';
 
 function formatTotals(totalsByCurrency) {
   return totalsByCurrency.map((t) => formatMoney(t.amount, t.currency)).join(' + ');
@@ -12,17 +13,30 @@ export default function Cart({ user, onNavigate, onUserUpdate }) {
   const { items, totalsByCurrency, changeQty, removeItem, clearCart } = useCart();
 
   const [note, setNote] = useState('');
-  const [location, setLocation] = useState(null);
+  const [address, setAddress] = useState('');
+  const [pointA, setPointA] = useState(null);
+  const [pointB, setPointB] = useState(null);
   const [locating, setLocating] = useState(false);
   const [sending, setSending] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [showGate, setShowGate] = useState(false);
 
-  async function getLocation() {
+  const setPoint = useCallback((key, point) => {
+    if (key === 'A') setPointA(point);
+    else setPointB(point);
+  }, []);
+
+  function clearPoints() {
+    haptic('light');
+    setPointA(null);
+    setPointB(null);
+  }
+
+  async function useMyLocation() {
     setLocating(true);
     try {
       const coords = await requestLocation();
-      setLocation(coords);
+      setPointA({ lat: coords.latitude, lng: coords.longitude });
       haptic('medium');
     } catch (error) {
       showAlert(error.message || 'Lokatsiya olinmadi');
@@ -38,8 +52,11 @@ export default function Cart({ user, onNavigate, onUserUpdate }) {
         items: items.map((i) => ({ productId: i.productId, size: i.size, qty: i.qty })),
         name,
         phone,
-        latitude: location?.latitude,
-        longitude: location?.longitude,
+        address: address.trim() || null,
+        latitude: pointB?.lat,
+        longitude: pointB?.lng,
+        fromLatitude: pointA?.lat,
+        fromLongitude: pointA?.lng,
         note: note.trim() || null,
       });
 
@@ -145,14 +162,48 @@ export default function Cart({ user, onNavigate, onUserUpdate }) {
       <div className="section-title">Yetkazib berish</div>
 
       <div className="field">
-        <label>Manzil (lokatsiya) — ixtiyoriy</label>
-        <button className="btn btn-outline" onClick={getLocation} disabled={locating}>
-          {locating
-            ? 'Aniqlanmoqda...'
-            : location
-              ? `📍 Lokatsiya olindi (${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)})`
-              : '📍 Lokatsiyani yuborish'}
-        </button>
+        <label>Manzil (qo‘lda yozing)</label>
+        <textarea
+          rows={2}
+          placeholder="Masalan: Toshkent sh., Chilonzor t., 12-kvartal, 34-uy, 5-xonadon"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+        />
+      </div>
+
+      <div className="field">
+        <label>Xaritada belgilang</label>
+        <MapPicker pointA={pointA} pointB={pointB} onChange={setPoint} />
+
+        <div className="map-actions">
+          <button className="btn btn-outline btn-sm" onClick={useMyLocation} disabled={locating}>
+            {locating ? 'Aniqlanmoqda...' : '📍 Mening joylashuvim (A)'}
+          </button>
+          {(pointA || pointB) && (
+            <button className="btn btn-light btn-sm" onClick={clearPoints}>
+              Nuqtalarni tozalash
+            </button>
+          )}
+        </div>
+
+        <div className="map-summary">
+          <div>
+            <span className="map-summary-dot" style={{ background: '#147a4f' }}>
+              A
+            </span>
+            {pointA
+              ? `${pointA.lat.toFixed(5)}, ${pointA.lng.toFixed(5)}`
+              : 'belgilanmagan'}
+          </div>
+          <div>
+            <span className="map-summary-dot" style={{ background: '#c0392b' }}>
+              B
+            </span>
+            {pointB
+              ? `${pointB.lat.toFixed(5)}, ${pointB.lng.toFixed(5)}`
+              : 'belgilanmagan'}
+          </div>
+        </div>
       </div>
 
       <div className="field">

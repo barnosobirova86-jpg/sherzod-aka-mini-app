@@ -54,8 +54,11 @@ model Order {
   totalPrice   Int
   customerName String?
   phone        String?
+  address      String?
   latitude     Float?
   longitude    Float?
+  fromLatitude Float?
+  fromLongitude Float?
   note         String?
   status       String   @default("pending")
   createdAt    DateTime @default(now())

@@ -79,7 +79,17 @@ export async function getMyOrders(req, res) {
  */
 export async function createOrder(req, res) {
   try {
-    const { items = [], name, phone, latitude, longitude, note } = req.body;
+    const {
+      items = [],
+      name,
+      phone,
+      address,
+      latitude,
+      longitude,
+      fromLatitude,
+      fromLongitude,
+      note,
+    } = req.body;
 
     if (!Array.isArray(items) || items.length === 0) {
       return res.status(400).json({ message: 'Savatcha bo‘sh' });
@@ -122,8 +132,11 @@ export async function createOrder(req, res) {
       totalPrice,
       customerName: name?.trim() || req.user.contactName || null,
       phone: phone || req.user.phone || null,
+      address: address?.trim() || null,
       latitude: latitude ? Number(latitude) : null,
       longitude: longitude ? Number(longitude) : null,
+      fromLatitude: fromLatitude ? Number(fromLatitude) : null,
+      fromLongitude: fromLongitude ? Number(fromLongitude) : null,
       note: note || null,
     });
 
