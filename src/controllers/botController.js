@@ -39,7 +39,7 @@ export async function handleStart(ctx) {
     username: from.username,
   });
 
-  await ctx.replyWithHTML(config.texts.start(from.first_name), shopKeyboard());
+  await ctx.replyWithHTML(config.texts.start(), shopKeyboard());
 
   if (!isHttps(config.webAppUrl)) {
     await ctx.replyWithHTML(

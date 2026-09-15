@@ -14,8 +14,8 @@ const config = {
   shopName: 'Kisva Shop',
   currency: 'so‘m',
   texts: {
-    start: (name) =>
-      `<b>${name}, xush kelibsiz!</b> 👋\n\n` +
+    start: () =>
+      `<b>Hurmatli mijoz, xush kelibsiz!</b> 👋\n\n` +
       `Assalomu alaykum ART-SHERZOD galereyasiga xush kelibsiz!\n\n` +
       `Har bir Kisva Ka‘ba po‘shtimiz sertifikatga ega.\n\n` +
       `Buyurtma berish uchun pastdagi 🛍 Do‘kon tugmasini bosing 👇`,
