@@ -15,6 +15,7 @@ model User {
   lastName    String?
   username    String?
   phone       String?
+  extraPhone  String?
   contactName String?
   createdAt   DateTime @default(now())
 

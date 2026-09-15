@@ -19,11 +19,31 @@ function orderTotalLabel(order) {
   return [...map.entries()].map(([currency, amount]) => formatMoney(amount, currency)).join(' + ');
 }
 
-export default function Profile({ user, onNavigate }) {
+export default function Profile({ user, onNavigate, onUserUpdate }) {
   const { addItem } = useCart();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showOrders, setShowOrders] = useState(false);
+  const [extraPhone, setExtraPhone] = useState(user?.extraPhone || '');
+  const [savingPhone, setSavingPhone] = useState(false);
+
+  useEffect(() => {
+    setExtraPhone(user?.extraPhone || '');
+  }, [user?.extraPhone]);
+
+  async function saveExtraPhone() {
+    setSavingPhone(true);
+    try {
+      const updated = await api.updateProfile({ extraPhone: extraPhone.trim() });
+      onUserUpdate?.(updated);
+      haptic('medium');
+      showAlert(extraPhone.trim() ? 'Qo‘shimcha raqam saqlandi' : 'Qo‘shimcha raqam o‘chirildi');
+    } catch (error) {
+      showAlert(error.message || 'Saqlanmadi');
+    } finally {
+      setSavingPhone(false);
+    }
+  }
 
   useEffect(() => {
     api
@@ -70,6 +90,36 @@ export default function Profile({ user, onNavigate }) {
           )}
           <p className="subtitle">{user?.phone || 'Telefon raqam kiritilmagan'}</p>
         </div>
+      </div>
+
+      <div className="section-title">Telefon raqamlarim</div>
+
+      <div className="list-item" style={{ cursor: 'default' }}>
+        <span style={{ fontSize: 18 }}>📱</span>
+        <span style={{ flex: 1 }}>Telegram raqami</span>
+        <span className="muted">{user?.phone || 'Ulanmagan'}</span>
+      </div>
+
+      <div className="field" style={{ marginTop: 10 }}>
+        <label>Qo‘shimcha raqam</label>
+        <input
+          type="tel"
+          inputMode="tel"
+          placeholder="+998 90 123 45 67"
+          value={extraPhone}
+          onChange={(e) => setExtraPhone(e.target.value)}
+        />
+        <p className="muted" style={{ fontSize: 12, marginTop: 6 }}>
+          Sizga yetib bo‘lmasa, shu raqamga qo‘ng‘iroq qilamiz
+        </p>
+        <button
+          className="btn btn-soft"
+          style={{ width: '100%', marginTop: 8 }}
+          onClick={saveExtraPhone}
+          disabled={savingPhone || extraPhone.trim() === (user?.extraPhone || '')}
+        >
+          {savingPhone ? 'Saqlanmoqda...' : 'Saqlash'}
+        </button>
       </div>
 
       <div style={{ marginTop: 18 }}>

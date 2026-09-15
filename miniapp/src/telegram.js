@@ -43,6 +43,41 @@ export function openTelegramProfile(username) {
 }
 
 /**
+ * Telegram‘dagi telefon raqamini so‘raydi.
+ * Telegram bir martalik ruxsat oynasini ko‘rsatadi — mijoz tasdiqlasa,
+ * raqam avtomatik keladi (qo‘lda yozish shart emas).
+ * Qo‘llab-quvvatlanmasa yoki rad etilsa — null qaytadi.
+ */
+export function requestTelegramPhone() {
+  return new Promise((resolve) => {
+    if (!tg?.requestContact) return resolve(null);
+
+    let done = false;
+    const finish = (value) => {
+      if (done) return;
+      done = true;
+      resolve(value);
+    };
+
+    // Mijoz oynani umuman yopmasa ham ilova qotib qolmasin
+    setTimeout(() => finish(null), 60000);
+
+    try {
+      tg.requestContact((granted, response) => {
+        if (!granted) return finish(null);
+        const phone =
+          response?.responseUnsafe?.contact?.phone_number ||
+          response?.contact?.phone_number ||
+          null;
+        finish(phone ? String(phone) : 'shared');
+      });
+    } catch {
+      finish(null);
+    }
+  });
+}
+
+/**
  * Lokatsiyani olish: avval Telegram LocationManager, keyin brauzer GPS
  */
 export function requestLocation() {

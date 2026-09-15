@@ -86,14 +86,27 @@ export async function getMe(req, res) {
  */
 export async function updateProfile(req, res) {
   try {
-    const contactName = String(req.body.contactName || '').trim();
-    const phone = String(req.body.phone || '').trim();
+    const patch = {};
 
-    if (!contactName || !phone) {
+    // Qo‘shimcha raqam alohida ham yangilanishi mumkin (profil sahifasidan)
+    if (req.body.extraPhone !== undefined) {
+      patch.extraPhone = String(req.body.extraPhone || '').trim() || null;
+    }
+
+    if (req.body.contactName !== undefined) {
+      patch.contactName = String(req.body.contactName || '').trim();
+    }
+    if (req.body.phone !== undefined) {
+      patch.phone = String(req.body.phone || '').trim();
+    }
+
+    // Bir martalik ro‘yxatdan o‘tishda ikkalasi ham majburiy
+    const isRegistration = patch.contactName !== undefined || patch.phone !== undefined;
+    if (isRegistration && (!patch.contactName || !patch.phone)) {
       return res.status(400).json({ message: 'Ism va telefon raqami majburiy' });
     }
 
-    const user = await User.updateContact(req.user.id, { contactName, phone });
+    const user = await User.updateContact(req.user.id, patch);
     res.json(user);
   } catch (error) {
     console.error('updateProfile xatosi:', error);
@@ -162,12 +175,16 @@ export async function createOrder(req, res) {
       await User.updatePhone(req.user.id, phone);
     }
 
+    // Asosiy raqam + mijoz qo‘shgan qo‘shimcha raqam (admin ikkalasini ko‘radi)
+    const mainPhone = phone || req.user.phone || null;
+    const phoneLabel = [mainPhone, req.user.extraPhone].filter(Boolean).join(' / ') || null;
+
     const order = await Order.create({
       userId: req.user.id,
       items: preparedItems,
       totalPrice,
       customerName: name?.trim() || req.user.contactName || null,
-      phone: phone || req.user.phone || null,
+      phone: phoneLabel,
       address: address?.trim() || null,
       latitude: latitude ? Number(latitude) : null,
       longitude: longitude ? Number(longitude) : null,

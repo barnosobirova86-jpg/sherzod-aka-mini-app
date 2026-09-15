@@ -26,11 +26,16 @@ const User = {
     return prisma.user.update({ where: { id: Number(id) }, data: { phone } });
   },
 
-  updateContact(id, { contactName, phone }) {
-    return prisma.user.update({
-      where: { id: Number(id) },
-      data: { contactName, phone },
-    });
+  /**
+   * Faqat berilgan maydonlarni yangilaydi (qolganlari o‘z holicha qoladi)
+   */
+  updateContact(id, { contactName, phone, extraPhone }) {
+    const data = {};
+    if (contactName !== undefined) data.contactName = contactName;
+    if (phone !== undefined) data.phone = phone;
+    if (extraPhone !== undefined) data.extraPhone = extraPhone;
+
+    return prisma.user.update({ where: { id: Number(id) }, data });
   },
 
   count() {
