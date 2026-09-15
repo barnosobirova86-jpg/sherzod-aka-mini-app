@@ -17,6 +17,7 @@ model User {
   phone       String?
   extraPhone  String?
   contactName String?
+  isAdmin     Boolean  @default(false)
   createdAt   DateTime @default(now())
 
   orders Order[]

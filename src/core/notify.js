@@ -1,4 +1,5 @@
 import config from '../config/default.js';
+import User from '../models/User.js';
 import { sendMessage } from './bot.js';
 import { orderTotalLabel } from '../controllers/botController.js';
 
@@ -105,9 +106,17 @@ function smsText(order) {
  */
 export async function notifyAdmins(order) {
   const tasks = [];
+  const text = adminMessage(order);
 
-  for (const chatId of config.adminChatIds) {
-    tasks.push(sendMessage(chatId, adminMessage(order)));
+  // Botga raqamini ulashgan do'kon egalari
+  const admins = await User.findAdmins().catch(() => []);
+  const chatIds = new Set([
+    ...admins.map((a) => a.telegramId),
+    ...config.adminChatIds, // qo'lda qo'shilganlari (ixtiyoriy)
+  ]);
+
+  for (const chatId of chatIds) {
+    tasks.push(sendMessage(chatId, text));
   }
 
   if (smsEnabled) {

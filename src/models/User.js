@@ -38,6 +38,17 @@ const User = {
     return prisma.user.update({ where: { id: Number(id) }, data });
   },
 
+  setAdmin(id, isAdmin) {
+    return prisma.user.update({ where: { id: Number(id) }, data: { isAdmin } });
+  },
+
+  /**
+   * Buyurtma haqida xabar oladigan do'kon egalari
+   */
+  findAdmins() {
+    return prisma.user.findMany({ where: { isAdmin: true } });
+  },
+
   count() {
     return prisma.user.count();
   },

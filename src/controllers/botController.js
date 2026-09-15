@@ -49,6 +49,14 @@ export async function handleStart(ctx) {
     );
   }
 
+  // Raqami avval saqlangan do'kon egasini ham taniymiz
+  if (user.phone && isAdminPhone(user.phone) && !user.isAdmin) {
+    await User.setAdmin(user.id, true);
+    await ctx.replyWithHTML(
+      '🔔 Siz do‘kon egasi sifatida tanildingiz — yangi buyurtmalar shu yerga keladi.'
+    );
+  }
+
   if (!user.phone) {
     await ctx.reply(
       'Buyurtmani tezroq rasmiylashtirish uchun telefon raqamingizni yuboring:',
@@ -57,13 +65,33 @@ export async function handleStart(ctx) {
   }
 }
 
+/**
+ * Raqamlarni solishtirish uchun oxirgi 9 ta raqamni oladi
+ * (+998 90 912 79 97, 998909127997, 909127997 — hammasi bir xil)
+ */
+const phoneKey = (value) => String(value || '').replace(/\D/g, '').slice(-9);
+
+export const isAdminPhone = (phone) =>
+  Boolean(phoneKey(phone)) && config.adminPhones.some((p) => phoneKey(p) === phoneKey(phone));
+
 export async function handleContact(ctx) {
   const contact = ctx.message.contact;
   if (!contact) return;
 
   const user = await User.findByTelegramId(ctx.from.id);
-  if (user) {
-    await User.updatePhone(user.id, contact.phone_number);
+  if (!user) return;
+
+  await User.updatePhone(user.id, contact.phone_number);
+
+  // Do'kon egasining raqami bo'lsa — buyurtma xabarlariga avtomatik ulanadi
+  if (isAdminPhone(contact.phone_number) && !user.isAdmin) {
+    await User.setAdmin(user.id, true);
+    return ctx.replyWithHTML(
+      '✅ <b>Raqamingiz saqlandi.</b>\n\n' +
+        'Siz do‘kon egasi sifatida tanildingiz — endi har bir yangi buyurtma ' +
+        'shu yerga xabar bo‘lib keladi. 🔔',
+      shopKeyboard() || {}
+    );
   }
 
   await ctx.reply('✅ Rahmat! Raqamingiz saqlandi.', shopKeyboard() || {});
