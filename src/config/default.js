@@ -11,6 +11,15 @@ const config = {
   webAppUrl: process.env.WEBAPP_URL || 'http://localhost:5173',
   adminPassword: process.env.ADMIN_PASSWORD || 'admin123',
   allowDevAuth: process.env.ALLOW_DEV_AUTH === 'true',
+  /* Buyurtma kelganda xabar oladigan adminlar */
+  adminChatIds: (process.env.ADMIN_CHAT_IDS || '')
+    .split(',')
+    .map((v) => v.trim())
+    .filter(Boolean),
+  adminPhones: (process.env.ADMIN_PHONES || '+998336115043,+998909127997')
+    .split(',')
+    .map((v) => v.trim())
+    .filter(Boolean),
   shopName: 'Kisva Shop',
   currency: 'so‘m',
   texts: {

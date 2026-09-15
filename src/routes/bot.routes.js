@@ -11,6 +11,11 @@ export function registerBotHandlers() {
   bot.start(handleStart);
   bot.help(handleHelp);
   bot.command('buyurtmalarim', handleMyOrders);
+
+  // Do'kon egasi o'z Telegram raqamini bilishi uchun (xabar sozlashda kerak)
+  bot.command('id', (ctx) =>
+    ctx.replyWithHTML(`Sizning Telegram ID raqamingiz: <code>${ctx.chat.id}</code>`)
+  );
   bot.on('contact', handleContact);
   bot.on('text', handleFallback);
 

@@ -3,6 +3,7 @@ import Order from '../models/Order.js';
 import User from '../models/User.js';
 import { sendMessage } from '../core/bot.js';
 import { broadcast } from '../core/sse.js';
+import { notifyAdmins } from '../core/notify.js';
 import { buildOrderMessage } from './botController.js';
 
 export async function getProducts(req, res) {
@@ -202,6 +203,11 @@ export async function createOrder(req, res) {
 
     // Admin panelga jonli xabar (yangilashga hojat qolmasin)
     broadcast('new-order', { orderId: order.id });
+
+    // Do'kon egasiga Telegram/SMS xabari — buyurtmaga xalal bermasin
+    notifyAdmins(order).catch((error) =>
+      console.error('Adminlarga xabar yuborilmadi:', error.message)
+    );
 
     res.status(201).json(order);
   } catch (error) {
