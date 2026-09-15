@@ -3,7 +3,6 @@
 // admin/src/categories.js faylida ham yangilash kerak.
 export const CATEGORIES = [
   { name: 'Kisva', icon: '🕋' },
-  { name: 'Naqshli Qur‘on', icon: '📖' },
   { name: 'Noyob Qur‘on kitoblar', icon: '🕌' },
   { name: 'Art Calligraphy', icon: '🖋️' },
   { name: 'Antikvar jihozlar', icon: '🏺' },
