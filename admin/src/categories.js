@@ -4,5 +4,5 @@ export const CATEGORIES = [
   'Kisva',
   'Noyob Qur‘on kitoblar',
   'Art Calligraphy',
-  'Antikvar jihozlar',
+  'Kartinalar / Handmade craft',
 ];

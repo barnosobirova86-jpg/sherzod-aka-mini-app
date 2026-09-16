@@ -1,4 +1,4 @@
-import { CATEGORIES } from '../categories.js';
+import { CATEGORIES, categoryLines } from '../categories.js';
 import { haptic } from '../telegram.js';
 
 export default function CategoryRibbon({ active, onSelect }) {
@@ -16,7 +16,11 @@ export default function CategoryRibbon({ active, onSelect }) {
           onClick={() => handleClick(cat.name)}
         >
           <span className="category-chip-icon">{cat.icon}</span>
-          <span>{cat.name}</span>
+          <span className="category-chip-text">
+            {categoryLines(cat.name).map((line) => (
+              <span key={line}>{line}</span>
+            ))}
+          </span>
         </button>
       ))}
     </div>

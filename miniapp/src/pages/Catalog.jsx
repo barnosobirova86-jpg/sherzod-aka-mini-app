@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import ProductCard from '../components/ProductCard.jsx';
-import { CATEGORIES } from '../categories.js';
+import { CATEGORIES, categoryLines } from '../categories.js';
 import { api } from '../api.js';
 import { haptic } from '../telegram.js';
 
@@ -42,7 +42,12 @@ export default function Catalog({ initialCategory, onOpenProduct }) {
               setActive(category.name);
             }}
           >
-            {category.icon} {category.name}
+            <span className="category-chip-icon">{category.icon}</span>
+            <span className="category-chip-text">
+              {categoryLines(category.name).map((line) => (
+                <span key={line}>{line}</span>
+              ))}
+            </span>
           </button>
         ))}
       </div>
