@@ -11,6 +11,10 @@ const config = {
   webAppUrl: process.env.WEBAPP_URL || 'http://localhost:5173',
   adminPassword: process.env.ADMIN_PASSWORD || 'admin123',
   allowDevAuth: process.env.ALLOW_DEV_AUTH === 'true',
+  /* Do'kon egalari uchun alohida bot (ixtiyoriy) */
+  adminBotToken: process.env.ADMIN_BOT_TOKEN || '',
+  adminPanelUrl: process.env.ADMIN_PANEL_URL || 'https://kisva-admin.vercel.app',
+
   /* Buyurtma kelganda xabar oladigan adminlar */
   adminChatIds: (process.env.ADMIN_CHAT_IDS || '')
     .split(',')

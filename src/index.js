@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import config from './config/default.js';
 import { connectDatabase, disconnectDatabase } from './database/connection.js';
 import { registerBotHandlers } from './routes/bot.routes.js';
+import { registerAdminBotHandlers } from './routes/adminBot.routes.js';
 import clientRoutes from './routes/client.routes.js';
 import adminRoutes from './routes/admin.routes.js';
 
@@ -16,6 +17,7 @@ const app = express();
 app.use(cors());
 
 const WEBHOOK_PATH = '/telegram/webhook';
+const ADMIN_WEBHOOK_PATH = '/telegram/admin-webhook';
 
 // Render.com kabi xostinglar avtomatik ravishda o‘z ochiq manzilini beradi.
 // U mavjud bo‘lsa — webhook rejimi (uxlab qolsa ham keyingi xabarda uyg‘onadi).
@@ -23,11 +25,13 @@ const WEBHOOK_PATH = '/telegram/webhook';
 const publicUrl = process.env.RENDER_EXTERNAL_URL || process.env.PUBLIC_URL || '';
 
 const bot = registerBotHandlers();
+const adminBot = registerAdminBotHandlers();
 
 // Webhook yo‘li BOSHQA hamma routedan (va 404 tutuvchidan) oldin ro‘yxatdan
 // o‘tishi shart — aks holda Telegram xabarlari hech qachon botga yetib bormaydi.
 if (publicUrl) {
   app.use(bot.webhookCallback(WEBHOOK_PATH));
+  if (adminBot) app.use(adminBot.webhookCallback(ADMIN_WEBHOOK_PATH));
 }
 
 app.use(express.json({ limit: '2mb' }));
@@ -74,9 +78,31 @@ async function start() {
     console.error('   BOT_TOKEN ni tekshiring.');
   }
 
+  if (adminBot) {
+    try {
+      const me = await adminBot.telegram.getMe();
+
+      if (publicUrl) {
+        const url = `${publicUrl.replace(/\/$/, '')}${ADMIN_WEBHOOK_PATH}`;
+        await adminBot.telegram.setWebhook(url);
+        console.log(`⚙️  Admin bot ishga tushdi (webhook): @${me.username}`);
+      } else {
+        await adminBot.telegram.deleteWebhook().catch(() => {});
+        adminBot.launch().catch((e) => console.error('❌ Admin bot to\'xtadi:', e.message));
+        console.log(`⚙️  Admin bot ishga tushdi (polling): @${me.username}`);
+      }
+    } catch (e) {
+      console.error('❌ Admin bot ishga tushmadi:', e.message);
+      console.error('   ADMIN_BOT_TOKEN ni tekshiring.');
+    }
+  }
+
   const shutdown = async (signal) => {
     console.log(`\n${signal} — to‘xtatilmoqda...`);
-    if (!publicUrl) bot.stop(signal);
+    if (!publicUrl) {
+      bot.stop(signal);
+      adminBot?.stop(signal);
+    }
     await disconnectDatabase();
     process.exit(0);
   };

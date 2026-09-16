@@ -1,6 +1,7 @@
 import config from '../config/default.js';
 import User from '../models/User.js';
 import { sendMessage } from './bot.js';
+import { adminBotEnabled, sendAdminMessage } from './adminBot.js';
 import { orderTotalLabel } from '../controllers/botController.js';
 
 /*
@@ -115,8 +116,11 @@ export async function notifyAdmins(order) {
     ...config.adminChatIds, // qo'lda qo'shilganlari (ixtiyoriy)
   ]);
 
+  // Alohida admin boti bo'lsa xabar o'sha yerga boradi, bo'lmasa do'kon botidan
+  const deliver = adminBotEnabled ? sendAdminMessage : sendMessage;
+
   for (const chatId of chatIds) {
-    tasks.push(sendMessage(chatId, text));
+    tasks.push(deliver(chatId, text));
   }
 
   if (smsEnabled) {
